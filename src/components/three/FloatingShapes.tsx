@@ -32,21 +32,21 @@ export default function FloatingShapes() {
 
   return (
     <group>
-      {/* Gold Torus Ring (Top Right) */}
-      <mesh ref={shape1Ref} position={[1.4, 0.8, -0.5]} castShadow>
-        <torusGeometry args={[0.25, 0.06, 16, 100]} />
+      {/* Gold Torus Ring (Middle Right, Far Back) */}
+      <mesh ref={shape1Ref} position={[1.5, 0.0, -0.6]} castShadow>
+        <torusGeometry args={[0.22, 0.05, 16, 100]} />
         <meshStandardMaterial color="#FBB503" roughness={0.15} metalness={0.9} />
       </mesh>
 
-      {/* Deep Navy Octahedron / Cone (Bottom Left) */}
-      <mesh ref={shape2Ref} position={[-1.3, -0.8, -0.3]} castShadow>
-        <octahedronGeometry args={[0.25, 0]} />
+      {/* Deep Navy Octahedron / Cone (Middle Left, Far Back) */}
+      <mesh ref={shape2Ref} position={[-1.5, 0.0, -0.5]} castShadow>
+        <octahedronGeometry args={[0.22, 0]} />
         <meshStandardMaterial color="#0B1B4D" roughness={0.3} metalness={0.4} />
       </mesh>
 
-      {/* Small Glowing Gold/Cream Sphere (Middle Left-ish) */}
-      <mesh ref={shape3Ref} position={[-1.2, -0.1, 0.4]} castShadow>
-        <sphereGeometry args={[0.1, 32, 32]} />
+      {/* Small Glowing Gold/Cream Sphere (Top Left-ish, Far Back) */}
+      <mesh ref={shape3Ref} position={[-0.7, 0.9, -0.7]} castShadow>
+        <sphereGeometry args={[0.08, 32, 32]} />
         <meshStandardMaterial color="#FBB503" emissive="#FBB503" emissiveIntensity={0.3} roughness={0.1} />
       </mesh>
     </group>

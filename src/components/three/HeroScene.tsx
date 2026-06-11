@@ -108,42 +108,42 @@ export default function HeroScene() {
 
         <Suspense fallback={null}>
           <group position={[0, 0, 0]}>
-            {/* Physics: Central Floating Atom model */}
+            {/* Physics: Orbital Atom Model (Top Right) */}
             <FloatingAtom 
-              position={[0, 0.5, -0.2]} 
-              scale={[0.9, 0.9, 0.9]} 
+              position={[1.35, 0.7, -0.1]} 
+              scale={[0.85, 0.85, 0.85]} 
               floatSpeed={0.75 * speed}
-              floatIntensity={0.1 * intensity}
+              floatIntensity={0.08 * intensity}
             />
 
-            {/* Chemistry: Molecule Model left */}
+            {/* Chemistry: Molecule Model (Top Left) */}
             <FloatingMolecule 
-              position={[-1.3, 0.35, -0.3]} 
+              position={[-1.35, 0.6, -0.2]} 
               rotation={[0.2, 0.4, -0.2]}
-              scale={[0.85, 0.85, 0.85]}
-              floatDelay={0}
+              scale={[0.8, 0.8, 0.8]}
+              floatDelay={1.5}
               floatSpeed={0.85 * speed}
-              floatIntensity={0.12 * intensity}
+              floatIntensity={0.09 * intensity}
             />
 
-            {/* Mathematics: Dodecahedron & Axes right */}
+            {/* Mathematics: Polyhedron & Axes (Bottom Right) */}
             <FloatingMath 
-              position={[1.4, -0.15, 0.2]} 
+              position={[1.4, -0.55, 0.2]} 
               rotation={[-0.3, -0.5, 0.1]}
-              scale={[0.85, 0.85, 0.85]}
-              floatDelay={2.5}
+              scale={[0.8, 0.8, 0.8]}
+              floatDelay={3.0}
               floatSpeed={0.65 * speed}
-              floatIntensity={0.1 * intensity}
+              floatIntensity={0.08 * intensity}
             />
 
-            {/* Physics/Chemistry: Small Secondary Atom bottom center-left */}
+            {/* Physics: Secondary Orbital Atom Model (Bottom Left) */}
             <FloatingAtom 
-              position={[-0.45, -0.85, 0.5]} 
+              position={[-1.3, -0.65, 0.3]} 
               rotation={[0.4, -0.2, 0.3]}
               scale={[0.65, 0.65, 0.65]}
-              floatDelay={4.8}
+              floatDelay={4.5}
               floatSpeed={0.7 * speed}
-              floatIntensity={0.08 * intensity}
+              floatIntensity={0.07 * intensity}
             />
 
             {/* Abstract gold/navy rings and boxes floating around */}

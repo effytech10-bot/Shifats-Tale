@@ -30,7 +30,7 @@ export default function Footer() {
           <div className="flex items-center space-x-2">
             <div className="inline-block relative h-11 w-44 sm:h-12 sm:w-48">
               <Image
-                src="/images/logo.png"
+                src="/images/logo_transparent.png"
                 alt="Shifat's Tales Logo"
                 fill
                 className="object-contain"

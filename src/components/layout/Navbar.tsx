@@ -64,9 +64,9 @@ export default function Navbar() {
       <div className="brand-container">
         <div className="flex items-center justify-between">
           {/* Logo Section */}
-          <Link href="#home" onClick={(e) => handleLinkClick(e, "#home")} className="relative h-10 w-40 sm:h-11 sm:w-48 transition-transform duration-300 hover:scale-101">
+          <Link href="#home" onClick={(e) => handleLinkClick(e, "#home")} className="relative h-12 w-48 sm:h-14 sm:w-56 transition-transform duration-300 hover:scale-101">
             <Image
-              src="/images/logo.png"
+              src="/images/logo_transparent.png"
               alt="Shifat's Tales Logo"
               fill
               className="object-contain object-left"

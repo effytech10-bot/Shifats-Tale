@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, MessageSquare, Mail, MapPin, Send, MessageCircle } from "lucide-react";
+import { Phone, Mail, Send, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ContactSection() {
@@ -46,10 +46,10 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 relative bg-slate-950/20">
-      <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
+    <section id="contact" className="brand-section-wrapper bg-bg-soft relative">
+      <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="brand-container">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <motion.h2
@@ -57,7 +57,7 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-sm font-bold text-amber-500 tracking-widest uppercase"
+            className="text-xs font-bold text-accent tracking-widest uppercase"
           >
             Connect Now
           </motion.h2>
@@ -66,7 +66,7 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight"
+            className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
           >
             Inquire About Upcoming Batches
           </motion.p>
@@ -75,7 +75,7 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-slate-400 text-sm sm:text-base"
+            className="text-text text-sm sm:text-base"
           >
             Fill up the short form below to compile an direct inquiry. Submitting will immediately open a chat with Shifat Sir on WhatsApp.
           </motion.p>
@@ -86,10 +86,10 @@ export default function ContactSection() {
           {/* Quick info column */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-8 lg:pr-8">
             <div className="space-y-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">
                 Direct Contact Channels
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
+              <p className="text-text text-sm leading-relaxed">
                 If you prefer to call or email directly rather than fill out the form, feel free to use the details below. We reply to WhatsApp messages within 2-3 hours.
               </p>
             </div>
@@ -98,14 +98,14 @@ export default function ContactSection() {
             <div className="space-y-5">
               <a
                 href="tel:+8801700000000"
-                className="flex items-center space-x-4 p-4 rounded-xl border border-slate-900 bg-slate-950/60 hover:border-slate-800 transition-colors"
+                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent hover:shadow-sm transition-all"
               >
-                <div className="bg-amber-500/10 p-2.5 rounded-lg text-amber-500 shrink-0">
+                <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0">
                   <Phone className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs text-slate-500 font-semibold uppercase tracking-wider">Phone Calls</span>
-                  <span className="block font-bold text-slate-200 text-sm sm:text-base">+880 1700-000000</span>
+                  <span className="block text-xs text-muted font-bold uppercase tracking-wider">Phone Calls</span>
+                  <span className="block font-extrabold text-primary text-sm sm:text-base">+880 1700-000000</span>
                 </div>
               </a>
 
@@ -113,43 +113,43 @@ export default function ContactSection() {
                 href="https://wa.me/8801700000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-4 p-4 rounded-xl border border-slate-900 bg-slate-950/60 hover:border-slate-800 transition-colors"
+                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent hover:shadow-sm transition-all"
               >
-                <div className="bg-emerald-500/10 p-2.5 rounded-lg text-emerald-500 shrink-0">
+                <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0">
                   <MessageCircle className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs text-slate-500 font-semibold uppercase tracking-wider">WhatsApp Direct</span>
-                  <span className="block font-bold text-slate-200 text-sm sm:text-base">Click to Chat Now</span>
+                  <span className="block text-xs text-muted font-bold uppercase tracking-wider">WhatsApp Direct</span>
+                  <span className="block font-extrabold text-primary text-sm sm:text-base">Click to Chat Now</span>
                 </div>
               </a>
 
               <a
                 href="mailto:info@shifatstales.com"
-                className="flex items-center space-x-4 p-4 rounded-xl border border-slate-900 bg-slate-950/60 hover:border-slate-800 transition-colors"
+                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent hover:shadow-sm transition-all"
               >
-                <div className="bg-blue-500/10 p-2.5 rounded-lg text-blue-400 shrink-0">
+                <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0">
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs text-slate-500 font-semibold uppercase tracking-wider">Email Inquiry</span>
-                  <span className="block font-bold text-slate-200 text-sm sm:text-base font-mono">info@shifatstales.com</span>
+                  <span className="block text-xs text-muted font-bold uppercase tracking-wider">Email Inquiry</span>
+                  <span className="block font-extrabold text-primary text-sm sm:text-base font-mono">info@shifatstales.com</span>
                 </div>
               </a>
             </div>
 
-            <div className="text-xs text-slate-500 leading-relaxed border-t border-slate-900 pt-6">
+            <div className="text-xs text-muted leading-relaxed border-t border-border pt-6 font-medium">
               * Note: For seat reservation, visiting the Farmgate center during schedule hours and completing offline enrollment confirmation is required.
             </div>
           </div>
 
           {/* Form column */}
-          <div className="lg:col-span-7 glass-card rounded-2xl p-6 sm:p-8">
+          <div className="lg:col-span-7 brand-card rounded-2xl p-6 sm:p-8 bg-white border border-border">
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
               
               {/* Name field */}
               <div className="space-y-2">
-                <label htmlFor="name" className="block text-xs sm:text-sm font-semibold text-slate-300">
+                <label htmlFor="name" className="block text-xs sm:text-sm font-bold text-primary-dark">
                   Your Full Name / Parent's Name
                 </label>
                 <input
@@ -160,13 +160,13 @@ export default function ContactSection() {
                   placeholder="Enter name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-900 focus:border-amber-500 focus:outline-none text-white text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-medium transition-all"
                 />
               </div>
 
               {/* Phone Field */}
               <div className="space-y-2">
-                <label htmlFor="phone" className="block text-xs sm:text-sm font-semibold text-slate-300">
+                <label htmlFor="phone" className="block text-xs sm:text-sm font-bold text-primary-dark">
                   Phone Number
                 </label>
                 <input
@@ -177,13 +177,13 @@ export default function ContactSection() {
                   placeholder="e.g. 017XXXXXXXX"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-900 focus:border-amber-500 focus:outline-none text-white text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-medium transition-all"
                 />
               </div>
 
               {/* Batch selection */}
               <div className="space-y-2">
-                <label htmlFor="batch" className="block text-xs sm:text-sm font-semibold text-slate-300">
+                <label htmlFor="batch" className="block text-xs sm:text-sm font-bold text-primary-dark">
                   Target Program / Batch
                 </label>
                 <select
@@ -191,7 +191,7 @@ export default function ContactSection() {
                   name="batch"
                   value={formData.batch}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-900 focus:border-amber-500 focus:outline-none text-white text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-semibold transition-all"
                 >
                   <option value="hsc-academic">HSC Academic Program (Physics & Math)</option>
                   <option value="varsity-admission">University & Engineering Admission Care</option>
@@ -202,7 +202,7 @@ export default function ContactSection() {
 
               {/* Message field */}
               <div className="space-y-2">
-                <label htmlFor="message" className="block text-xs sm:text-sm font-semibold text-slate-300">
+                <label htmlFor="message" className="block text-xs sm:text-sm font-bold text-primary-dark">
                   Message / Inquiries
                 </label>
                 <textarea
@@ -213,7 +213,7 @@ export default function ContactSection() {
                   placeholder="Let Sir know if you have specific timing queries or academic targets..."
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-900 focus:border-amber-500 focus:outline-none text-white text-sm transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-medium transition-all resize-none"
                 />
               </div>
 
@@ -221,11 +221,11 @@ export default function ContactSection() {
               <button
                 type="submit"
                 disabled={submitted}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-sm sm:text-base shadow-lg shadow-amber-500/10 flex items-center justify-center space-x-2 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                className="primary-btn w-full flex items-center justify-center space-x-2 text-center disabled:opacity-75 disabled:cursor-not-allowed"
               >
                 {submitted ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                     <span>Opening WhatsApp chat...</span>
                   </>
                 ) : (

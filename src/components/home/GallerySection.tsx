@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { galleryItems, GalleryItem } from "@/data/gallery";
+import { galleryItems } from "@/data/gallery";
 import Image from "next/image";
 import { Camera, ZoomIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,10 +24,10 @@ export default function GallerySection() {
   ];
 
   return (
-    <section id="gallery" className="py-24 px-4 sm:px-6 lg:px-8 relative">
-      <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
+    <section id="gallery" className="brand-section-wrapper bg-bg relative">
+      <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="brand-container">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <motion.h2
@@ -35,7 +35,7 @@ export default function GallerySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-sm font-bold text-amber-500 tracking-widest uppercase"
+            className="text-xs font-bold text-accent tracking-widest uppercase"
           >
             Gallery
           </motion.h2>
@@ -44,7 +44,7 @@ export default function GallerySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight"
+            className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
           >
             Explore Life at Shifat's Tales
           </motion.p>
@@ -53,22 +53,22 @@ export default function GallerySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-slate-400 text-sm sm:text-base"
+            className="text-text text-sm sm:text-base"
           >
             A visual overview of our learning facilities, handwritten summary worksheets, and celebrations of student success.
           </motion.p>
         </div>
 
         {/* Filters Panel */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-12">
           {tabs.map((tab) => (
             <button
               key={tab.value}
               onClick={() => setFilter(tab.value)}
-              className={`px-4.5 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-300 ${
+              className={`px-4.5 py-2.5 text-xs sm:text-sm font-bold rounded-full border transition-all duration-300 cursor-pointer ${
                 filter === tab.value
-                  ? "bg-amber-500 border-amber-500 text-slate-950 shadow-md shadow-amber-500/15"
-                  : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                  ? "bg-accent border-accent text-primary shadow-sm"
+                  : "bg-white border-border text-muted hover:text-primary hover:border-muted"
               }`}
             >
               {tab.label}
@@ -87,36 +87,36 @@ export default function GallerySection() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 key={item.id}
-                className="glass-card rounded-2xl overflow-hidden aspect-square relative group hover:border-slate-700 transition-all duration-300 cursor-pointer"
+                className="brand-card rounded-2xl overflow-hidden aspect-square relative group bg-white border border-border transition-all duration-300 cursor-pointer"
               >
                 {/* Image */}
                 <Image
                   src={item.imageUrl}
                   alt={item.title}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 group-hover:scale-103"
                   sizes="(max-w-768px) 100vw, 25vw"
                 />
 
-                {/* Overlay details */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 space-y-2 z-10">
-                  <div className="flex items-center space-x-1.5 text-amber-400">
-                    <Camera className="h-4 w-4" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">
+                {/* Overlay details - light theme premium look */}
+                <div className="absolute inset-x-0 bottom-0 bg-white/95 border-t border-border p-4 translate-y-[calc(100%-46px)] group-hover:translate-y-0 transition-transform duration-300 flex flex-col space-y-1.5 z-10 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-extrabold uppercase tracking-wider text-accent">
                       {item.category}
                     </span>
+                    <Camera className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  <h4 className="font-bold text-white text-base">
+                  <h4 className="font-bold text-primary text-sm line-clamp-1">
                     {item.title}
                   </h4>
-                  <p className="text-xs text-slate-300 leading-normal">
+                  <p className="text-[11px] text-muted leading-normal opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-75">
                     {item.description}
                   </p>
                 </div>
 
                 {/* Tiny zoom indicator top-right */}
-                <div className="absolute top-4 right-4 p-2 rounded-lg bg-slate-950/80 backdrop-blur-md border border-white/5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                  <ZoomIn className="h-4 w-4 text-slate-350" />
+                <div className="absolute top-4 right-4 p-2 rounded-lg bg-white/95 border border-border opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-sm">
+                  <ZoomIn className="h-4 w-4 text-primary" />
                 </div>
               </motion.div>
             ))}

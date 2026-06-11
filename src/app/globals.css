@@ -1,29 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --background: #060913;
-  --foreground: #f3f4f6;
-  --primary-navy: #060913;
-  --secondary-navy: #0f172a;
-  --accent-gold: #fbbf24;
-  --accent-gold-dark: #d97706;
-  --accent-teal: #14b8a6;
-  --accent-blue: #3b82f6;
-  --glass-bg: rgba(15, 23, 42, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.06);
+  --background: #FFFCF2; /* Soft Cream */
+  --foreground: #1F2937; /* Main Text */
+  
+  --color-primary: #010E62; /* Deep Navy */
+  --color-primary-dark: #0B1B4D; /* Oxford Blue */
+  --color-accent: #FBB503; /* Gold Accent */
+  --color-bg: #FFF8E6; /* Cream Background */
+  --color-bg-soft: #FFFCF2; /* Soft Cream */
+  --color-text: #1F2937; /* Main Text */
+  --color-muted: #6B7280; /* Muted Text */
+  --color-border: #E7E0D2; /* Border */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary-navy: var(--primary-navy);
-  --color-secondary-navy: var(--secondary-navy);
-  --color-accent-gold: var(--accent-gold);
-  --color-accent-gold-dark: var(--accent-gold-dark);
-  --color-accent-teal: var(--accent-teal);
-  --color-accent-blue: var(--accent-blue);
-  --color-glass-bg: var(--glass-bg);
-  --color-glass-border: var(--glass-border);
+  
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-accent: var(--color-accent);
+  --color-bg: var(--color-bg);
+  --color-bg-soft: var(--color-bg-soft);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
+  
   --font-sans: var(--font-inter), sans-serif;
   --font-display: var(--font-outfit), sans-serif;
 }
@@ -33,66 +36,168 @@ html {
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--color-bg-soft);
+  color: var(--color-text);
   font-family: var(--font-inter), var(--font-sans);
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-outfit), var(--font-display);
-  font-weight: 700;
+  color: var(--color-primary);
+  font-weight: 800;
 }
 
-/* Glassmorphism Card Utility */
-.glass-card {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-nav {
-  background: rgba(6, 9, 19, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* Custom glows */
-.glow-gold {
-  box-shadow: 0 0 30px rgba(251, 191, 36, 0.15);
-}
-
-.glow-blue {
-  box-shadow: 0 0 35px rgba(59, 130, 246, 0.15);
-}
-
-/* Keyframes & Animations */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-/* Custom scrollbar to match the premium theme */
+/* Custom scrollbar to match the premium warm theme */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #060913;
+  background: var(--color-bg-soft);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: var(--color-border);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--color-muted);
+}
+
+/* Reusable Components/Layout Utilities */
+.brand-container {
+  width: 100%;
+  max-width: 80rem; /* 1280px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 640px) {
+  .brand-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .brand-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.brand-section-wrapper {
+  padding-top: 5.5rem;
+  padding-bottom: 5.5rem;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .brand-section-wrapper {
+    padding-top: 6.5rem;
+    padding-bottom: 6.5rem;
+  }
+}
+
+/* Reusable Buttons */
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 10px -1px rgba(251, 181, 3, 0.2);
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 250ms;
+  border: 1px solid transparent;
+}
+.primary-btn:hover {
+  background-color: #e2a202; /* slightly darker brand gold */
+  box-shadow: 0 6px 15px -1px rgba(251, 181, 3, 0.35);
+  transform: translateY(-1px);
+}
+.primary-btn:active {
+  transform: translateY(0);
+}
+
+.secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid var(--color-primary);
+  background-color: transparent;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 250ms;
+}
+.secondary-btn:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+.secondary-btn:active {
+  transform: translateY(0);
+}
+
+/* Reusable Cards */
+.brand-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 4px 25px -2px rgba(1, 14, 98, 0.03), 0 2px 10px -1px rgba(1, 14, 98, 0.02);
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+.brand-card:hover {
+  border-color: #d8cfbe;
+  box-shadow: 0 12px 35px -4px rgba(1, 14, 98, 0.07), 0 4px 15px -2px rgba(1, 14, 98, 0.04);
+}
+
+/* Reusable Badges */
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+}
+
+.brand-badge-blue {
+  background-color: rgba(1, 14, 98, 0.05);
+  color: var(--color-primary);
+  border: 1px solid rgba(1, 14, 98, 0.1);
+}
+
+/* Subtle highlights */
+.glow-accent-gold {
+  box-shadow: 0 0 20px rgba(251, 181, 3, 0.15);
+}
+
+/* Floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }

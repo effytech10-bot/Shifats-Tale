@@ -16,7 +16,7 @@ import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-amber-500 selection:text-slate-900">
+    <div className="min-h-screen bg-bg-soft text-text flex flex-col selection:bg-accent selection:text-primary">
       {/* Dynamic Header Navbar */}
       <Navbar />
 

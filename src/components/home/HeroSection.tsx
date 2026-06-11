@@ -10,7 +10,7 @@ const HeroScene = dynamic(() => import("../three/HeroScene"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-[350px] sm:h-[450px] md:h-[550px] flex items-center justify-center">
-      <div className="w-10 h-10 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin"></div>
+      <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
     </div>
   ),
 });
@@ -27,13 +27,13 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-screen pt-28 pb-16 flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen pt-28 pb-16 flex items-center justify-center overflow-hidden bg-bg-soft"
     >
-      {/* Background gradients */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[150px] pointer-events-none" />
+      {/* Background gradients - very soft academic colors */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
+      <div className="brand-container w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Hero Content Column */}
@@ -42,9 +42,9 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-amber-400 text-xs font-semibold tracking-wide"
+              className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-border text-primary text-xs font-bold tracking-wide shadow-sm"
             >
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               <span>Admissions open for SSC & HSC batches</span>
             </motion.div>
 
@@ -53,10 +53,10 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight"
+                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-primary leading-tight"
               >
                 Shifat's Tales
-                <span className="block mt-1 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                <span className="block mt-1 text-primary-dark">
                   Academic & Admission Care
                 </span>
               </motion.h1>
@@ -65,7 +65,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                className="text-base sm:text-lg md:text-xl text-text max-w-2xl mx-auto lg:mx-0 leading-relaxed"
               >
                 Simplifying complex Physics & Higher Mathematics theories with visual lectures, personalized care, and structured exam routines. Run directly by Adnan Bin Wahid (Shifat Sir).
               </motion.p>
@@ -76,7 +76,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-300 max-w-md mx-auto lg:mx-0"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-text max-w-md mx-auto lg:mx-0"
             >
               {[
                 "Personalized 1-on-1 feedback",
@@ -85,8 +85,8 @@ export default function HeroSection() {
                 "Capped batch size (max 30)",
               ].map((text, i) => (
                 <div key={i} className="flex items-center space-x-2 text-sm justify-center lg:justify-start">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                  <span>{text}</span>
+                  <CheckCircle2 className="h-4.5 w-4.5 text-accent shrink-0" />
+                  <span className="font-medium">{text}</span>
                 </div>
               ))}
             </motion.div>
@@ -100,21 +100,21 @@ export default function HeroSection() {
             >
               <a
                 href="tel:+8801700000000"
-                className="flex items-center justify-center space-x-2 w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-102"
+                className="primary-btn flex items-center justify-center space-x-2 w-full sm:w-auto text-center"
               >
-                <Phone className="h-5 w-5" />
+                <Phone className="h-4.5 w-4.5" />
                 <span>Call Shifat Sir</span>
               </a>
               <button
                 onClick={() => scrollToSection("#youtube-classes")}
-                className="flex items-center justify-center space-x-2 w-full sm:w-auto px-7 py-3.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-white font-semibold hover:bg-slate-800 transition-all duration-300 hover:scale-102"
+                className="secondary-btn flex items-center justify-center space-x-2 w-full sm:w-auto"
               >
-                <Play className="h-4 w-4 fill-white text-white" />
+                <Play className="h-4 w-4 fill-primary text-primary" />
                 <span>Watch Free Class</span>
               </button>
               <button
                 onClick={() => scrollToSection("#courses")}
-                className="flex items-center justify-center space-x-1 text-sm text-slate-400 hover:text-amber-400 font-semibold group transition-colors duration-200 mt-2 sm:mt-0"
+                className="flex items-center justify-center space-x-1 text-sm text-muted hover:text-primary font-bold group transition-colors duration-200 mt-2 sm:mt-0"
               >
                 <span>View Batches</span>
                 <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
@@ -125,7 +125,7 @@ export default function HeroSection() {
           {/* Hero 3D Scene Column */}
           <div className="lg:col-span-5 w-full flex items-center justify-center">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="w-full relative"

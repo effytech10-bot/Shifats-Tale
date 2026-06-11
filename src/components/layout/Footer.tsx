@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Phone, MapPin, Send, Mail } from "lucide-react";
+import Image from "next/image";
+import { Phone, MapPin, Send, Mail } from "lucide-react";
 import { FacebookIcon, YoutubeIcon } from "@/components/ui/Icons";
 
 export default function Footer() {
@@ -20,25 +21,22 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-slate-950 border-t border-slate-900 text-slate-400 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer className="bg-primary border-t border-primary-dark/50 text-slate-300 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="brand-container grid grid-cols-1 md:grid-cols-4 gap-12">
         
         {/* About Section */}
         <div className="space-y-4 col-span-1 md:col-span-1.5">
           <div className="flex items-center space-x-2">
-            <div className="bg-amber-500 p-2 rounded-lg text-slate-950 font-bold">
-              <BookOpen className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-lg tracking-tight text-white">
-                Shifat's Tales
-              </span>
-              <span className="text-[10px] text-slate-400 tracking-wider uppercase font-semibold leading-none">
-                Academic & Admission Care
-              </span>
+            <div className="bg-white px-3 py-1.5 rounded-xl inline-block relative h-11 w-44 sm:h-12 sm:w-48">
+              <Image
+                src="/images/logo.png"
+                alt="Shifat's Tales Logo"
+                fill
+                className="object-contain p-0.5"
+              />
             </div>
           </div>
-          <p className="text-sm leading-relaxed text-slate-500">
+          <p className="text-sm leading-relaxed text-slate-400">
             A premium personal coaching ecosystem specialized in Physics and Higher Mathematics. Founded and mentored by Adnan Bin Wahid (Shifat Sir). Empowering SSC and HSC science students to build core concepts and score top ranks in university admission tests.
           </p>
           <div className="flex items-center space-x-3 pt-2">
@@ -46,7 +44,7 @@ export default function Footer() {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200"
+              className="p-2.5 rounded-xl bg-primary-dark border border-primary-dark/80 text-slate-300 hover:text-accent hover:border-accent/40 transition-all duration-200"
               aria-label="Facebook Page"
             >
               <FacebookIcon className="h-4.5 w-4.5" />
@@ -55,7 +53,7 @@ export default function Footer() {
               href="https://youtube.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200"
+              className="p-2.5 rounded-xl bg-primary-dark border border-primary-dark/80 text-slate-300 hover:text-accent hover:border-accent/40 transition-all duration-200"
               aria-label="YouTube Channel"
             >
               <YoutubeIcon className="h-4.5 w-4.5" />
@@ -65,7 +63,7 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div>
-          <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-5">Quick Links</h3>
+          <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-5">Quick Links</h3>
           <ul className="space-y-3">
             {[
               { label: "Home Program", href: "#home" },
@@ -79,7 +77,7 @@ export default function Footer() {
                 <a
                   href={link.href}
                   onClick={(e) => handleLinkClick(e, link.href)}
-                  className="text-sm text-slate-400 hover:text-amber-400 transition-colors duration-200"
+                  className="text-sm text-slate-300 hover:text-accent transition-colors duration-200"
                 >
                   {link.label}
                 </a>
@@ -90,31 +88,31 @@ export default function Footer() {
 
         {/* Contact info */}
         <div>
-          <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-5">Contact Details</h3>
+          <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-5">Contact Details</h3>
           <ul className="space-y-4">
             <li className="flex items-start space-x-3 text-sm">
-              <Phone className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <Phone className="h-5 w-5 text-accent shrink-0 mt-0.5" />
               <div>
-                <span className="block text-slate-300 font-medium">Call/WhatsApp</span>
-                <a href="tel:+8801700000000" className="hover:text-amber-400 transition-colors">
+                <span className="block text-slate-200 font-bold">Call/WhatsApp</span>
+                <a href="tel:+8801700000000" className="hover:text-accent text-slate-300 transition-colors font-semibold">
                   +880 1700-000000
                 </a>
               </div>
             </li>
             <li className="flex items-start space-x-3 text-sm">
-              <Mail className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <Mail className="h-5 w-5 text-accent shrink-0 mt-0.5" />
               <div>
-                <span className="block text-slate-300 font-medium">Email</span>
-                <a href="mailto:info@shifatstales.com" className="hover:text-amber-400 transition-colors">
+                <span className="block text-slate-200 font-bold">Email</span>
+                <a href="mailto:info@shifatstales.com" className="hover:text-accent text-slate-300 transition-colors font-mono">
                   info@shifatstales.com
                 </a>
               </div>
             </li>
             <li className="flex items-start space-x-3 text-sm">
-              <MapPin className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <MapPin className="h-5 w-5 text-accent shrink-0 mt-0.5" />
               <div>
-                <span className="block text-slate-300 font-medium">Location</span>
-                <span className="text-slate-500 text-xs">
+                <span className="block text-slate-200 font-bold">Location</span>
+                <span className="text-slate-400 text-xs leading-relaxed block mt-0.5">
                   2nd Floor, Green View Tower, Near Farmgate Footbridge, Farmgate, Dhaka, Bangladesh
                 </span>
               </div>
@@ -124,8 +122,8 @@ export default function Footer() {
 
         {/* Direct WhatsApp Callout */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Direct Admission Care</h3>
-          <p className="text-xs text-slate-500 leading-relaxed">
+          <h3 className="text-sm font-bold text-white tracking-wider uppercase">Direct Admission Care</h3>
+          <p className="text-xs text-slate-400 leading-relaxed">
             We do not offer automatic online enrollment or payments. To join our programs, please connect directly with Shifat Sir or visit our Farmgate venue.
           </p>
           <a
@@ -140,7 +138,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+      <div className="brand-container mt-16 pt-8 border-t border-primary-dark/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
         <p>© {new Date().getFullYear()} Shifat's Tales — Academic & Admission Care. All rights reserved.</p>
         <p className="flex items-center gap-1">
           Designed with ❤️ for students in Bangladesh

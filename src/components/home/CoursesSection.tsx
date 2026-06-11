@@ -9,11 +9,11 @@ export default function CoursesSection() {
   const whatsappNumber = "8801700000000"; // Sir's phone number
 
   return (
-    <section id="courses" className="py-24 px-4 sm:px-6 lg:px-8 relative">
+    <section id="courses" className="brand-section-wrapper bg-bg relative">
       {/* Background decoration */}
-      <div className="absolute top-1/3 right-0 w-80 h-80 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/3 right-0 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="brand-container">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <motion.h2
@@ -21,7 +21,7 @@ export default function CoursesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-sm font-bold text-amber-500 tracking-widest uppercase"
+            className="text-xs font-bold text-accent tracking-widest uppercase"
           >
             Batches & Programs
           </motion.h2>
@@ -30,7 +30,7 @@ export default function CoursesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight"
+            className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
           >
             Academic & Admission Batches
           </motion.p>
@@ -39,7 +39,7 @@ export default function CoursesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-slate-400 text-sm sm:text-base"
+            className="text-text text-sm sm:text-base"
           >
             Select the appropriate batch to jumpstart your conceptual mastery. Capped batch sizes ensure personalized focus for every single student.
           </motion.p>
@@ -59,53 +59,50 @@ export default function CoursesSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative group hover:border-slate-700 hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-300"
+                className="brand-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative group bg-white border border-border"
               >
-                {/* Accent glow on hover */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 via-transparent to-amber-500/0 group-hover:from-blue-500/5 group-hover:to-amber-500/5 transition-all duration-300 pointer-events-none" />
-
                 <div className="space-y-6">
                   {/* Title & Badge */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold">
+                      <span className="brand-badge brand-badge-blue">
                         {course.target}
                       </span>
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                    <h3 className="text-xl sm:text-2xl font-bold text-primary group-hover:text-primary transition-colors">
                       {course.title}
                     </h3>
-                    <p className="text-xs font-medium text-slate-400 italic">
+                    <p className="text-xs font-semibold text-muted italic">
                       {course.subtitle}
                     </p>
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm text-slate-400 leading-relaxed">
+                  <p className="text-sm text-text leading-relaxed">
                     {course.description}
                   </p>
 
                   {/* Class Logistics */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-900">
-                    <div className="flex items-center space-x-2 text-xs text-slate-300">
-                      <Calendar className="h-4 w-4 text-amber-500 shrink-0" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-border">
+                    <div className="flex items-center space-x-2 text-xs font-bold text-primary-dark">
+                      <Calendar className="h-4 w-4 text-accent shrink-0" />
                       <span>{course.schedule}</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-xs text-slate-300">
-                      <Clock className="h-4 w-4 text-amber-500 shrink-0" />
+                    <div className="flex items-center space-x-2 text-xs font-bold text-primary-dark">
+                      <Clock className="h-4 w-4 text-accent shrink-0" />
                       <span>{course.duration}</span>
                     </div>
                   </div>
 
                   {/* Key Syllabus Points */}
                   <div className="space-y-2 pt-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                    <span className="text-xs font-bold text-primary-dark uppercase tracking-wider block">
                       Program Inclusions:
                     </span>
                     <ul className="grid grid-cols-1 gap-2.5">
                       {course.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start space-x-2 text-xs sm:text-sm text-slate-300">
-                          <Check className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <li key={idx} className="flex items-start space-x-2 text-xs sm:text-sm text-text">
+                          <Check className="h-4 w-4 text-green-600 shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -119,7 +116,7 @@ export default function CoursesSection() {
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center space-x-2 w-full py-3 rounded-xl border border-amber-500/20 bg-slate-950 text-amber-400 font-bold hover:bg-amber-500 hover:text-slate-950 transition-all duration-300 shadow-md group-hover:border-amber-500"
+                    className="primary-btn w-full flex items-center justify-center space-x-2 text-center"
                   >
                     <Send className="h-4 w-4" />
                     <span>Inquire via WhatsApp</span>

@@ -1,28 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { Award, GraduationCap, Users, Send } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { siteInfo, teachingMethods } from "@/data/site";
+
+// Dynamically import the 3D scene with SSR disabled for optimal bundle performance
+const HeroScene = dynamic(() => import("../three/HeroScene"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 flex items-center justify-center bg-transparent">
+      <div className="w-8 h-8 border-3 border-accent/20 border-t-accent rounded-full animate-spin" />
+    </div>
+  ),
+});
 
 interface TeacherSectionProps {
   isTeacherFlying?: boolean;
 }
 
 export default function TeacherSection({ isTeacherFlying = false }: TeacherSectionProps) {
-  const [imgSrc, setImgSrc] = useState("/images/sir_photo_clean.png");
   const whatsappLink = `https://wa.me/${siteInfo.whatsapp}?text=Hello%20${encodeURIComponent(siteInfo.teacherName.split(" ").pop()!)}%20Sir%2C%20I%20would%20like%20to%20discuss%2520admissions%20for%20myself%20/%20my%20child.`;
   const shouldReduceMotion = useReducedMotion();
-
-  const floatAnimation = shouldReduceMotion ? {} : {
-    y: [0, -6, 0],
-    transition: {
-      duration: 6,
-      repeat: Infinity,
-      ease: "easeInOut" as const
-    }
-  };
 
   const headerVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 15 },
@@ -61,44 +62,61 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Teacher Image/Badge Column */}
-          <div className="lg:col-span-5 flex flex-col items-center">
+          <div className="lg:col-span-5 flex flex-col items-center justify-center">
+            {/* Transparent 3D Canvas + Image wrapper */}
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-[1/1.2] flex items-end justify-center rounded-2xl overflow-hidden z-10">
+              {/* 3D Scene Layer (only on large displays for best performance) */}
+              <div className="absolute inset-0 z-0 hidden md:block w-full h-full pointer-events-none">
+                <HeroScene />
+              </div>
+
+              {/* Bottom shadow / fade transition to blend crop edge into cream bg */}
+              <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-bg via-bg/80 to-transparent z-10 pointer-events-none" />
+              
+              {/* Radial shadows & ambient gold/blue glows behind photo for perfect 3D integration */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-1/4 bg-primary/15 rounded-full blur-2xl z-0 pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-accent/8 rounded-full blur-[80px] z-0 pointer-events-none" />
+
+              {/* Teacher photo with filter drop-shadow to pop out */}
+              <motion.div
+                id="teacher-section-photo"
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ 
+                  opacity: isTeacherFlying ? 0 : 1,
+                  scale: 1,
+                  y: 0
+                }}
+                transition={{ duration: 0.6 }}
+                className="relative w-full h-full flex items-end justify-center z-10 select-none pointer-events-auto transition-opacity duration-200"
+              >
+                <Image
+                  src="/images/sir_photo_clean.png"
+                  alt={siteInfo.teacherName}
+                  fill
+                  sizes="(max-width: 768px) 280px, 340px"
+                  className="object-contain object-bottom filter drop-shadow-[0_16px_32px_rgba(1,14,98,0.22)]"
+                  priority
+                />
+              </motion.div>
+            </div>
+
+            {/* Compact Designation Tag under portrait */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              animate={floatAnimation}
-              className="relative w-full max-w-[340px] sm:max-w-[380px] aspect-[4/5] rounded-2xl overflow-hidden border border-border group bg-white shadow-sm flex flex-col justify-between p-6 hover:shadow-md hover:border-accent/30 transition-all duration-300"
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-5 z-20 text-center w-full max-w-[280px] sm:max-w-[340px] bg-white border border-border p-3.5 rounded-xl shadow-sm hover:border-accent/30 hover:shadow-md transition-all duration-300"
             >
-              {/* Photo Grid backdrop */}
-              <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:16px_16px]" />
-
-              <div className="flex-grow flex flex-col items-center justify-center py-4 relative z-10">
-                <div 
-                  id="teacher-section-photo" 
-                  className={`relative w-48 h-48 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 transition-opacity duration-200 ${isTeacherFlying ? "opacity-0" : "opacity-100"}`}
-                >
-                  <Image
-                    src={imgSrc}
-                    alt={siteInfo.teacherName}
-                    fill
-                    sizes="192px"
-                    className="object-contain object-bottom filter drop-shadow-[0_8px_16px_rgba(1,14,98,0.12)]"
-                    onError={() => setImgSrc("/images/shifat_sir.png")}
-                  />
-                </div>
-              </div>
-
-              {/* Float Tag */}
-              <div className="bg-bg-soft border border-border p-3 rounded-xl flex items-center justify-between shadow-sm relative z-10 group-hover:border-accent/20 transition-all">
-                <div>
-                  <span className="block font-bold text-xs text-primary">{siteInfo.teacherName}</span>
-                  <span className="block text-[8px] text-muted font-bold uppercase tracking-wider leading-none mt-0.5">{siteInfo.teacherName.split(" ").pop()} Sir</span>
-                </div>
-                <span className="bg-accent text-primary text-[9px] font-extrabold px-2.5 py-1 rounded shadow-sm">
-                  Lead Mentor
-                </span>
-              </div>
+              <span className="block text-accent font-extrabold text-[10px] sm:text-xs uppercase tracking-widest">
+                Instructor & CEO
+              </span>
+              <h4 className="font-extrabold text-base sm:text-lg text-primary mt-1">
+                {siteInfo.teacherName}
+              </h4>
+              <span className="block text-xs text-muted font-bold mt-0.5">
+                EEE, CUET
+              </span>
             </motion.div>
           </div>
 

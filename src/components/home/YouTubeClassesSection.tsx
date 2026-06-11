@@ -177,7 +177,7 @@ export default function YouTubeClassesSection() {
                   Like this class? Inquire about upcoming batches to learn directly with Sir.
                 </span>
                 <a
-                  href={`https://wa.me/8801700000000?text=Hello%20Sir%2C%20I%20just%20watched%20your%20class%20on%20${encodeURIComponent(
+                  href={`https://wa.me/8801879169446?text=Hello%20Sir%2C%20I%20just%20watched%20your%20class%20on%20${encodeURIComponent(
                     activeVideo.title
                   )}.%20Please%2520let%20me%20know%20how%20to%20register.`}
                   target="_blank"

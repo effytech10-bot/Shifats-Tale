@@ -1,10 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Phone, Play, User, CheckCircle2 } from "lucide-react";
+import { Phone, Play, User } from "lucide-react";
+
+// Dynamically import the 3D scene with SSR disabled for optimal bundle performance
+const HeroScene = dynamic(() => import("../three/HeroScene"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 flex items-center justify-center bg-transparent">
+      <div className="w-8 h-8 border-3 border-accent/20 border-t-accent rounded-full animate-spin" />
+    </div>
+  ),
+});
 
 export default function HeroSection() {
+  const [imgSrc, setImgSrc] = useState("/images/media__1781164765815_transparent.png");
+
   const scrollToSection = (id: string) => {
     const el = document.querySelector(id);
     if (el) {
@@ -73,14 +87,14 @@ export default function HeroSection() {
                   e.preventDefault();
                   scrollToSection("#contact");
                 }}
-                className="primary-btn flex items-center justify-center space-x-2 w-full sm:w-auto text-center"
+                className="primary-btn flex items-center justify-center space-x-2 w-full sm:w-auto text-center cursor-pointer"
               >
                 <Phone className="h-4.5 w-4.5" />
                 <span>Contact Sir</span>
               </a>
               <button
                 onClick={() => scrollToSection("#youtube-classes")}
-                className="secondary-btn flex items-center justify-center space-x-2 w-full sm:w-auto"
+                className="secondary-btn flex items-center justify-center space-x-2 w-full sm:w-auto cursor-pointer"
               >
                 <Play className="h-4 w-4 fill-primary text-primary" />
                 <span>Watch Free Class</span>
@@ -106,35 +120,53 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Hero Static Teacher Photo Column */}
-          <div className="lg:col-span-5 w-full flex items-center justify-center">
+          {/* Hero 3D background & Teacher Photo Column */}
+          <div className="lg:col-span-5 w-full flex items-center justify-center relative min-h-[400px] sm:min-h-[500px]">
+            {/* 3D Scene Layer (only on large displays for best performance) */}
+            <div className="absolute inset-0 z-0 hidden md:block w-full h-full pointer-events-none">
+              <HeroScene />
+            </div>
+
+            {/* Teacher Card (glassmorphic border overlaying the 3D scene) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="w-full max-w-[340px] sm:max-w-[380px] aspect-[4/5] relative rounded-3xl overflow-hidden border border-border shadow-lg bg-white p-5 flex flex-col justify-between"
+              className="w-full max-w-[320px] sm:max-w-[360px] aspect-[4/5] relative rounded-3xl overflow-hidden border border-border shadow-lg bg-white/90 backdrop-blur-md p-5 flex flex-col justify-between z-10"
             >
               {/* Grid backdrop */}
               <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:16px_16px]" />
 
-              <div className="flex-grow flex flex-col items-center justify-center space-y-4 py-8 relative z-10">
-                <div className="bg-bg p-6 rounded-full border border-border text-primary shadow-sm">
-                  <User className="h-10 w-10 text-primary" />
+              <div className="flex-grow flex flex-col items-center justify-center space-y-4 py-4 relative z-10">
+                {/* Framed Image Circle */}
+                <div className="relative w-40 h-40 rounded-full overflow-hidden border-2 border-accent/40 shadow-sm bg-bg-soft flex items-center justify-center">
+                  <Image
+                    src={imgSrc}
+                    alt="Md. Zia Uddin Azad Sifat"
+                    fill
+                    sizes="160px"
+                    className="object-cover object-top scale-[1.15]"
+                    onError={() => setImgSrc("/images/shifat_sir.png")} // Fallback to raw jpeg if png isn't generated yet
+                  />
                 </div>
                 <div className="text-center space-y-1">
-                  <span className="block font-extrabold text-primary text-base sm:text-lg">Teacher Photo Card</span>
-                  <span className="block text-xs text-muted font-semibold">Adnan Bin Wahid (Shifat Sir)</span>
+                  <span className="block font-extrabold text-primary text-base sm:text-lg leading-tight">
+                    Md. Zia Uddin Azad Sifat
+                  </span>
+                  <span className="block text-[11px] text-muted font-extrabold uppercase tracking-widest">
+                    Instructor & CEO
+                  </span>
                 </div>
               </div>
 
               {/* Specs Badge */}
-              <div className="bg-bg-soft border border-border p-3.5 rounded-2xl flex items-center justify-between relative z-10">
+              <div className="bg-bg-soft/80 border border-border p-3 rounded-2xl flex items-center justify-between relative z-10">
                 <div>
-                  <span className="block font-bold text-xs text-primary">Founder & Mentor</span>
-                  <span className="block text-[9px] text-muted font-bold uppercase tracking-wider">Shifat's Tales Coaching</span>
+                  <span className="block font-bold text-xs text-primary leading-none mb-1">Shifat Sir</span>
+                  <span className="block text-[8px] text-muted font-extrabold uppercase tracking-wider">Shifat's Tales Coaching</span>
                 </div>
-                <span className="bg-accent text-primary text-[10px] font-extrabold px-2.5 py-1 rounded">
-                  B.Sc. Engineering
+                <span className="bg-accent text-primary text-[9px] font-extrabold px-2.5 py-1 rounded">
+                  EEE, CUET
                 </span>
               </div>
             </motion.div>
@@ -144,3 +176,4 @@ export default function HeroSection() {
     </section>
   );
 }
+

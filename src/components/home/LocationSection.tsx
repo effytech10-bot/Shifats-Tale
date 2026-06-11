@@ -5,8 +5,8 @@ import { MapPin, Compass, Train } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function LocationSection() {
-  const mapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9024422998634!2d90.39088661543134!3d23.75086789467645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8bd55555555%3A0x2d17c768db1b9c9f!2sFarmgate%2C%20Dhaka%201215!5e0!3m2!1sen!2sbd!4v1655000000000!5m2!1sen!2sbd";
-  const directionUrl = "https://maps.google.com/?q=Farmgate+Dhaka+Bangladesh";
+  const mapUrl = "https://maps.google.com/maps?q=Rangunia%20Government%20College,%20Chattogram&t=&z=16&ie=UTF8&iwloc=&output=embed";
+  const directionUrl = "https://maps.google.com/?q=Rangunia+Government+College+Chattogram";
 
   return (
     <section id="location" className="brand-section-wrapper bg-bg relative">
@@ -40,7 +40,7 @@ export default function LocationSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-text text-sm sm:text-base"
           >
-            Classes are conducted in a clean, fully air-conditioned and high-tech facility at the center of Dhaka.
+            Classes are conducted in a clean, fully air-conditioned and high-tech facility near Rangunia College, Chattogram.
           </motion.p>
         </div>
 
@@ -57,7 +57,7 @@ export default function LocationSection() {
                 <div>
                   <h4 className="font-extrabold text-primary text-base sm:text-lg">Physical Venue</h4>
                   <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
-                    2nd Floor, Green View Tower, Near Farmgate Footbridge, Farmgate, Dhaka-1215, Bangladesh
+                    Sekandar & M.P Yusuf Building, 3rd Floor, next to Rangunia College, Rangunia, Chattogram, Bangladesh
                   </p>
                 </div>
               </div>
@@ -70,7 +70,7 @@ export default function LocationSection() {
                 <div>
                   <h4 className="font-extrabold text-primary text-base sm:text-lg">How to reach</h4>
                   <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
-                    Conveniently located 2 minutes walking distance from Farmgate Metrorail Station and the main NDC bus counter. Notre Dame College and Holy Cross buses pass nearby.
+                    Conveniently located next to Rangunia College in Rangunia, Chattogram. Easily accessible from all parts of Rangunia by local transport (CNG/bus).
                   </p>
                 </div>
               </div>
@@ -100,7 +100,7 @@ export default function LocationSection() {
                 <span>Get Direction</span>
               </a>
               <a
-                href="tel:+8801700000000"
+                href="tel:+8801879169446"
                 className="secondary-btn w-full flex items-center justify-center text-center font-bold"
               >
                 <span>Call Now</span>

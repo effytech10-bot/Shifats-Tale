@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { galleryItems } from "@/data/gallery";
 import { Camera, ZoomIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-type CategoryFilter = "All" | "classroom" | "notes" | "events";
+type CategoryFilter = "All" | "classroom" | "notes" | "events" | "flyers";
 
 export default function GallerySection() {
   const [filter, setFilter] = useState<CategoryFilter>("All");
@@ -17,6 +18,7 @@ export default function GallerySection() {
 
   const tabs: { label: string; value: CategoryFilter }[] = [
     { label: "Show All", value: "All" },
+    { label: "Coaching Flyers", value: "flyers" },
     { label: "Classroom Life", value: "classroom" },
     { label: "Lecture Sheets & Notes", value: "notes" },
     { label: "Events & Awards", value: "events" },
@@ -54,7 +56,7 @@ export default function GallerySection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-text text-sm sm:text-base"
           >
-            A visual overview of our learning facilities, handwritten summary worksheets, and celebrations of student success.
+            A visual overview of our learning facilities, flyers, handwritten worksheets, and celebrations of student success.
           </motion.p>
         </div>
 
@@ -86,21 +88,36 @@ export default function GallerySection() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 key={item.id}
-                className="brand-card rounded-2xl overflow-hidden aspect-square relative group bg-white border border-border transition-all duration-300 cursor-pointer"
+                className="brand-card rounded-2xl overflow-hidden aspect-[3/4] sm:aspect-square relative group bg-white border border-border transition-all duration-300 cursor-pointer"
               >
-                {/* Photo Placeholder Background */}
+                {/* Photo Placeholder Background (Shown if image fails or loading) */}
                 <div className="absolute inset-0 bg-bg-soft flex flex-col items-center justify-center p-4">
                   <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:14px_14px]" />
-                  <Camera className="h-7 w-7 text-primary/40 mb-1.5 relative z-10" />
-                  <span className="text-[11px] font-extrabold text-primary relative z-10 uppercase tracking-wide">Photo Placeholder</span>
-                  <span className="text-[9px] text-muted relative z-10 mt-1 uppercase font-bold">({item.category})</span>
+                  <Camera className="h-7 w-7 text-primary/40 mb-1.5" />
+                  <span className="text-[11px] font-extrabold text-primary uppercase tracking-wide">Photo Placeholder</span>
+                  <span className="text-[9px] text-muted mt-1 uppercase font-bold">({item.category})</span>
                 </div>
+
+                {/* Real Image Render */}
+                {item.imageUrl && (
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                    priority={item.category === "flyers"}
+                  />
+                )}
+
+                {/* Dark Overlay gradient for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 z-1" />
 
                 {/* Overlay details - light theme premium look */}
                 <div className="absolute inset-x-0 bottom-0 bg-white/95 border-t border-border p-4 translate-y-[calc(100%-46px)] group-hover:translate-y-0 transition-transform duration-300 flex flex-col space-y-1.5 z-10 shadow-lg">
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-extrabold uppercase tracking-wider text-accent">
-                      {item.category}
+                      {item.category === "flyers" ? "Coaching Flyer" : item.category}
                     </span>
                     <Camera className="h-3.5 w-3.5 text-primary" />
                   </div>
@@ -124,3 +141,4 @@ export default function GallerySection() {
     </section>
   );
 }
+

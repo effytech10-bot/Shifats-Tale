@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Award, GraduationCap, Users, Send } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function TeacherSection() {
-  const whatsappLink = "https://wa.me/8801700000000?text=Hello%20Shifat%20Sir%2C%20I%20would%2520like%20to%20discuss%20admissions%20for%20my%20child%20/ myself.";
+  const [imgSrc, setImgSrc] = useState("/images/media__1781164765908_transparent.png");
+  const whatsappLink = "https://wa.me/8801879169446?text=Hello%20Shifat%20Sir%2C%20I%20would%20like%20to%20discuss%20admissions%20for%20myself%20/%20my%20child.";
 
   return (
     <section id="teacher" className="brand-section-wrapper bg-bg relative overflow-hidden">
@@ -29,20 +30,23 @@ export default function TeacherSection() {
               {/* Photo Grid backdrop */}
               <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:16px_16px]" />
 
-              <div className="flex-grow flex flex-col items-center justify-center space-y-4 py-8 relative z-10">
-                <div className="bg-bg p-6 rounded-full border border-border text-primary shadow-sm">
-                  <Users className="h-10 w-10 text-primary" />
-                </div>
-                <div className="text-center space-y-1">
-                  <span className="block font-extrabold text-primary text-base">Teacher Photo Placeholder</span>
-                  <span className="block text-xs text-muted font-semibold">Adnan Bin Wahid (Shifat Sir)</span>
+              <div className="flex-grow flex flex-col items-center justify-center py-4 relative z-10">
+                <div className="relative w-44 h-44 rounded-2xl overflow-hidden border border-border shadow-sm bg-bg-soft flex items-center justify-center">
+                  <Image
+                    src={imgSrc}
+                    alt="Md. Zia Uddin Azad Sifat"
+                    fill
+                    sizes="176px"
+                    className="object-cover object-top scale-105"
+                    onError={() => setImgSrc("/images/shifat_sir.png")}
+                  />
                 </div>
               </div>
 
               {/* Float Tag */}
               <div className="bg-bg-soft border border-border p-3 rounded-xl flex items-center justify-between shadow-sm relative z-10">
                 <div>
-                  <span className="block font-bold text-xs text-primary">Adnan Bin Wahid</span>
+                  <span className="block font-bold text-xs text-primary">Md. Zia Uddin Azad Sifat</span>
                   <span className="block text-[8px] text-muted font-bold uppercase tracking-wider leading-none">Shifat Sir</span>
                 </div>
                 <span className="bg-accent text-primary text-[9px] font-extrabold px-2.5 py-1 rounded">
@@ -71,7 +75,7 @@ export default function TeacherSection() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
               >
-                Adnan Bin Wahid (Shifat Sir)
+                Md. Zia Uddin Azad Sifat
               </motion.h3>
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
@@ -85,10 +89,12 @@ export default function TeacherSection() {
               </motion.p>
             </div>
 
+
             {/* Short Bio */}
             <p className="text-text text-sm sm:text-base leading-relaxed">
-              Hello, I am Adnan Bin Wahid (Shifat Sir). For over a decade, I have guided college and secondary science group students in Dhaka to master core Physics and Higher Mathematics. My goal is to make learning concept-driven and systematic, transforming complicated exam materials into easily solvable challenges.
+              Hello, I am Md. Zia Uddin Azad Sifat (Shifat Sir). As a B.Sc. Engineer from CUET, I specialize in simplifying complex Physics and Higher Mathematics concepts. Through structured classes, weekly exams, and concept-first teaching, I guide SSC and HSC science students to excel in both board exams and engineering admission preparation.
             </p>
+
 
             {/* Teaching Method Cards */}
             <div className="space-y-3">

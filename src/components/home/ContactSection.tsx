@@ -15,7 +15,7 @@ export default function ContactSection() {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const whatsappNumber = "8801700000000";
+  const whatsappNumber = "8801879169446";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -111,7 +111,7 @@ export default function ContactSection() {
             <div className="space-y-4">
               {/* Phone */}
               <a
-                href="tel:+8801700000000"
+                href="tel:+8801879169446"
                 className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent transition-all shadow-sm"
               >
                 <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0">
@@ -119,13 +119,13 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <span className="block text-[10px] text-muted font-bold uppercase tracking-wider">Phone Calls</span>
-                  <span className="block font-extrabold text-primary text-sm sm:text-base">+880 1700-000000</span>
+                  <span className="block font-extrabold text-primary text-sm sm:text-base">+880 1879-169446</span>
                 </div>
               </a>
 
               {/* WhatsApp */}
               <a
-                href="https://wa.me/8801700000000"
+                href="https://wa.me/8801879169446"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent transition-all shadow-sm"
@@ -180,7 +180,7 @@ export default function ContactSection() {
                 <div>
                   <span className="block text-[10px] text-muted font-bold uppercase tracking-wider">Office Address</span>
                   <span className="block font-extrabold text-primary text-xs leading-relaxed mt-0.5">
-                    2nd Floor, Green View Tower, Farmgate, Dhaka
+                    Sekandar & M.P Yusuf Building, 3rd Floor, next to Rangunia College, Rangunia, Chattogram
                   </span>
                 </div>
               </div>

@@ -8,7 +8,7 @@ export const faqs: FAQItem[] = [
   {
     id: "faq-1",
     question: "Where is the physical coaching center located?",
-    answer: "Our main offline facility is situated at a highly accessible spot in Dhaka (e.g., Farmgate / Lalmatia, near leading colleges). Exact floor details and directions can be found in the Location section below or sent via WhatsApp."
+    answer: "Our main offline facility is situated at a highly accessible spot in Rangunia, Chattogram (Sekandar & M.P Yusuf Building, 3rd Floor, next to Rangunia College). Exact floor details and directions can be found in the Location section below or sent via WhatsApp."
   },
   {
     id: "faq-2",

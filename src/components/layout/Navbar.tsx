@@ -90,7 +90,7 @@ export default function Navbar() {
           {/* Call to Action CTA */}
           <div className="hidden sm:flex items-center space-x-3">
             <a
-              href="tel:+8801700000000"
+              href="tel:+8801879169446"
               className="flex items-center space-x-1.5 px-4 py-2 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary text-xs sm:text-sm font-bold hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
             >
               <Phone className="h-4 w-4" />
@@ -143,7 +143,7 @@ export default function Navbar() {
           ))}
           <div className="pt-6 flex flex-col space-y-3.5">
             <a
-              href="tel:+8801700000000"
+              href="tel:+8801879169446"
               className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary font-bold hover:bg-primary hover:text-white transition-all duration-200"
             >
               <Phone className="h-4 w-4" />

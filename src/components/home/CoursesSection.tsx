@@ -6,7 +6,7 @@ import { BookOpen, Calendar, Clock, Send } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function CoursesSection() {
-  const whatsappNumber = "8801700000000";
+  const whatsappNumber = "8801879169446";
 
   return (
     <section id="courses" className="brand-section-wrapper bg-bg relative">

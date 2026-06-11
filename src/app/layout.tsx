@@ -14,18 +14,18 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Shifat's Tales — Academic & Admission Care",
-  description: "Premium personal coaching program specialized in Physics and Higher Mathematics. Mentored directly by Adnan Bin Wahid (Shifat Sir) in Farmgate, Dhaka. Focused on SSC, HSC board exams and engineering/varsity admissions.",
+  description: "Premium personal coaching program specialized in Physics and Higher Mathematics. Mentored directly by Md. Zia Uddin Azad Sifat (Shifat Sir) in Rangunia, Chattogram. Focused on SSC, HSC board exams and engineering/varsity admissions.",
   keywords: [
     "Shifat's Tales",
     "Shifat Sir Coaching",
-    "Adnan Bin Wahid",
-    "Physics Coaching Dhaka",
+    "Md. Zia Uddin Azad Sifat",
+    "Physics Coaching Chattogram",
     "Mathematics Admission Care",
     "BUET Admission Care",
-    "Notre Dame College Academic Care",
-    "Coaching center Farmgate"
+    "CUET Admission Care",
+    "Coaching center Rangunia"
   ],
-  authors: [{ name: "Adnan Bin Wahid" }],
+  authors: [{ name: "Md. Zia Uddin Azad Sifat" }],
   openGraph: {
     title: "Shifat's Tales — Academic & Admission Care",
     description: "Premium personal coaching program specialized in Physics and Higher Mathematics by Shifat Sir.",

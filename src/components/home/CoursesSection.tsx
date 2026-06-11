@@ -1,14 +1,206 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { courses } from "@/data/courses";
-import { BookOpen, Calendar, Clock, Send } from "lucide-react";
+import { Calendar, Clock, Send, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { siteInfo } from "@/data/site";
 
 export default function CoursesSection() {
   const whatsappNumber = siteInfo.whatsapp;
   const shouldReduceMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(1); // Default to Class 11/12 Academic Batch
+  const [windowWidth, setWindowWidth] = useState(1024);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % courses.length);
+  };
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev - 1 + courses.length) % courses.length);
+  };
+
+  const getCardPositionProps = (index: number) => {
+    let diff = index - activeIndex;
+    
+    // Handle wrap-around circular math
+    if (diff < -courses.length / 2) {
+      diff += courses.length;
+    } else if (diff > courses.length / 2) {
+      diff -= courses.length;
+    }
+    return diff;
+  };
+
+  // Determine offsets based on screen width
+  const isMobile = windowWidth < 640;
+  const isTablet = windowWidth >= 640 && windowWidth < 1024;
+
+  const getCardStyles = (diff: number) => {
+    if (isMobile) {
+      if (diff === 0) {
+        return {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 1,
+          opacity: 1,
+          zIndex: 30,
+          pointerEvents: "auto" as const,
+        };
+      }
+      if (diff === 1) {
+        return {
+          x: 20,
+          y: 8,
+          rotate: 2.5,
+          scale: 0.94,
+          opacity: 0.4,
+          zIndex: 20,
+          pointerEvents: "auto" as const,
+        };
+      }
+      if (diff === -1) {
+        return {
+          x: -20,
+          y: 8,
+          rotate: -2.5,
+          scale: 0.94,
+          opacity: 0.4,
+          zIndex: 20,
+          pointerEvents: "auto" as const,
+        };
+      }
+      return {
+        x: 0,
+        y: 16,
+        rotate: 0,
+        scale: 0.85,
+        opacity: 0,
+        zIndex: 0,
+        pointerEvents: "none" as const,
+      };
+    }
+
+    if (isTablet) {
+      if (diff === 0) {
+        return {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 1.02,
+          opacity: 1,
+          zIndex: 30,
+          pointerEvents: "auto" as const,
+        };
+      }
+      if (diff === 1) {
+        return {
+          x: 220,
+          y: 12,
+          rotate: 4,
+          scale: 0.92,
+          opacity: 0.75,
+          zIndex: 20,
+          pointerEvents: "auto" as const,
+        };
+      }
+      if (diff === -1) {
+        return {
+          x: -220,
+          y: 12,
+          rotate: -4,
+          scale: 0.92,
+          opacity: 0.75,
+          zIndex: 20,
+          pointerEvents: "auto" as const,
+        };
+      }
+      return {
+        x: 0,
+        y: 24,
+        rotate: 0,
+        scale: 0.8,
+        opacity: 0,
+        zIndex: 0,
+        pointerEvents: "none" as const,
+      };
+    }
+
+    // Desktop
+    if (diff === 0) {
+      return {
+        x: 0,
+        y: 0,
+        rotate: 0,
+        scale: 1.03,
+        opacity: 1,
+        zIndex: 30,
+        pointerEvents: "auto" as const,
+      };
+    }
+    if (diff === 1) {
+      return {
+        x: 320,
+        y: 16,
+        rotate: 5,
+        scale: 0.92,
+        opacity: 0.7,
+        zIndex: 20,
+        pointerEvents: "auto" as const,
+      };
+    }
+    if (diff === -1) {
+      return {
+        x: -320,
+        y: 16,
+        rotate: -5,
+        scale: 0.92,
+        opacity: 0.7,
+        zIndex: 20,
+        pointerEvents: "auto" as const,
+      };
+    }
+    if (diff === 2) {
+      return {
+        x: 600,
+        y: 32,
+        rotate: 9,
+        scale: 0.82,
+        opacity: 0.25,
+        zIndex: 10,
+        pointerEvents: "auto" as const,
+      };
+    }
+    if (diff === -2) {
+      return {
+        x: -600,
+        y: 32,
+        rotate: -9,
+        scale: 0.82,
+        opacity: 0.25,
+        zIndex: 10,
+        pointerEvents: "auto" as const,
+      };
+    }
+    return {
+      x: 0,
+      y: 40,
+      rotate: 0,
+      scale: 0.75,
+      opacity: 0,
+      zIndex: 0,
+      pointerEvents: "none" as const,
+    };
+  };
 
   const headerVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 15 },
@@ -19,35 +211,13 @@ export default function CoursesSection() {
     }
   };
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.08,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: shouldReduceMotion ? 0 : 25 
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        duration: 0.6, 
-        ease: "easeOut" as const
-      } 
-    },
-  };
-
   return (
-    <section id="courses" className="brand-section-wrapper bg-bg relative">
-      <div className="absolute top-1/3 right-0 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
+    <section id="courses" className="brand-section-wrapper bg-bg relative overflow-hidden">
+      {/* Background ambient glows */}
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-accent/4 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-primary/4 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="brand-container">
+      <div className="brand-container relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <motion.h2
@@ -79,15 +249,13 @@ export default function CoursesSection() {
           </motion.p>
         </div>
 
-        {/* Courses Grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {courses.map((course) => {
+        {/* 3D Fanning Deck Stack Carousel Track */}
+        <div className="relative w-full min-h-[550px] sm:min-h-[510px] flex items-center justify-center select-none overflow-visible py-4">
+          {courses.map((course, index) => {
+            const diff = getCardPositionProps(index);
+            const style = getCardStyles(diff);
+            const isActive = diff === 0;
+
             const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
               `Hello Sir, I want to inquire about the batch: ${course.title}. Please provide timing and seat availability.`
             )}`;
@@ -95,74 +263,152 @@ export default function CoursesSection() {
             return (
               <motion.div
                 key={course.id}
-                variants={cardVariants}
-                className="brand-card rounded-2xl overflow-hidden flex flex-col justify-between bg-white border border-border group hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-xl hover:border-accent/80 transition-all duration-300 ease-out"
+                initial={false}
+                animate={{
+                  x: style.x,
+                  y: style.y,
+                  rotate: style.rotate,
+                  scale: style.scale,
+                  opacity: style.opacity,
+                  zIndex: style.zIndex,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 150,
+                  damping: 20,
+                  mass: 0.8
+                }}
+                style={{
+                  pointerEvents: style.pointerEvents,
+                  position: "absolute",
+                  width: "100%",
+                  maxWidth: "390px",
+                }}
+                className="origin-bottom cursor-pointer animate-none"
+                onClick={!isActive ? () => setActiveIndex(index) : undefined}
               >
-                {/* Banner Placeholder */}
-                <div className="relative w-full h-44 bg-bg flex flex-col items-center justify-center border-b border-border p-4 overflow-hidden">
-                  <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:12px_12px]" />
-                  
-                  {/* Subtle hover background zoom */}
-                  <div className="absolute inset-0 bg-accent/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  <div className="bg-white p-3 rounded-full border border-border text-primary shadow-sm mb-2 relative z-10 group-hover:scale-110 transition-transform duration-300">
-                    <BookOpen className="h-6 w-6 text-accent animate-pulse" style={{ animationDuration: "3s" }} />
-                  </div>
-                  <span className="text-xs font-extrabold text-primary relative z-10 uppercase tracking-widest">{course.title} Banner</span>
-                  <span className="text-[10px] text-muted relative z-10 mt-0.5">Static Placeholder</span>
-                </div>
+                {/* Chamfered Card Border Wrapper */}
+                <div 
+                  style={{
+                    clipPath: "polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 0 100%)",
+                    backgroundColor: isActive ? "#FBB503" : "#E2E8F0",
+                  }}
+                  className={`w-full transition-all duration-300 p-[1.5px] ${
+                    isActive 
+                      ? "shadow-2xl scale-[1.03]" 
+                      : "shadow-md opacity-85 hover:opacity-100"
+                  }`}
+                >
+                  {/* Chamfered Card Content */}
+                  <div 
+                    style={{
+                      clipPath: "polygon(0 0, calc(100% - 31.5px) 0, 100% 31.5px, 100% 100%, 0 100%)",
+                      backgroundColor: isActive ? "#010E62" : "#FFFFFF",
+                    }}
+                    className="w-full flex flex-col justify-between p-6 sm:p-7 space-y-5 rounded-none"
+                  >
+                    {/* Header Row: Flyer Thumbnail & Title/Info */}
+                    <div className="flex items-start gap-4">
+                      {/* Square Flyer Thumbnail */}
+                      <div className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 border-2 ${
+                        isActive ? "border-[#FBB503]/40" : "border-border"
+                      }`}>
+                        <Image 
+                          src={course.bannerImage}
+                          alt={course.title}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
+                          priority={isActive}
+                        />
+                      </div>
 
-                {/* Course Details */}
-                <div className="p-6 flex-grow flex flex-col justify-between space-y-6">
-                  <div className="space-y-4">
-                    {/* Title & Target */}
-                    <div className="space-y-1">
-                      <span className="brand-badge brand-badge-blue group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                        {course.target}
-                      </span>
-                      <h3 className="text-lg sm:text-xl font-extrabold text-primary pt-1 group-hover:text-primary-dark transition-colors">
-                        {course.title}
-                      </h3>
-                      <p className="text-xs font-semibold text-muted italic">
-                        {course.subtitle}
-                      </p>
+                      {/* Text info and Target Badge */}
+                      <div className="flex-grow min-w-0 space-y-1.5">
+                        <span className={`inline-block text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded border ${
+                          isActive 
+                            ? 'bg-[#FBB503]/15 text-[#FBB503] border-[#FBB503]/25' 
+                            : 'bg-bg-soft text-primary border-border'
+                        }`}>
+                          {course.target}
+                        </span>
+                        <div>
+                          <h3 className={`text-sm sm:text-base font-extrabold tracking-tight leading-tight line-clamp-2 ${
+                            isActive ? '!text-white' : '!text-primary'
+                          }`}>
+                            {course.title}
+                          </h3>
+                          <p className={`text-[10px] font-bold italic mt-0.5 truncate ${
+                            isActive ? '!text-[#FBB503]' : '!text-muted'
+                          }`}>
+                            {course.subtitle}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-sm text-text leading-relaxed">
+                    {/* Course Description */}
+                    <p className={`text-xs sm:text-sm leading-relaxed line-clamp-3 ${
+                      isActive ? '!text-[#E7E0D2]' : '!text-text'
+                    }`}>
                       {course.description}
                     </p>
 
-                    {/* Class Details */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] text-primary-dark font-bold border-t border-border">
-                      <div className="flex items-center space-x-1.5">
-                        <Calendar className="h-3.5 w-3.5 text-accent shrink-0 group-hover:rotate-6 transition-transform" />
+                    {/* Schedule / Time details */}
+                    <div className={`grid grid-cols-2 gap-2 pt-3 text-[11px] font-bold border-t ${
+                      isActive ? 'border-white/10 !text-white/90' : 'border-border !text-primary-dark'
+                    }`}>
+                      <div>
+                        <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Schedule</span>
                         <span className="truncate">{course.schedule}</span>
                       </div>
-                      <div className="flex items-center space-x-1.5 justify-end">
-                        <Clock className="h-3.5 w-3.5 text-accent shrink-0 group-hover:scale-110 transition-transform" />
+                      <div className="text-right">
+                        <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Duration</span>
                         <span className="truncate">{course.duration}</span>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Actions */}
-                  <div className="pt-4">
-                    <a
-                      href={waLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="primary-btn w-full flex items-center justify-center space-x-2 text-center group-hover:shadow-md transition-all duration-300"
-                    >
-                      <Send className="h-4 w-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                      <span>Contact for Details</span>
-                    </a>
+                    {/* Contact CTA */}
+                    <div className="pt-1">
+                      <a
+                        href={waLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-full flex items-center justify-center space-x-2 text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 ${
+                          isActive 
+                            ? "bg-white !text-primary hover:bg-[#FBB503] hover:text-primary-dark shadow-md pointer-events-auto" 
+                            : "bg-bg-soft border border-border !text-primary hover:bg-border pointer-events-none"
+                        }`}
+                      >
+                        <Send className="h-3.5 w-3.5" />
+                        <span>{course.ctaText}</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </motion.div>
             );
           })}
-        </motion.div>
+        </div>
+
+        {/* Outline Square Controls Center-Bottom */}
+        <div className="flex justify-center space-x-4 mt-8">
+          <button 
+            onClick={handlePrev} 
+            className="w-12 h-12 border border-primary text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-colors cursor-pointer rounded-xl bg-white shadow-sm"
+            aria-label="Previous batch"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button 
+            onClick={handleNext} 
+            className="w-12 h-12 border border-primary text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-colors cursor-pointer rounded-xl bg-white shadow-sm"
+            aria-label="Next batch"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </div>
+
       </div>
     </section>
   );

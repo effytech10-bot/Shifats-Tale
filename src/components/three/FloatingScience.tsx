@@ -251,3 +251,201 @@ export function FloatingMath({
     </group>
   );
 }
+
+// 4. Mathematics: Möbius Strip (Twisted Mathematical Ribbon)
+export function FloatingMobius({
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+  scale = [1, 1, 1],
+  floatDelay = 0,
+  floatSpeed = 1.0,
+  floatIntensity = 0.15,
+}: ScienceProps) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    const t = state.clock.getElapsedTime() * floatSpeed + floatDelay;
+
+    // Slow floating translation
+    groupRef.current.position.y = position[1] + Math.sin(t * 0.85 + 1.2) * floatIntensity;
+
+    // Slow rotation / tumbling to showcase the twist
+    groupRef.current.rotation.x = rotation[0] + t * 0.15;
+    groupRef.current.rotation.y = rotation[1] + t * 0.22;
+    groupRef.current.rotation.z = rotation[2] + Math.cos(t * 0.3) * 0.06;
+  });
+
+  // Mathematically generate Möbius Strip geometry
+  const geom = React.useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    const vertices = [];
+    const indices = [];
+    const uSegments = 50;
+    const vSegments = 8;
+    
+    for (let j = 0; j <= vSegments; j++) {
+      const v = -0.12 + (j / vSegments) * 0.24; // width from -0.12 to 0.12
+      for (let i = 0; i <= uSegments; i++) {
+        const u = (i / uSegments) * Math.PI * 2;
+        const a = 0.35; // major radius
+        
+        // Parametric formulas for Möbius strip
+        const x = (a + v * Math.cos(u / 2)) * Math.cos(u);
+        const y = (a + v * Math.cos(u / 2)) * Math.sin(u);
+        const z = v * Math.sin(u / 2);
+        
+        vertices.push(x, y, z);
+      }
+    }
+    
+    for (let j = 0; j < vSegments; j++) {
+      for (let i = 0; i < uSegments; i++) {
+        const row1 = j * (uSegments + 1);
+        const row2 = (j + 1) * (uSegments + 1);
+        
+        const a = row1 + i;
+        const b = row1 + i + 1;
+        const c = row2 + i;
+        const d = row2 + i + 1;
+        
+        // Face 1 (front side)
+        indices.push(a, b, c);
+        indices.push(b, d, c);
+        
+        // Face 2 (back side for double-sided rendering support)
+        indices.push(c, b, a);
+        indices.push(c, d, b);
+      }
+    }
+    
+    g.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    g.setIndex(indices);
+    g.computeVertexNormals();
+    return g;
+  }, []);
+
+  return (
+    <group ref={groupRef} position={position} rotation={rotation} scale={scale}>
+      {/* Solid Navy twisted band */}
+      <mesh geometry={geom} castShadow receiveShadow>
+        <meshStandardMaterial 
+          color="#0B1B4D" 
+          roughness={0.25} 
+          metalness={0.3} 
+          side={THREE.DoubleSide} 
+        />
+      </mesh>
+      
+      {/* Wireframe Gold overlay band to emphasize mathematics */}
+      <mesh geometry={geom} scale={[1.01, 1.01, 1.01]}>
+        <meshStandardMaterial 
+          color="#FBB503" 
+          wireframe 
+          roughness={0.1} 
+          metalness={0.9} 
+          side={THREE.DoubleSide} 
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// 5. Physics: Light Prism Refraction (Spectrum)
+export function FloatingPrism({
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+  scale = [1, 1, 1],
+  floatDelay = 0,
+  floatSpeed = 1.0,
+  floatIntensity = 0.15,
+}: ScienceProps) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    const t = state.clock.getElapsedTime() * floatSpeed + floatDelay;
+
+    // Slow floating translation
+    groupRef.current.position.y = position[1] + Math.cos(t * 0.95 - 0.7) * floatIntensity;
+
+    // Slow tumbling rotation to capture light angles
+    groupRef.current.rotation.x = rotation[0] + Math.sin(t * 0.3) * 0.08;
+    groupRef.current.rotation.y = rotation[1] + t * 0.12;
+    groupRef.current.rotation.z = rotation[2] + Math.cos(t * 0.2) * 0.06;
+  });
+
+  return (
+    <group ref={groupRef} position={position} rotation={rotation} scale={scale}>
+      {/* Glass Triangular Prism (3 radial segments creates a triangle) */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.22, 0.22, 0.5, 3]} />
+        <meshStandardMaterial 
+          color="#E7E0D2" 
+          roughness={0.1} 
+          metalness={0.1} 
+          transparent 
+          opacity={0.5} 
+        />
+      </mesh>
+
+      {/* Wireframe border highlights for the prism */}
+      <mesh>
+        <cylinderGeometry args={[0.222, 0.222, 0.505, 3]} />
+        <meshStandardMaterial 
+          color="#E7E0D2" 
+          wireframe 
+          roughness={0.1}
+          metalness={0.8}
+        />
+      </mesh>
+
+      {/* Incoming White Light Ray */}
+      <group position={[-0.32, -0.15, 0]} rotation={[0, 0, Math.PI / 6]}>
+        <mesh castShadow>
+          <cylinderGeometry args={[0.008, 0.008, 0.38, 8]} />
+          <meshBasicMaterial color="#FFFFFF" />
+        </mesh>
+      </group>
+
+      {/* Exiting Spectrum Fan (Rainbow) */}
+      <group position={[0.1, 0, 0]}>
+        {/* Red Ray */}
+        <group position={[0.16, 0.04, 0]} rotation={[0, 0, -Math.PI / 12]}>
+          <mesh>
+            <cylinderGeometry args={[0.006, 0.006, 0.38, 8]} />
+            <meshBasicMaterial color="#FF3B30" />
+          </mesh>
+        </group>
+        {/* Yellow Ray */}
+        <group position={[0.16, 0.01, 0]} rotation={[0, 0, -Math.PI / 24]}>
+          <mesh>
+            <cylinderGeometry args={[0.006, 0.006, 0.38, 8]} />
+            <meshBasicMaterial color="#FFCC00" />
+          </mesh>
+        </group>
+        {/* Green Ray */}
+        <group position={[0.16, -0.02, 0]} rotation={[0, 0, 0]}>
+          <mesh>
+            <cylinderGeometry args={[0.006, 0.006, 0.38, 8]} />
+            <meshBasicMaterial color="#34C759" />
+          </mesh>
+        </group>
+        {/* Blue Ray */}
+        <group position={[0.16, -0.05, 0]} rotation={[0, 0, Math.PI / 24]}>
+          <mesh>
+            <cylinderGeometry args={[0.006, 0.006, 0.38, 8]} />
+            <meshBasicMaterial color="#007AFF" />
+          </mesh>
+        </group>
+        {/* Violet Ray */}
+        <group position={[0.16, -0.08, 0]} rotation={[0, 0, Math.PI / 12]}>
+          <mesh>
+            <cylinderGeometry args={[0.006, 0.006, 0.38, 8]} />
+            <meshBasicMaterial color="#AF52DE" />
+          </mesh>
+        </group>
+      </group>
+    </group>
+  );
+}

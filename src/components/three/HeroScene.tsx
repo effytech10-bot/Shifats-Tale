@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { FloatingAtom, FloatingMolecule, FloatingMath } from "./FloatingScience";
+import { FloatingAtom, FloatingMolecule, FloatingMath, FloatingMobius, FloatingPrism } from "./FloatingScience";
 import FloatingShapes from "./FloatingShapes";
 import * as THREE from "three";
 
@@ -136,14 +136,24 @@ export default function HeroScene() {
               floatIntensity={0.08 * intensity}
             />
 
-            {/* Physics: Secondary Orbital Atom Model (Bottom Left) */}
-            <FloatingAtom 
+            {/* Physics: Light Prism Refraction (Bottom Left) */}
+            <FloatingPrism 
               position={[-1.3, -0.65, 0.3]} 
-              rotation={[0.4, -0.2, 0.3]}
-              scale={[0.65, 0.65, 0.65]}
+              rotation={[0.1, -0.3, 0.2]}
+              scale={[0.7, 0.7, 0.7]}
               floatDelay={4.5}
               floatSpeed={0.7 * speed}
               floatIntensity={0.07 * intensity}
+            />
+
+            {/* Mathematics: Möbius Strip Ring (Middle Right) */}
+            <FloatingMobius 
+              position={[1.5, 0.0, -0.6]} 
+              rotation={[0.3, 0.5, -0.2]}
+              scale={[0.75, 0.75, 0.75]}
+              floatDelay={2.0}
+              floatSpeed={0.8 * speed}
+              floatIntensity={0.08 * intensity}
             />
 
             {/* Abstract gold/navy rings and boxes floating around */}

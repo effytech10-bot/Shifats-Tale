@@ -5,19 +5,11 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 export default function FloatingShapes() {
-  const shape1Ref = useRef<THREE.Mesh>(null);
   const shape2Ref = useRef<THREE.Mesh>(null);
   const shape3Ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-
-    if (shape1Ref.current) {
-      // Float around JSX y = 0.0 (Middle Right)
-      shape1Ref.current.position.y = Math.sin(t * 0.8) * 0.15 + 0.0;
-      shape1Ref.current.rotation.x = t * 0.2;
-      shape1Ref.current.rotation.y = t * 0.15;
-    }
 
     if (shape2Ref.current) {
       // Float around JSX y = 0.0 (Middle Left)
@@ -35,12 +27,6 @@ export default function FloatingShapes() {
 
   return (
     <group>
-      {/* Gold Torus Ring (Middle Right, Far Back) */}
-      <mesh ref={shape1Ref} position={[1.5, 0.0, -0.6]} castShadow>
-        <torusGeometry args={[0.22, 0.05, 16, 100]} />
-        <meshStandardMaterial color="#FBB503" roughness={0.15} metalness={0.9} />
-      </mesh>
-
       {/* Deep Navy Octahedron / Cone (Middle Left, Far Back) */}
       <mesh ref={shape2Ref} position={[-1.5, 0.0, -0.5]} castShadow>
         <octahedronGeometry args={[0.22, 0]} />

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { galleryItems } from "@/data/gallery";
-import Image from "next/image";
 import { Camera, ZoomIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -89,14 +88,13 @@ export default function GallerySection() {
                 key={item.id}
                 className="brand-card rounded-2xl overflow-hidden aspect-square relative group bg-white border border-border transition-all duration-300 cursor-pointer"
               >
-                {/* Image */}
-                <Image
-                  src={item.imageUrl}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-103"
-                  sizes="(max-w-768px) 100vw, 25vw"
-                />
+                {/* Photo Placeholder Background */}
+                <div className="absolute inset-0 bg-bg-soft flex flex-col items-center justify-center p-4">
+                  <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:14px_14px]" />
+                  <Camera className="h-7 w-7 text-primary/40 mb-1.5 relative z-10" />
+                  <span className="text-[11px] font-extrabold text-primary relative z-10 uppercase tracking-wide">Photo Placeholder</span>
+                  <span className="text-[9px] text-muted relative z-10 mt-1 uppercase font-bold">({item.category})</span>
+                </div>
 
                 {/* Overlay details - light theme premium look */}
                 <div className="absolute inset-x-0 bottom-0 bg-white/95 border-t border-border p-4 translate-y-[calc(100%-46px)] group-hover:translate-y-0 transition-transform duration-300 flex flex-col space-y-1.5 z-10 shadow-lg">
@@ -114,8 +112,8 @@ export default function GallerySection() {
                   </p>
                 </div>
 
-                {/* Tiny zoom indicator top-right */}
-                <div className="absolute top-4 right-4 p-2 rounded-lg bg-white/95 border border-border opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-sm">
+                {/* Zoom indicator top-right */}
+                <div className="absolute top-4 right-4 p-2 rounded-lg bg-white border border-border opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-sm">
                   <ZoomIn className="h-4 w-4 text-primary" />
                 </div>
               </motion.div>

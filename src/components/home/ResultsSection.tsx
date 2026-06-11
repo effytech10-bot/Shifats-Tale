@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { studentResults } from "@/data/results";
-import { GraduationCap, School } from "lucide-react";
+import { GraduationCap, School, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type CategoryFilter = "All" | "Engineering" | "University" | "Medical" | "Board";
@@ -55,7 +55,7 @@ export default function ResultsSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-text text-sm sm:text-base"
           >
-            Authentic highlights of ND/Holy Cross and leading college candidates who secured positions in BUET, Medicals, and Dhaka University under Sir's mentorship.
+            Real results ND/Holy Cross and leading college candidates secured in BUET, medical colleges, and Dhaka University batches.
           </motion.p>
         </div>
 
@@ -100,20 +100,26 @@ export default function ResultsSection() {
                     </span>
                   </div>
 
-                  {/* Student Details */}
-                  <div className="space-y-1">
-                    <h4 className="font-extrabold text-primary text-lg transition-colors">
-                      {result.name}
-                    </h4>
-                    <p className="text-xs text-text flex items-center space-x-1.5 font-semibold">
-                      <School className="h-3.5 w-3.5 text-muted shrink-0" />
-                      <span>{result.college}</span>
-                    </p>
+                  {/* Student Details with photo placeholder */}
+                  <div className="flex items-center space-x-3 pt-2">
+                    {/* Student Photo Placeholder */}
+                    <div className="w-12 h-12 bg-bg border border-border rounded-full flex items-center justify-center shrink-0 shadow-sm text-primary">
+                      <User className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-extrabold text-primary text-base leading-tight">
+                        {result.name}
+                      </h4>
+                      <p className="text-xs text-text flex items-center space-x-1.5 font-semibold mt-1">
+                        <School className="h-3.5 w-3.5 text-muted shrink-0" />
+                        <span className="truncate max-w-[150px]">{result.college}</span>
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {/* Achieved Rank Info Block */}
-                <div className="bg-bg-soft border border-border p-3.5 rounded-xl flex items-center space-x-2.5 mt-2">
+                <div className="bg-bg-soft border border-border p-3 rounded-xl flex items-center space-x-2.5 mt-2">
                   <div className="bg-accent/15 p-2 rounded-lg">
                     <GraduationCap className="h-5 w-5 text-primary" />
                   </div>

@@ -10,27 +10,27 @@ interface StatItem {
 
 const stats: StatItem[] = [
   {
-    number: "8+",
+    number: "10+",
     label: "Years Experience",
     description: "Teaching Physics & Mathematics",
     icon: <Award className="h-6 w-6 text-accent" />,
   },
   {
-    number: "1,500+",
-    label: "A+ in Board Exams",
+    number: "1,200+",
+    label: "Students Guided",
     description: "SSC and HSC Candidates",
     icon: <Users className="h-6 w-6 text-primary" />,
   },
   {
-    number: "400+",
-    label: "Varsity Merit Positions",
-    description: "BUET, Dhaka University, Medicals",
+    number: "40+",
+    label: "Successful Batches",
+    description: "Academic & Admission Care",
     icon: <GraduationCap className="h-6 w-6 text-primary-dark" />,
   },
   {
-    number: "1-on-1",
-    label: "Personal Care",
-    description: "Direct feedback & doubt clearing",
+    number: "Weekly",
+    label: "Exam System",
+    description: "Continuous progress evaluation",
     icon: <CheckCircle className="h-6 w-6 text-emerald-600" />,
   },
 ];

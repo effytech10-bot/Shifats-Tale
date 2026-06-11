@@ -12,70 +12,99 @@ export interface Course {
 
 export const courses: Course[] = [
   {
-    id: "hsc-academic",
-    title: "HSC Academic Program",
-    subtitle: "Physics & Higher Mathematics Special Care",
-    description: "Complete academic syllabus coverage according to board standards. Focused on building conceptual depth followed by rigorous problem-solving from textbook and test papers.",
-    target: "HSC 2026 & 2027 Batches",
-    schedule: "3 Days/Week (2 Hours per session)",
-    duration: "Full Academic Session",
-    features: [
-      "Conceptual discussion from basic to advanced levels",
-      "Chapter-wise hand notes and formula sheets",
-      "Regular weekly quizzes & monthly descriptive exams",
-      "Special doubt-clearing sessions before board exams",
-      "Continuous student performance tracking"
-    ],
-    whatsappText: "Hello Sir, I'm interested in the HSC Academic Program. Please let me know the details of the upcoming batches."
-  },
-  {
-    id: "varsity-admission",
-    title: "University & Engineering Admission Care",
-    subtitle: "Pre-Admission + Admission Preparation",
-    description: "Targeted course to crack admission tests of BUET, RUET, KUET, CUET, Dhaka University (A-Unit), and other public universities. Fast calculation tricks, conceptual shortcuts, and CQ solving strategies.",
-    target: "HSC Candidates (Admission Seekers)",
-    schedule: "4 Days/Week (Interactive lectures + Exams)",
-    duration: "6 Months Intensive Program",
-    features: [
-      "Rigorous discussion of BUET & DU past 20 years question banks",
-      "Advanced mathematical short-cuts and time-management tips",
-      "Weekly admission-style standard tests (both CQ & MCQ)",
-      "Exclusive PDF lectures and standard sheet booklet",
-      "Personalized mentorship and university choice guidelines"
-    ],
-    whatsappText: "Hello Sir, I want to inquire about the University & Engineering Admission Care batch."
-  },
-  {
     id: "ssc-academic",
-    title: "SSC Academic Care",
-    subtitle: "Science Group Core subjects",
-    description: "Laying a solid foundation in Physics, Chemistry, and General/Higher Mathematics. Bridging the gap between secondary conceptual basics and college prerequisites.",
-    target: "SSC 2026 & 2027 Science Students",
+    title: "SSC Academic Batch",
+    subtitle: "Science Core Program",
+    description: "Complete board syllabus coverage in Physics, Chemistry, and Mathematics. Laying the ground foundations for higher secondary studies.",
+    target: "Class 9 & 10 (Science Candidates)",
     schedule: "3 Days/Week (1.5 Hours per session)",
     duration: "Full Academic Session",
     features: [
-      "In-depth breakdown of textbook theories",
-      "Creative Question (CQ) and MCQ pattern mastery",
-      "Solving board question banks from top schools",
-      "Weekly assessment and parents update feedback",
-      "Interactive and visual learning techniques"
+      "Textbook theory breakdown",
+      "Creative question (CQ) mastery",
+      "Solve boards question bank",
+      "Weekly test updates to parents"
     ],
-    whatsappText: "Hello Sir, I want to register my child/myself for the SSC Academic Care batch. Please share the details."
+    whatsappText: "Hello Sir, I want to inquire about the SSC Academic Batch details."
   },
   {
-    id: "physics-special",
-    title: "Physics Masterclass",
-    subtitle: "Exclusive Concept Builder Program",
-    description: "A highly specialized program designed only for students who struggle with core physics concepts or wish to prepare ahead for national olympiads and premium university exams.",
-    target: "HSC Science Students",
+    id: "hsc-academic",
+    title: "HSC Academic Batch",
+    subtitle: "Physics & Math Special Care",
+    description: "Comprehensive lessons targeting board exams. In-depth concept visualization, extensive formula sheets, and chapter-wise quiz booklets.",
+    target: "HSC 2026 & 2027 Candidates",
+    schedule: "3 Days/Week (2 Hours per session)",
+    duration: "Full Academic Session",
+    features: [
+      "Core conceptual discussions",
+      "Formula roadmaps & hand notes",
+      "Weekly structured quizzes",
+      "Board paper solve masterclass"
+    ],
+    whatsappText: "Hello Sir, I want to inquire about the HSC Academic Batch schedules."
+  },
+  {
+    id: "admission-prep",
+    title: "Admission Preparation",
+    subtitle: "BUET, Varsity & Medical Care",
+    description: "Intensive training program to score top ranks in engineering universities, varsity A-unit, and medical admissions. Calculation tips and CQ shortcuts.",
+    target: "HSC Candidates (Admission Seekers)",
+    schedule: "4 Days/Week (Interactive lectures + Exams)",
+    duration: "6 Months Program",
+    features: [
+      "Past 20 years question banks solving",
+      "Mathematical shortcuts & speed tips",
+      "BUET standard diagnostic tests",
+      "University choice guidelines"
+    ],
+    whatsappText: "Hello Sir, I would like details about the Admission Preparation program."
+  },
+  {
+    id: "math-special",
+    title: "Math Special Batch",
+    subtitle: "Higher Mathematics Concept Care",
+    description: "Specialized class only for math candidates struggling with core calculus, coordinate geometry, or trigonometric equations.",
+    target: "SSC & HSC Science Candidates",
     schedule: "2 Days/Week (Extended sessions)",
     duration: "Ongoing Monthly Program",
     features: [
-      "Visualization of physical laws using simulations",
-      "Advanced calculus-based physics explanations",
-      "Solving challenging problems from Irodov and university standard materials",
-      "Specialized focus on electricity, magnetism, and magnetism"
+      "Algebraic & calculus logic breakdown",
+      "Step-by-step math proof analysis",
+      "Solve advanced workbook problems",
+      "Special test checklists"
     ],
-    whatsappText: "Hello Sir, I'm interested in joining the Physics Masterclass. Please let me know the schedule."
+    whatsappText: "Hello Sir, I want to inquire about the Math Special Batch slots."
+  },
+  {
+    id: "physics-special",
+    title: "Physics Special Batch",
+    subtitle: "Advanced Mechanics & Electromagnetism",
+    description: "Specialized conceptual program focusing on electricity, magnetism, waves, and mechanics equations using simulated visuals.",
+    target: "SSC & HSC Science Candidates",
+    schedule: "2 Days/Week (Extended sessions)",
+    duration: "Ongoing Monthly Program",
+    features: [
+      "Simulation-based conceptual lessons",
+      "Advanced calculus-based physics",
+      "Challenging engineering problems solve",
+      "Formula derivation notes"
+    ],
+    whatsappText: "Hello Sir, I want to inquire about the Physics Special Batch schedules."
+  },
+  {
+    id: "crash-course",
+    title: "Revision Crash Course",
+    subtitle: "Final Board Revision Program",
+    description: "Fast-track syllabus review program launched 3 months before board exams to solve test papers and identify weak concepts.",
+    target: "SSC & HSC Exam Candidates",
+    schedule: "4 Days/Week (Revision classes + Daily exams)",
+    duration: "3 Months Program",
+    features: [
+      "Express syllabus speed-run",
+      "High-yield board topics selection",
+      "Full board mock diagnostic tests",
+      "Last-minute prep worksheets"
+    ],
+    whatsappText: "Hello Sir, please let me know details of the upcoming Revision Crash Course."
   }
 ];

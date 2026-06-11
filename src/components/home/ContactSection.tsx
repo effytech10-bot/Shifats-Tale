@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, Mail, Send, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Send, MessageCircle, Clock } from "lucide-react";
+import { FacebookIcon, YoutubeIcon } from "@/components/ui/Icons";
 import { motion } from "framer-motion";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
-    name: "",
+    studentName: "",
+    studentClass: "",
+    interestedCourse: "ssc-academic",
     phone: "",
-    batch: "hsc-academic",
     message: "",
   });
 
@@ -25,23 +27,34 @@ export default function ContactSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Construct the WhatsApp message content based on form input
-    const batchName = 
-      formData.batch === "hsc-academic" ? "HSC Academic Program" :
-      formData.batch === "varsity-admission" ? "University & Engineering Admission Care" :
-      formData.batch === "ssc-academic" ? "SSC Academic Care" : "Physics Masterclass";
+    // Convert course id to friendly name
+    const coursesMap: Record<string, string> = {
+      "ssc-academic": "SSC Academic Batch",
+      "hsc-academic": "HSC Academic Batch",
+      "admission-prep": "Admission Preparation",
+      "math-special": "Math Special Batch",
+      "physics-special": "Physics Special Batch",
+      "crash-course": "Revision Crash Course",
+    };
 
-    const textMessage = `Hello Shifat Sir,\n\nMy name is *${formData.name}*.\nPhone: *${formData.phone}*.\nI want to inquire about the *${batchName}* batch.\n\n*Message:* ${formData.message}`;
+    const courseName = coursesMap[formData.interestedCourse] || formData.interestedCourse;
+
+    const textMessage = `Hello Shifat Sir,\n\n*Lead Form Submission*\n\nStudent Name: *${formData.studentName}*\nClass/Batch: *${formData.studentClass}*\nInterested Batch: *${courseName}*\nPhone Number: *${formData.phone}*\n\n*Message:* ${formData.message}`;
     
     const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(textMessage)}`;
     
     setSubmitted(true);
     
-    // Smooth delay before redirecting to WhatsApp
     setTimeout(() => {
       window.open(waUrl, "_blank");
       setSubmitted(false);
-      setFormData({ name: "", phone: "", batch: "hsc-academic", message: "" });
+      setFormData({
+        studentName: "",
+        studentClass: "",
+        interestedCourse: "ssc-academic",
+        phone: "",
+        message: "",
+      });
     }, 1500);
   };
 
@@ -77,69 +90,100 @@ export default function ContactSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-text text-sm sm:text-base"
           >
-            Fill up the short form below to compile an direct inquiry. Submitting will immediately open a chat with Shifat Sir on WhatsApp.
+            Fill out the short form below to compile an direct inquiry. Submitting will immediately open a chat with Shifat Sir on WhatsApp.
           </motion.p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
           
           {/* Quick info column */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-8 lg:pr-8">
-            <div className="space-y-6">
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-6 lg:pr-8">
+            <div className="space-y-4">
               <h3 className="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">
                 Direct Contact Channels
               </h3>
               <p className="text-text text-sm leading-relaxed">
-                If you prefer to call or email directly rather than fill out the form, feel free to use the details below. We reply to WhatsApp messages within 2-3 hours.
+                If you prefer to call, write, or visit the center directly rather than fill out the form, feel free to use the credentials below.
               </p>
             </div>
 
             {/* Icons list */}
-            <div className="space-y-5">
+            <div className="space-y-4">
+              {/* Phone */}
               <a
                 href="tel:+8801700000000"
-                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent hover:shadow-sm transition-all"
+                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent transition-all shadow-sm"
               >
                 <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0">
                   <Phone className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs text-muted font-bold uppercase tracking-wider">Phone Calls</span>
+                  <span className="block text-[10px] text-muted font-bold uppercase tracking-wider">Phone Calls</span>
                   <span className="block font-extrabold text-primary text-sm sm:text-base">+880 1700-000000</span>
                 </div>
               </a>
 
+              {/* WhatsApp */}
               <a
                 href="https://wa.me/8801700000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent hover:shadow-sm transition-all"
+                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent transition-all shadow-sm"
               >
                 <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0">
                   <MessageCircle className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs text-muted font-bold uppercase tracking-wider">WhatsApp Direct</span>
-                  <span className="block font-extrabold text-primary text-sm sm:text-base">Click to Chat Now</span>
+                  <span className="block text-[10px] text-muted font-bold uppercase tracking-wider">WhatsApp Chat</span>
+                  <span className="block font-extrabold text-primary text-sm sm:text-base">Chat with Sir</span>
                 </div>
               </a>
 
-              <a
-                href="mailto:info@shifatstales.com"
-                className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white hover:border-accent hover:shadow-sm transition-all"
-              >
+              {/* Social Pages */}
+              <div className="grid grid-cols-2 gap-4">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-3 p-3.5 rounded-xl border border-border bg-white hover:border-accent transition-all shadow-sm"
+                >
+                  <FacebookIcon className="h-4.5 w-4.5 text-primary" />
+                  <span className="text-xs font-bold text-primary-dark">Facebook</span>
+                </a>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-3 p-3.5 rounded-xl border border-border bg-white hover:border-accent transition-all shadow-sm"
+                >
+                  <YoutubeIcon className="h-4.5 w-4.5 text-primary" />
+                  <span className="text-xs font-bold text-primary-dark">YouTube</span>
+                </a>
+              </div>
+
+              {/* Office hours */}
+              <div className="flex items-center space-x-4 p-4 rounded-xl border border-border bg-white shadow-sm">
                 <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0">
-                  <Mail className="h-5 w-5" />
+                  <Clock className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs text-muted font-bold uppercase tracking-wider">Email Inquiry</span>
-                  <span className="block font-extrabold text-primary text-sm sm:text-base font-mono">info@shifatstales.com</span>
+                  <span className="block text-[10px] text-muted font-bold uppercase tracking-wider">Office Hours</span>
+                  <span className="block font-extrabold text-primary text-sm sm:text-base">Daily 4:00 PM - 9:00 PM</span>
                 </div>
-              </a>
-            </div>
+              </div>
 
-            <div className="text-xs text-muted leading-relaxed border-t border-border pt-6 font-medium">
-              * Note: For seat reservation, visiting the Farmgate center during schedule hours and completing offline enrollment confirmation is required.
+              {/* Address info */}
+              <div className="flex items-start space-x-4 p-4 rounded-xl border border-border bg-white shadow-sm">
+                <div className="bg-accent/15 p-2.5 rounded-lg text-primary shrink-0 mt-0.5">
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <div>
+                  <span className="block text-[10px] text-muted font-bold uppercase tracking-wider">Office Address</span>
+                  <span className="block font-extrabold text-primary text-xs leading-relaxed mt-0.5">
+                    2nd Floor, Green View Tower, Farmgate, Dhaka
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -147,24 +191,62 @@ export default function ContactSection() {
           <div className="lg:col-span-7 brand-card rounded-2xl p-6 sm:p-8 bg-white border border-border">
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
               
-              {/* Name field */}
+              {/* Student Name */}
               <div className="space-y-2">
-                <label htmlFor="name" className="block text-xs sm:text-sm font-bold text-primary-dark">
-                  Your Full Name / Parent's Name
+                <label htmlFor="studentName" className="block text-xs sm:text-sm font-bold text-primary-dark">
+                  Student Name
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
+                  id="studentName"
+                  name="studentName"
                   required
-                  placeholder="Enter name"
-                  value={formData.name}
+                  placeholder="Enter student's full name"
+                  value={formData.studentName}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-medium transition-all"
                 />
               </div>
 
-              {/* Phone Field */}
+              {/* Class */}
+              <div className="space-y-2">
+                <label htmlFor="studentClass" className="block text-xs sm:text-sm font-bold text-primary-dark">
+                  Class
+                </label>
+                <input
+                  type="text"
+                  id="studentClass"
+                  name="studentClass"
+                  required
+                  placeholder="e.g. Class 10 / HSC 2026"
+                  value={formData.studentClass}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-medium transition-all"
+                />
+              </div>
+
+              {/* Interested Course */}
+              <div className="space-y-2">
+                <label htmlFor="interestedCourse" className="block text-xs sm:text-sm font-bold text-primary-dark">
+                  Interested Course
+                </label>
+                <select
+                  id="interestedCourse"
+                  name="interestedCourse"
+                  value={formData.interestedCourse}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-semibold transition-all"
+                >
+                  <option value="ssc-academic">SSC Academic Batch</option>
+                  <option value="hsc-academic">HSC Academic Batch</option>
+                  <option value="admission-prep">Admission Preparation</option>
+                  <option value="math-special">Math Special Batch</option>
+                  <option value="physics-special">Physics Special Batch</option>
+                  <option value="crash-course">Revision Crash Course</option>
+                </select>
+              </div>
+
+              {/* Phone Number */}
               <div className="space-y-2">
                 <label htmlFor="phone" className="block text-xs sm:text-sm font-bold text-primary-dark">
                   Phone Number
@@ -181,29 +263,10 @@ export default function ContactSection() {
                 />
               </div>
 
-              {/* Batch selection */}
-              <div className="space-y-2">
-                <label htmlFor="batch" className="block text-xs sm:text-sm font-bold text-primary-dark">
-                  Target Program / Batch
-                </label>
-                <select
-                  id="batch"
-                  name="batch"
-                  value={formData.batch}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl bg-bg-soft border border-border focus:border-accent focus:bg-white focus:outline-none text-text text-sm font-semibold transition-all"
-                >
-                  <option value="hsc-academic">HSC Academic Program (Physics & Math)</option>
-                  <option value="varsity-admission">University & Engineering Admission Care</option>
-                  <option value="ssc-academic">SSC Academic Care (Science Core)</option>
-                  <option value="physics-special">Physics Masterclass (Concept Builder)</option>
-                </select>
-              </div>
-
-              {/* Message field */}
+              {/* Message */}
               <div className="space-y-2">
                 <label htmlFor="message" className="block text-xs sm:text-sm font-bold text-primary-dark">
-                  Message / Inquiries
+                  Message
                 </label>
                 <textarea
                   id="message"
@@ -221,17 +284,17 @@ export default function ContactSection() {
               <button
                 type="submit"
                 disabled={submitted}
-                className="primary-btn w-full flex items-center justify-center space-x-2 text-center disabled:opacity-75 disabled:cursor-not-allowed"
+                className="primary-btn w-full flex items-center justify-center space-x-2 text-center disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
               >
                 {submitted ? (
                   <>
                     <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    <span>Opening WhatsApp chat...</span>
+                    <span>Sending Query...</span>
                   </>
                 ) : (
                   <>
                     <Send className="h-4.5 w-4.5" />
-                    <span>Send Inquiry to Sir</span>
+                    <span>Send Query</span>
                   </>
                 )}
               </button>

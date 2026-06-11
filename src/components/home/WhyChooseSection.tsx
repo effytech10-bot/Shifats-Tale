@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Cpu, NotebookTabs, ShieldAlert, Award, Headphones, UserCheck } from "lucide-react";
+import { Cpu, NotebookTabs, ClipboardList, MessageCircle, UserCheck, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Benefit {
@@ -13,41 +13,41 @@ interface Benefit {
 
 const benefits: Benefit[] = [
   {
-    title: "Concept Visualization",
-    description: "Instead of raw formulas, we utilize interactive 3D simulations and graphing models to demonstrate concepts in Mechanics, Optics, and Calculus.",
-    icon: <Cpu className="h-6 w-6" />,
-    colorClass: "text-primary bg-bg border-border",
-  },
-  {
-    title: "Exclusive Hand Notes",
-    description: "Access curated handwritten summary notes, calculus roadmap sheets, and shortcut banks compiled directly by Shifat Sir, updated every session.",
-    icon: <NotebookTabs className="h-6 w-6" />,
-    colorClass: "text-primary bg-bg border-border",
-  },
-  {
-    title: "Small Capped Batches",
-    description: "Strict limit of 25-30 students per offline batch. This guarantees that Sir can personally guide and answer queries from every attendee.",
+    title: "Personal Guidance",
+    description: "Direct mentorship from Shifat Sir, including target goal planning, parent alignment feedback, and personalized tracking.",
     icon: <UserCheck className="h-6 w-6" />,
     colorClass: "text-primary bg-bg border-border",
   },
   {
-    title: "Rigorous Evaluation",
-    description: "Weekly structured quiz sheets, board CQ mock tests, and intensive admission-level diagnostics with individual error analysis sheets.",
-    icon: <Award className="h-6 w-6" />,
+    title: "Small Batch Environment",
+    description: "Intentionally capped intake (max 30 candidates per batch) to make sure no student sits silently with unresolved doubts.",
+    icon: <Users className="h-6 w-6" />,
     colorClass: "text-primary bg-bg border-border",
   },
   {
-    title: "Dedicated Doubt Resolvers",
-    description: "Access to designated Telegram solving groups where students can submit queries, answered promptly with handwritten solutions.",
-    icon: <Headphones className="h-6 w-6" />,
+    title: "Weekly Exams",
+    description: "Rigorous weekly quizzes, board-standard creative questions, and mock evaluations to build test-taking confidence.",
+    icon: <ClipboardList className="h-6 w-6" />,
     colorClass: "text-primary bg-bg border-border",
   },
   {
-    title: "Direct Parents Support",
-    description: "Direct tracking, performance updates, and scheduled counseling sessions to align students' academic schedules with their goals.",
-    icon: <ShieldAlert className="h-6 w-6" />,
+    title: "Lecture Sheets",
+    description: "Curated worksheets, handwritten concept books, and mathematical shortcut checklists compiled directly by Shifat Sir.",
+    icon: <NotebookTabs className="h-6 w-6" />,
     colorClass: "text-primary bg-bg border-border",
   },
+  {
+    title: "Doubt Solving",
+    description: "Designated solving classes and active online Q&A groups to answer every individual student query step-by-step.",
+    icon: <MessageCircle className="h-6 w-6" />,
+    colorClass: "text-primary bg-bg border-border",
+  },
+  {
+    title: "Concept-Based Teaching",
+    description: "We focus on the underlying physical laws and mathematical proofs, helping students visualize concepts instead of memorizing.",
+    icon: <Cpu className="h-6 w-6" />,
+    colorClass: "text-primary bg-bg border-border",
+  }
 ];
 
 export default function WhyChooseSection() {

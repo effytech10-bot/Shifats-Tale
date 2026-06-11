@@ -56,7 +56,7 @@ export default function LocationSection() {
                 </div>
                 <div>
                   <h4 className="font-extrabold text-primary text-base sm:text-lg">Physical Venue</h4>
-                  <p className="text-sm text-text mt-1.5 leading-relaxed">
+                  <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
                     2nd Floor, Green View Tower, Near Farmgate Footbridge, Farmgate, Dhaka-1215, Bangladesh
                   </p>
                 </div>
@@ -69,8 +69,8 @@ export default function LocationSection() {
                 </div>
                 <div>
                   <h4 className="font-extrabold text-primary text-base sm:text-lg">How to reach</h4>
-                  <p className="text-sm text-text mt-1.5 leading-relaxed">
-                    Conveniently located 2 minutes walking distance from Farmgate Metrorail Station and the main bus counter. NDC, Holy Cross and Dhaka College buses pass nearby.
+                  <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
+                    Conveniently located 2 minutes walking distance from Farmgate Metrorail Station and the main NDC bus counter. Notre Dame College and Holy Cross buses pass nearby.
                   </p>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export default function LocationSection() {
                 </div>
                 <div>
                   <h4 className="font-extrabold text-primary text-base sm:text-lg">Security & Amenities</h4>
-                  <p className="text-sm text-text mt-1.5 leading-relaxed">
+                  <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
                     CCTV monitored secure campus. Filtered drinking water, clean separate washrooms, and high-speed projector visual lecture screens.
                   </p>
                 </div>
@@ -90,14 +90,20 @@ export default function LocationSection() {
             </div>
 
             {/* Directions CTA */}
-            <div className="pt-6 border-t border-border">
+            <div className="pt-6 border-t border-border flex flex-col sm:flex-row gap-3">
               <a
                 href={directionUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="primary-btn w-full flex items-center justify-center space-x-2 text-center"
+                className="primary-btn w-full flex items-center justify-center text-center font-bold"
               >
-                <span>Get Google Maps Direction</span>
+                <span>Get Direction</span>
+              </a>
+              <a
+                href="tel:+8801700000000"
+                className="secondary-btn w-full flex items-center justify-center text-center font-bold"
+              >
+                <span>Call Now</span>
               </a>
             </div>
           </div>
@@ -111,6 +117,10 @@ export default function LocationSection() {
               allowFullScreen={false}
               loading="lazy"
             />
+            {/* Map Placeholder Tag */}
+            <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-white border border-border rounded-lg shadow-sm text-[10px] text-primary font-bold uppercase tracking-wider">
+              Google Map Placeholder
+            </div>
           </div>
         </div>
       </div>

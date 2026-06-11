@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { youtubeClasses, YouTubeClass } from "@/data/youtubeClasses";
-import { Play, Clock, Eye, X, ChevronRight } from "lucide-react";
+import { Play, Clock, Eye, X } from "lucide-react";
 import { YoutubeIcon } from "@/components/ui/Icons";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -56,37 +56,40 @@ export default function YouTubeClassesSection() {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               className="brand-card rounded-2xl overflow-hidden flex flex-col group bg-white border border-border"
             >
-              {/* Fake Video Thumbnail Area */}
+              {/* YouTube Thumbnail Placeholder */}
               <div
                 onClick={() => setActiveVideo(v)}
-                className="relative w-full aspect-video bg-primary-dark flex items-center justify-center cursor-pointer overflow-hidden border-b border-border"
+                className="relative w-full aspect-video bg-bg flex flex-col items-center justify-center cursor-pointer overflow-hidden border-b border-border p-4"
               >
-                {/* Visual texture using gradients */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-primary-dark via-primary to-primary-dark/85" />
-                <div className="absolute inset-0 bg-gradient-to-t from-accent/10 to-transparent pointer-events-none" />
-
+                <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:16px_16px]" />
+                
                 {/* Subject Name Tag */}
-                <span className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-md bg-white/95 border border-border text-primary text-[10px] font-bold uppercase tracking-wider">
+                <span className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-md bg-white border border-border text-primary text-[10px] font-bold uppercase tracking-wider">
                   {v.topic}
                 </span>
 
-                {/* Big Red/Amber YouTube Play Button */}
-                <div className="relative z-10 w-16 h-16 rounded-full bg-white/95 border border-border flex items-center justify-center transform group-hover:scale-105 group-hover:bg-accent group-hover:text-primary text-accent transition-all duration-300 shadow-lg">
+                {/* Big YouTube Play Button */}
+                <div className="relative z-10 w-16 h-16 rounded-full bg-white border border-border flex items-center justify-center transform group-hover:scale-105 group-hover:bg-accent group-hover:text-primary text-accent transition-all duration-300 shadow-md">
                   <Play className="h-6 w-6 fill-current ml-1" />
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white z-10">
-                  <span className="flex items-center space-x-1 font-bold bg-primary/75 px-2 py-0.5 rounded border border-white/5 backdrop-blur-sm">
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-primary z-10">
+                  <span className="flex items-center space-x-1 font-bold bg-white/95 px-2 py-0.5 rounded border border-border shadow-sm">
                     <Clock className="h-3.5 w-3.5" />
                     <span>{v.duration}</span>
                   </span>
                   {v.views && (
-                    <span className="flex items-center space-x-1 font-bold bg-primary/75 px-2 py-0.5 rounded border border-white/5 backdrop-blur-sm">
+                    <span className="flex items-center space-x-1 font-bold bg-white/95 px-2 py-0.5 rounded border border-border shadow-sm">
                       <Eye className="h-3.5 w-3.5" />
                       <span>{v.views}</span>
                     </span>
                   )}
                 </div>
+
+                {/* Center Title overlay */}
+                <span className="absolute text-[10px] font-bold text-muted bottom-12 uppercase tracking-widest">
+                  YouTube Thumbnail Placeholder
+                </span>
               </div>
 
               {/* Video Title Details */}
@@ -100,10 +103,9 @@ export default function YouTubeClassesSection() {
                 <div className="pt-2 flex items-center justify-between">
                   <button
                     onClick={() => setActiveVideo(v)}
-                    className="text-xs font-bold text-primary hover:text-accent flex items-center space-x-1"
+                    className="primary-btn px-4 py-2 rounded-xl text-xs font-bold"
                   >
-                    <span>Play Lecture Now</span>
-                    <ChevronRight className="h-3.5 w-3.5 text-accent" />
+                    <span>Watch Class</span>
                   </button>
                 </div>
               </div>
@@ -117,10 +119,10 @@ export default function YouTubeClassesSection() {
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="primary-btn inline-flex items-center justify-center space-x-2 w-full sm:w-auto text-center"
+            className="secondary-btn inline-flex items-center justify-center space-x-2 w-full sm:w-auto text-center"
           >
             <YoutubeIcon className="h-5 w-5" />
-            <span>Subscribe to YouTube Channel</span>
+            <span>Watch More on YouTube</span>
           </a>
         </div>
       </div>
@@ -177,7 +179,7 @@ export default function YouTubeClassesSection() {
                 <a
                   href={`https://wa.me/8801700000000?text=Hello%20Sir%2C%20I%20just%20watched%20your%20class%20on%20${encodeURIComponent(
                     activeVideo.title
-                  )}.%20Please%20let%2520me%20know%20how%20to%20register.`}
+                  )}.%20Please%2520let%20me%20know%20how%20to%20register.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="primary-btn w-full sm:w-auto text-center"

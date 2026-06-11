@@ -30,9 +30,9 @@ export default function Home() {
         <ResultsSection />
         <YouTubeClassesSection />
         <TestimonialsSection />
+        <LocationSection />
         <GallerySection />
         <FAQSection />
-        <LocationSection />
         <ContactSection />
       </main>
 

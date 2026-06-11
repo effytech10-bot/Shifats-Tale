@@ -14,12 +14,12 @@ interface NavLink {
 const navLinks: NavLink[] = [
   { label: "Home", href: "#home" },
   { label: "Courses", href: "#courses" },
-  { label: "Why Us", href: "#why-choose" },
-  { label: "Meet Sir", href: "#teacher" },
   { label: "Results", href: "#results" },
   { label: "Free Classes", href: "#youtube-classes" },
-  { label: "Reviews", href: "#testimonials" },
-  { label: "FAQs", href: "#faq" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Location", href: "#location" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -102,7 +102,7 @@ export default function Navbar() {
               className="primary-btn flex items-center space-x-1.5 px-4.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-accent/25 transition-all duration-300"
             >
               <MessageSquare className="h-4 w-4" />
-              <span>Inquire Batch</span>
+              <span>Contact Sir</span>
             </a>
           </div>
 
@@ -155,7 +155,7 @@ export default function Navbar() {
               className="primary-btn flex items-center justify-center space-x-2 py-3 rounded-xl font-bold shadow-lg shadow-accent/15"
             >
               <MessageSquare className="h-4 w-4" />
-              <span>Message Sir</span>
+              <span>Contact Sir</span>
             </a>
           </div>
         </div>

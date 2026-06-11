@@ -68,19 +68,29 @@ export default function Footer() {
             {[
               { label: "Home Program", href: "#home" },
               { label: "Offered Courses", href: "#courses" },
-              { label: "Why Choose Sir", href: "#why-choose" },
               { label: "Meet Shifat Sir", href: "#teacher" },
               { label: "Success Results", href: "#results" },
               { label: "Free Video Lectures", href: "#youtube-classes" },
+              { label: "Student Login", href: "#login", isPortal: true },
+              { label: "Admin Login", href: "#admin-login", isPortal: true },
             ].map((link) => (
               <li key={link.label}>
-                <a
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  className="text-sm text-slate-300 hover:text-accent transition-colors duration-200"
-                >
-                  {link.label}
-                </a>
+                {link.isPortal ? (
+                  <Link
+                    href={link.href}
+                    className="text-sm text-slate-300 hover:text-accent transition-colors duration-200 font-semibold"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleLinkClick(e, link.href)}
+                    className="text-sm text-slate-300 hover:text-accent transition-colors duration-200"
+                  >
+                    {link.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>

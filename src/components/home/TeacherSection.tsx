@@ -24,27 +24,28 @@ export default function TeacherSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="relative w-full max-w-[340px] sm:max-w-[380px] aspect-square rounded-2xl overflow-hidden border border-border glow-accent-gold group bg-white shadow-sm"
+              className="relative w-full max-w-[340px] sm:max-w-[380px] aspect-[4/5] rounded-2xl overflow-hidden border border-border group bg-white shadow-sm flex flex-col justify-between p-6"
             >
-              {/* Soft overlay on hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/65 via-transparent to-transparent opacity-70 z-10" />
+              {/* Photo Grid backdrop */}
+              <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:16px_16px]" />
 
-              <Image
-                src="/images/shifat_sir.png"
-                alt="Adnan Bin Wahid - Shifat Sir"
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-103"
-                sizes="(max-w-768px) 100vw, 380px"
-                priority
-              />
+              <div className="flex-grow flex flex-col items-center justify-center space-y-4 py-8 relative z-10">
+                <div className="bg-bg p-6 rounded-full border border-border text-primary shadow-sm">
+                  <Users className="h-10 w-10 text-primary" />
+                </div>
+                <div className="text-center space-y-1">
+                  <span className="block font-extrabold text-primary text-base">Teacher Photo Placeholder</span>
+                  <span className="block text-xs text-muted font-semibold">Adnan Bin Wahid (Shifat Sir)</span>
+                </div>
+              </div>
 
               {/* Float Tag */}
-              <div className="absolute bottom-4 left-4 right-4 z-20 bg-white/95 backdrop-blur-md p-3.5 rounded-xl border border-border flex items-center justify-between shadow-md">
+              <div className="bg-bg-soft border border-border p-3 rounded-xl flex items-center justify-between shadow-sm relative z-10">
                 <div>
-                  <span className="block font-bold text-sm text-primary">Adnan Bin Wahid</span>
-                  <span className="block text-[10px] text-muted font-bold uppercase tracking-wider leading-none">Shifat Sir</span>
+                  <span className="block font-bold text-xs text-primary">Adnan Bin Wahid</span>
+                  <span className="block text-[8px] text-muted font-bold uppercase tracking-wider leading-none">Shifat Sir</span>
                 </div>
-                <span className="bg-accent text-primary text-[10px] font-extrabold px-2 py-1 rounded">
+                <span className="bg-accent text-primary text-[9px] font-extrabold px-2.5 py-1 rounded">
                   Lead Mentor
                 </span>
               </div>
@@ -61,7 +62,7 @@ export default function TeacherSection() {
                 transition={{ duration: 0.5 }}
                 className="text-xs font-bold text-accent tracking-widest uppercase"
               >
-                Meet the Mentor
+                Meet Your Teacher
               </motion.h2>
               <motion.h3
                 initial={{ opacity: 0, y: 15 }}
@@ -84,32 +85,32 @@ export default function TeacherSection() {
               </motion.p>
             </div>
 
-            {/* Teaching Credentials List */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-start space-x-2.5">
-                <Award className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                <div>
-                  <span className="block font-bold text-sm text-primary">8+ Years</span>
-                  <span className="text-xs text-muted font-medium">Coaching Experience</span>
-                </div>
-              </div>
-              <div className="flex items-start space-x-2.5">
-                <Users className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                <div>
-                  <span className="block font-bold text-sm text-primary">1,500+ Students</span>
-                  <span className="text-xs text-muted font-medium">Mentored Personally</span>
-                </div>
-              </div>
-            </div>
+            {/* Short Bio */}
+            <p className="text-text text-sm sm:text-base leading-relaxed">
+              Hello, I am Adnan Bin Wahid (Shifat Sir). For over a decade, I have guided college and secondary science group students in Dhaka to master core Physics and Higher Mathematics. My goal is to make learning concept-driven and systematic, transforming complicated exam materials into easily solvable challenges.
+            </p>
 
-            {/* Personal Statement / Letter */}
-            <div className="space-y-4 text-text text-sm sm:text-base leading-relaxed border-l-2 border-accent pl-4 py-1 italic">
-              <p>
-                "At Shifat's Tales, I don't believe in rote memorization. Physics and Mathematics are not just sets of formulas to copy down; they are stories of how the world functions. When you understand the logic behind a river-boat vector math or a mechanics collision problem, you don't need to memorize anything."
-              </p>
-              <p>
-                "Every single student gets my personal focus. We keep class batches intentionally small so that no one sits silently with an unsolved doubt. Whether you are aiming to pass your board exams with a solid A+ or preparing to score a top rank in the BUET admission tests, I am here to walk that path with you."
-              </p>
+            {/* Teaching Method Cards */}
+            <div className="space-y-3">
+              <span className="block text-xs font-bold text-primary-dark uppercase tracking-wider">
+                Our Teaching Methodology:
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { title: "Concept-First Learning", desc: "Prioritizing complete visualization of scientific laws before solving formulas." },
+                  { title: "Chapter-Wise Problem Solving", desc: "Systematic mastery of textbook exercises and math shortcuts chapter by chapter." },
+                  { title: "Board Question Practice", desc: "Intensive drills using past test banks and creative question templates." },
+                  { title: "Weak Student Support", desc: "Tailored doubt resolution slots and parent sync reports for student accountability." }
+                ].map((method, i) => (
+                  <div
+                    key={i}
+                    className="brand-card p-4 bg-white border border-border rounded-xl space-y-1.5 shadow-sm hover:border-accent transition-colors duration-200"
+                  >
+                    <span className="block font-extrabold text-primary text-sm">{method.title}</span>
+                    <span className="block text-xs text-muted leading-relaxed font-semibold">{method.desc}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Call to Action */}
@@ -121,13 +122,7 @@ export default function TeacherSection() {
                 className="primary-btn flex items-center justify-center space-x-2 w-full sm:w-auto text-center"
               >
                 <Send className="h-4 w-4" />
-                <span>Discuss Admission with Sir</span>
-              </a>
-              <a
-                href="tel:+8801700000000"
-                className="secondary-btn flex items-center justify-center space-x-2 w-full sm:w-auto"
-              >
-                <span>Call Directly</span>
+                <span>Contact Sir</span>
               </a>
             </div>
 

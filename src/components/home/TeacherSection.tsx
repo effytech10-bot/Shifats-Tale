@@ -62,43 +62,40 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Teacher Image/Badge Column */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center">
-            {/* Transparent 3D Canvas + Image wrapper */}
-            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-[1/1.2] flex items-end justify-center rounded-2xl overflow-hidden z-10">
-              {/* 3D Scene Layer (only on large displays for best performance) */}
-              <div className="absolute inset-0 z-0 hidden md:block w-full h-full pointer-events-none">
-                <HeroScene />
-              </div>
-
-              {/* Bottom shadow / fade transition to blend crop edge into cream bg */}
-              <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-bg via-bg/80 to-transparent z-10 pointer-events-none" />
-              
-              {/* Radial shadows & ambient gold/blue glows behind photo for perfect 3D integration */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4/5 h-1/4 bg-primary/15 rounded-full blur-2xl z-0 pointer-events-none" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-accent/8 rounded-full blur-[80px] z-0 pointer-events-none" />
-
-              {/* Teacher photo with filter drop-shadow to pop out */}
-              <motion.div
-                id="teacher-section-photo"
-                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                animate={{ 
-                  opacity: isTeacherFlying ? 0 : 1,
-                  scale: 1,
-                  y: 0
-                }}
-                transition={{ duration: 0.6 }}
-                className="relative w-full h-full flex items-end justify-center z-10 select-none pointer-events-auto transition-opacity duration-200"
-              >
-                <Image
-                  src="/images/sir_photo_clean.png"
-                  alt={siteInfo.teacherName}
-                  fill
-                  sizes="(max-width: 768px) 280px, 340px"
-                  className="object-contain object-bottom filter drop-shadow-[0_16px_32px_rgba(1,14,98,0.22)]"
-                  priority
-                />
-              </motion.div>
+          <div className="lg:col-span-5 w-full flex flex-col items-center justify-center relative min-h-[450px] sm:min-h-[550px] z-10">
+            {/* 3D Scene Layer (only on large displays for best performance) - full size background */}
+            <div className="absolute inset-0 z-0 hidden md:block w-full h-full pointer-events-none">
+              <HeroScene />
             </div>
+
+            {/* Centered Teacher Portrait container (no overflow-hidden to allow shadows to bleed) */}
+            <motion.div
+              id="teacher-section-photo"
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ 
+                opacity: isTeacherFlying ? 0 : 1,
+                scale: 1,
+                y: 0
+              }}
+              transition={{ duration: 0.6 }}
+              className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-[1/1.2] flex items-end justify-center z-10 select-none pointer-events-auto transition-opacity duration-200"
+            >
+              {/* Radial shadows & ambient gold/blue glows behind photo for realistic 3D shadow integration */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%] h-[20%] bg-primary-dark/25 rounded-full blur-xl z-0 pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-accent/6 rounded-full blur-[80px] z-0 pointer-events-none" />
+
+              {/* Gradient fade overlay to smoothly dissolve cropped bottom edge into cream background */}
+              <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#FFF8E6] via-[#FFF8E6]/85 to-transparent z-10 pointer-events-none" />
+
+              <Image
+                src="/images/sir_photo_clean.png"
+                alt={siteInfo.teacherName}
+                fill
+                sizes="(max-width: 768px) 280px, 340px"
+                className="object-contain object-bottom filter drop-shadow-[0_16px_32px_rgba(1,14,98,0.22)] z-10"
+                priority
+              />
+            </motion.div>
 
             {/* Compact Designation Tag under portrait */}
             <motion.div
@@ -106,7 +103,7 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="mt-5 z-20 text-center w-full max-w-[280px] sm:max-w-[340px] bg-white border border-border p-3.5 rounded-xl shadow-sm hover:border-accent/30 hover:shadow-md transition-all duration-300"
+              className="mt-6 z-20 text-center w-full max-w-[280px] sm:max-w-[340px] bg-white border border-border p-3.5 rounded-xl shadow-sm hover:border-accent/30 hover:shadow-md transition-all duration-300"
             >
               <span className="block text-accent font-extrabold text-[10px] sm:text-xs uppercase tracking-widest">
                 Instructor & CEO

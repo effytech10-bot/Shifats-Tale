@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence, animate } from "framer-motion";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/layout/Navbar";
+
+// Dynamically import the 3D scene with SSR disabled for optimal bundle performance
+const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-transparent" />,
+});
 import HeroSection from "@/components/home/HeroSection";
 import TrustStats from "@/components/home/TrustStats";
 import CoursesSection from "@/components/home/CoursesSection";
@@ -30,8 +37,8 @@ export default function Home() {
   } | null>(null);
 
   const handleTeacherPhotoClick = () => {
-    const heroEl = document.getElementById("hero-section-photo");
-    const teacherEl = document.getElementById("teacher-section-photo");
+    const heroEl = document.getElementById("hero-teacher-block");
+    const teacherEl = document.getElementById("teacher-instructor-block");
     const teacherSection = document.getElementById("teacher");
 
     if (heroEl && teacherEl && teacherSection) {
@@ -132,7 +139,7 @@ export default function Home() {
               rotateY: [0, 45, -25, 0], // Gorgeous 3D rotations during flight
               rotateX: [0, 15, -10, 0],
               rotateZ: [0, -12, 6, 0],
-              scale: [1, 1.10, 0.95, 1], // Grows slightly on takeoff, lands firmly
+              scale: [1, 1.03, 0.99, 1], // Subtle scaling for the entire block
             }}
             exit={{ opacity: 0 }}
             transition={{
@@ -150,25 +157,54 @@ export default function Home() {
               backfaceVisibility: "hidden",
             }}
           >
-            <div className="w-full h-full relative" style={{ perspective: 1000 }}>
-              {/* Premium gold glow trail following the flight */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{
-                  opacity: [0, 0.6, 0.6, 0],
-                  scale: [0.5, 1.25, 1.1, 0.5],
-                }}
-                transition={{
-                  duration: 1.2,
-                  ease: [0.25, 1, 0.5, 1],
-                }}
-                className="absolute inset-0 bg-accent/20 rounded-full blur-3xl -z-10"
-              />
-              <img
-                src="/images/sir_photo_clean.png"
-                alt=""
-                className="w-full h-full object-contain object-bottom filter drop-shadow-[0_20px_40px_rgba(1,14,98,0.25)]"
-              />
+            <div className="w-full h-full flex flex-col items-center justify-center relative bg-transparent" style={{ perspective: 1000 }}>
+              {/* 3D Scene Layer rendering during flight */}
+              <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
+                <HeroScene />
+              </div>
+
+              {/* Centered Teacher Portrait container */}
+              <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-[1/1.2] flex items-end justify-center z-10 select-none">
+                {/* Radial shadows & glows */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%] h-[20%] bg-primary-dark/25 rounded-full blur-xl z-0 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-accent/6 rounded-full blur-[80px] z-0 pointer-events-none" />
+
+                {/* Premium gold glow trail following the flight */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{
+                    opacity: [0, 0.6, 0.6, 0],
+                    scale: [0.5, 1.25, 1.1, 0.5],
+                  }}
+                  transition={{
+                    duration: 1.2,
+                    ease: [0.25, 1, 0.5, 1],
+                  }}
+                  className="absolute inset-0 bg-accent/20 rounded-full blur-3xl -z-10"
+                />
+
+                {/* Gradient fade overlay (uses landing bg to dissolve cropped bottom edge) */}
+                <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#FFF8E6] via-[#FFF8E6]/85 to-transparent z-10 pointer-events-none" />
+
+                <img
+                  src="/images/sir_photo_clean.png"
+                  alt=""
+                  className="w-full h-full object-contain object-bottom filter drop-shadow-[0_16px_32px_rgba(1,14,98,0.22)] z-10"
+                />
+              </div>
+
+              {/* Compact Designation Tag */}
+              <div className="mt-6 z-20 text-center w-full max-w-[280px] sm:max-w-[340px] bg-white border border-border p-3.5 rounded-xl shadow-sm">
+                <span className="block text-accent font-extrabold text-[10px] sm:text-xs uppercase tracking-widest">
+                  Instructor & CEO
+                </span>
+                <h4 className="font-extrabold text-base sm:text-lg text-primary mt-1">
+                  Md. Zia Uddin Azad Sifat
+                </h4>
+                <span className="block text-xs text-muted font-bold mt-0.5">
+                  EEE, CUET
+                </span>
+              </div>
             </div>
           </motion.div>
         )}

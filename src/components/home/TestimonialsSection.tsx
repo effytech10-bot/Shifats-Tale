@@ -7,66 +7,22 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 export default function TestimonialsSection() {
   const shouldReduceMotion = useReducedMotion();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0); // -1 for left, 1 for right
-  const [isHovered, setIsHovered] = useState(false);
 
-  // Auto-play mechanism
-  useEffect(() => {
-    if (isHovered) return;
-    const interval = setInterval(() => {
-      handleNext();
-    }, 6000); // Swap every 6 seconds
-    return () => clearInterval(interval);
-  }, [isHovered, currentIndex]);
+  // Distribute testimonials into responsive columns
+  const col1 = [testimonials[0], testimonials[3], testimonials[6]];
+  const col2 = [testimonials[1], testimonials[4], testimonials[7]];
+  const col3 = [testimonials[2], testimonials[5], testimonials[8]];
 
-  const handleNext = () => {
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
+  const tab1 = [testimonials[0], testimonials[2], testimonials[4], testimonials[6], testimonials[8]];
+  const tab2 = [testimonials[1], testimonials[3], testimonials[5], testimonials[7]];
 
-  const handlePrev = () => {
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const handleDotClick = (index: number) => {
-    setDirection(index > currentIndex ? 1 : -1);
-    setCurrentIndex(index);
-  };
-
-  const handleDragEnd = (event: any, info: any) => {
-    const swipeThreshold = 50;
-    if (info.offset.x > swipeThreshold) {
-      handlePrev();
-    } else if (info.offset.x < -swipeThreshold) {
-      handleNext();
-    }
-  };
-
-  const activeTestimonial = testimonials[currentIndex];
-
-  const slideVariants = {
-    enter: (dir: number) => ({
-      x: shouldReduceMotion ? 0 : dir > 0 ? 180 : -180,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        x: { type: "spring" as const, stiffness: 120, damping: 20 },
-        opacity: { duration: 0.3 },
-      },
-    },
-    exit: (dir: number) => ({
-      x: shouldReduceMotion ? 0 : dir > 0 ? -180 : 180,
-      opacity: 0,
-      transition: {
-        x: { type: "spring" as const, stiffness: 120, damping: 20 },
-        opacity: { duration: 0.3 },
-      },
-    }),
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   const headerVariants = {
@@ -78,6 +34,58 @@ export default function TestimonialsSection() {
     }
   };
 
+  const TestimonialCard = ({ item }: { item: typeof testimonials[0] }) => (
+    <div 
+      className="brand-card rounded-2xl p-6 bg-white border border-border flex flex-col justify-between space-y-4 hover:shadow-lg hover:border-accent/40 transition-all duration-300 w-full text-left select-none"
+    >
+      <div className="space-y-3">
+        {/* Star Rating */}
+        <div className="flex items-center space-x-1">
+          {[...Array(item.rating)].map((_, i) => (
+            <Star key={i} className="h-3.5 w-3.5 fill-accent text-accent shrink-0" />
+          ))}
+        </div>
+
+        {/* Message */}
+        <p className="text-xs sm:text-sm text-text font-semibold leading-relaxed italic">
+          "{item.message}"
+        </p>
+      </div>
+
+      {/* User Info Row */}
+      <div className="pt-4 border-t border-border flex items-center space-x-3 mt-auto">
+        {/* Initials Avatar */}
+        <div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-primary text-xs font-extrabold shrink-0 shadow-sm">
+          {getInitials(item.name)}
+        </div>
+        <div className="min-w-0">
+          <h4 className="font-extrabold text-primary text-xs sm:text-sm truncate leading-snug">
+            {item.name}
+          </h4>
+          <span className="text-[10px] text-muted block font-semibold truncate">
+            {item.batch} {item.achievement ? `| ${item.achievement}` : ""}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
+  const MarqueeColumn = ({ items, speed }: { items: typeof testimonials; speed: string }) => (
+    <div className="relative h-[620px] overflow-hidden rounded-2xl">
+      <div 
+        style={{ "--marquee-duration": speed } as React.CSSProperties}
+        className="flex flex-col gap-5 animate-marquee-vertical animate-marquee-vertical-hover-pause py-2"
+      >
+        {items.map((item, index) => (
+          <TestimonialCard key={`col-orig-${item.id}-${index}`} item={item} />
+        ))}
+        {items.map((item, index) => (
+          <TestimonialCard key={`col-dup-${item.id}-${index}`} item={item} />
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <section id="testimonials" className="brand-section-wrapper bg-bg-soft relative overflow-hidden">
       {/* Background ambient glows */}
@@ -86,7 +94,7 @@ export default function TestimonialsSection() {
 
       <div className="brand-container relative">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <motion.h2
             variants={headerVariants}
             initial="hidden"
@@ -116,115 +124,31 @@ export default function TestimonialsSection() {
           </motion.p>
         </div>
 
-        {/* Carousel Container */}
-        <div 
-          className="relative max-w-5xl mx-auto w-full px-4 sm:px-16"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Carousel Track with drag gestures */}
-          <div className="overflow-hidden w-full relative min-h-[350px] sm:min-h-[260px] flex items-center justify-center">
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
-              <motion.div
-                key={currentIndex}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.6}
-                onDragEnd={handleDragEnd}
-                className="w-full absolute cursor-grab active:cursor-grabbing flex justify-center"
-              >
-                <div className="brand-card rounded-3xl p-8 sm:p-10 md:p-12 flex flex-col justify-between relative bg-white border border-border group hover:shadow-md hover:border-accent/30 transition-all duration-300 w-full max-w-4xl select-none">
-                  {/* Double quote background icon - scales and highlights on card hover */}
-                  <Quote className="absolute right-8 top-8 h-16 w-16 text-bg/85 group-hover:text-accent/10 group-hover:scale-110 transition-all duration-300 pointer-events-none" />
+        {/* 3-Column Infinite Vertical Marquee Container */}
+        <div className="relative max-w-6xl mx-auto w-full overflow-hidden px-2 py-4">
+          {/* Top & Bottom Fade Overlays */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#FFFCF2] via-[#FFFCF2]/80 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#FFFCF2] via-[#FFFCF2]/80 to-transparent z-10" />
 
-                  <div className="space-y-5 relative z-10">
-                    {/* Stars */}
-                    <div className="flex items-center space-x-1.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                      ))}
-                    </div>
+          {/* Responsive columns grid */}
+          <div className="relative z-0">
+            {/* Desktop: 3 Columns */}
+            <div className="hidden lg:grid grid-cols-3 gap-6">
+              <MarqueeColumn items={col1} speed="24s" />
+              <MarqueeColumn items={col2} speed="30s" />
+              <MarqueeColumn items={col3} speed="27s" />
+            </div>
 
-                    {/* Quote Content */}
-                    <p className="text-text text-base sm:text-lg md:text-xl font-medium leading-relaxed italic group-hover:text-primary-dark transition-colors">
-                      "{activeTestimonial.quote}"
-                    </p>
-                  </div>
+            {/* Tablet: 2 Columns */}
+            <div className="hidden md:grid lg:hidden grid-cols-2 gap-6">
+              <MarqueeColumn items={tab1} speed="26s" />
+              <MarqueeColumn items={tab2} speed="32s" />
+            </div>
 
-                  {/* User Identity Info */}
-                  <div className="pt-6 border-t border-border mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                      <h4 className="font-extrabold text-primary text-base sm:text-lg md:text-xl group-hover:text-primary transition-colors">
-                        {activeTestimonial.name}
-                      </h4>
-                      <span className="text-xs sm:text-sm text-muted block mt-0.5 font-semibold">
-                        {activeTestimonial.batch}
-                      </span>
-                    </div>
-                    
-                    {activeTestimonial.achievement && (
-                      <span className="text-xs sm:text-sm font-bold text-primary bg-bg px-3.5 py-1.5 rounded-xl border border-border max-w-full sm:max-w-[280px] text-left sm:text-right truncate group-hover:border-accent/20 transition-all">
-                        {activeTestimonial.achievement}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Navigation Arrows (Desktop) */}
-          <button
-            onClick={handlePrev}
-            className="absolute left-0 md:left-[-16px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-border bg-white flex items-center justify-center text-primary hover:text-accent hover:border-accent/40 shadow-sm hover:shadow transition-all duration-200 z-20 cursor-pointer hidden sm:flex"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <button
-            onClick={handleNext}
-            className="absolute right-0 md:right-[-16px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-border bg-white flex items-center justify-center text-primary hover:text-accent hover:border-accent/40 shadow-sm hover:shadow transition-all duration-200 z-20 cursor-pointer hidden sm:flex"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-        </div>
-
-        {/* Mobile Navigation Controls & Indicator Dots */}
-        <div className="flex flex-col items-center justify-center gap-4 mt-8">
-          {/* Arrow Buttons (Mobile only) */}
-          <div className="flex items-center space-x-4 sm:hidden">
-            <button
-              onClick={handlePrev}
-              className="w-10 h-10 rounded-full border border-border bg-white flex items-center justify-center text-primary active:text-accent active:border-accent shadow-sm"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={handleNext}
-              className="w-10 h-10 rounded-full border border-border bg-white flex items-center justify-center text-primary active:text-accent active:border-accent shadow-sm"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Navigation Dots */}
-          <div className="flex items-center justify-center space-x-2.5">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleDotClick(index)}
-                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${index === currentIndex ? "w-7 bg-accent" : "w-2.5 bg-border hover:bg-muted-dark"}`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
+            {/* Mobile: 1 Column */}
+            <div className="grid grid-cols-1 gap-6 md:hidden">
+              <MarqueeColumn items={testimonials} speed="40s" />
+            </div>
           </div>
         </div>
       </div>

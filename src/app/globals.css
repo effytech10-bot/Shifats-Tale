@@ -201,3 +201,21 @@ h1, h2, h3, h4, h5, h6 {
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
+
+/* Infinite Vertical Scrolling Marquee */
+@keyframes scroll-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-marquee-vertical {
+  animation: scroll-up var(--marquee-duration, 30s) linear infinite;
+}
+
+.animate-marquee-vertical-hover-pause:hover {
+  animation-play-state: paused;
+}

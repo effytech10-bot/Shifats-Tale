@@ -12,8 +12,6 @@ export interface Testimonial {
   quote: string; // Keep for backward compatibility with UI
   rating: number; // 1 to 5 stars
   image: string; // Path to student avatar or fallback
-  
-  // Keep for backward compatibility with UI
   batch: string;
   achievement?: string;
 }
@@ -62,5 +60,60 @@ export const testimonials: Testimonial[] = [
     image: "/images/shifat_sir.png",
     batch: "HSC Batch 2025",
     achievement: "Physics Board Mark: 98/100"
+  },
+  {
+    id: "test-5",
+    name: "Nabila Sajjad",
+    role: "Student",
+    message: "Sir's mathematical physics shortcut derivations and coordinate geometry summaries saved my admission exam time. I managed to solve all problems and got into RUET EEE!",
+    quote: "Sir's mathematical physics shortcut derivations and coordinate geometry summaries saved my admission exam time. I managed to solve all problems and got into RUET EEE!",
+    rating: 5,
+    image: "/images/shifat_sir.png",
+    batch: "HSC Batch 2023",
+    achievement: "Got into RUET (EEE)"
+  },
+  {
+    id: "test-6",
+    name: "Kamrul Islam",
+    role: "Parent",
+    message: "Fahim was struggling with mechanics in physics class. After joining Shifat Sir's core care batch, his analytical skills improved significantly. He succeeded in board exams and got admitted into CUET.",
+    quote: "Fahim was struggling with mechanics in physics class. After joining Shifat Sir's core care batch, his analytical skills improved significantly. He succeeded in board exams and got admitted into CUET.",
+    rating: 5,
+    image: "/images/shifat_sir.png",
+    batch: "Father of Fahim (HSC Batch 2024)",
+    achievement: "Fahim got into CUET"
+  },
+  {
+    id: "test-7",
+    name: "Farhan Labib",
+    role: "Student",
+    message: "Higher Mathematics calculus was a nightmare for me until I did the differentiation and integration visual breakdown sessions with Sifat Sir. His graphical representation was superb.",
+    quote: "Higher Mathematics calculus was a nightmare for me until I did the differentiation and integration visual breakdown sessions with Sifat Sir. His graphical representation was superb.",
+    rating: 5,
+    image: "/images/shifat_sir.png",
+    batch: "HSC Batch 2025",
+    achievement: "Board Exam Math A+"
+  },
+  {
+    id: "test-8",
+    name: "Jannatul Fiza",
+    role: "Student",
+    message: "The strict diagnostic test rankings and parent notification system kept me serious and focused throughout my HSC prep. I am extremely proud to say I got admitted into DU A-Unit!",
+    quote: "The strict diagnostic test rankings and parent notification system kept me serious and focused throughout my HSC prep. I am extremely proud to say I got admitted into DU A-Unit!",
+    rating: 5,
+    image: "/images/shifat_sir.png",
+    batch: "HSC Batch 2024",
+    achievement: "Got into Dhaka University (DU)"
+  },
+  {
+    id: "test-9",
+    name: "Maisha Anjum",
+    role: "Student",
+    message: "I got board A+ in all science core subjects. Sir's creative questions (CQ) and MCQ speed-drills prepared me to manage exam stress without panicking.",
+    quote: "I got board A+ in all science core subjects. Sir's creative questions (CQ) and MCQ speed-drills prepared me to manage exam stress without panicking.",
+    rating: 5,
+    image: "/images/shifat_sir.png",
+    batch: "SSC Batch 2024",
+    achievement: "SSC Board GPA 5.00"
   }
 ];

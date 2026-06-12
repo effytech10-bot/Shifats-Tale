@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { courses } from "@/data/courses";
-import { Calendar, Clock, Send, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { Calendar, Clock, Send, ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { siteInfo } from "@/data/site";
 
 export default function CoursesSection() {
@@ -12,6 +12,7 @@ export default function CoursesSection() {
   const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(1); // Default to Class 11/12 Academic Batch
   const [windowWidth, setWindowWidth] = useState(1024);
+  const [selectedCourse, setSelectedCourse] = useState<typeof courses[0] | null>(null);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -368,21 +369,22 @@ export default function CoursesSection() {
                       </div>
                     </div>
 
-                    {/* Contact CTA */}
+                    {/* View Details Modal Trigger */}
                     <div className="pt-1">
-                      <a
-                        href={waLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`w-full flex items-center justify-center space-x-2 text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 ${
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCourse(course);
+                        }}
+                        className={`w-full flex items-center justify-center space-x-2 text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                           isActive 
                             ? "bg-white !text-primary hover:bg-[#FBB503] hover:text-primary-dark shadow-md pointer-events-auto" 
                             : "bg-bg-soft border border-border !text-primary hover:bg-border pointer-events-none"
                         }`}
                       >
-                        <Send className="h-3.5 w-3.5" />
-                        <span>{course.ctaText}</span>
-                      </a>
+                        <Eye className="h-3.5 w-3.5" />
+                        <span>View Details</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -410,6 +412,114 @@ export default function CoursesSection() {
         </div>
 
       </div>
+
+      {/* Flyer Lightbox Popup Modal */}
+      <AnimatePresence>
+        {selectedCourse && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedCourse(null)}
+              className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            />
+
+            {/* Modal Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              className="relative bg-white rounded-3xl overflow-hidden shadow-2xl border border-border max-w-4xl w-full flex flex-col md:flex-row max-h-[90vh] md:max-h-[85vh] z-10"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedCourse(null)}
+                className="absolute top-4 right-4 p-2.5 rounded-full bg-black/40 hover:bg-black/60 text-white z-20 transition-all duration-200 cursor-pointer shadow-md hover:scale-105"
+                aria-label="Close details"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              {/* Left Side: Large Flyer Image */}
+              <div className="relative w-full h-64 md:w-1/2 md:h-auto min-h-[260px] sm:min-h-[340px] bg-bg-soft shrink-0 border-b md:border-b-0 md:border-r border-border">
+                <Image
+                  src={selectedCourse.bannerImage}
+                  alt={selectedCourse.title}
+                  fill
+                  className="object-contain md:object-cover"
+                  priority
+                />
+              </div>
+
+              {/* Right Side: Course Details & Action */}
+              <div className="p-6 md:p-8 flex flex-col justify-between flex-grow overflow-y-auto space-y-6">
+                <div className="space-y-5">
+                  <div className="space-y-2.5">
+                    <span className="inline-block text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded bg-[#FBB503]/10 text-primary border border-[#FBB503]/25">
+                      {selectedCourse.target}
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-primary tracking-tight leading-tight">
+                      {selectedCourse.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm font-semibold italic text-muted mt-0.5">
+                      {selectedCourse.subtitle}
+                    </p>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-text leading-relaxed">
+                    {selectedCourse.description}
+                  </p>
+
+                  {/* Highlights/Features of the Batch */}
+                  {selectedCourse.features && selectedCourse.features.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-primary">Key Features</h4>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-text font-medium">
+                        {selectedCourse.features.map((feature: string, fIdx: number) => (
+                          <li key={fIdx} className="flex items-center space-x-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#FBB503] shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Schedule Details Box */}
+                  <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-bg-soft border border-border text-xs font-bold text-primary">
+                    <div>
+                      <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Weekly Schedule</span>
+                      <span>{selectedCourse.schedule}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Duration</span>
+                      <span>{selectedCourse.duration}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Send Message to WhatsApp inside the modal */}
+                <div className="pt-2">
+                  <a
+                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                      `Hello Sir, I want to inquire about the batch: ${selectedCourse.title}. Please provide details and class timings.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full primary-btn flex items-center justify-center space-x-2 text-center py-3.5 text-xs font-bold shadow-md hover:scale-[1.01] active:scale-95 transition-all duration-200"
+                  >
+                    <Send className="h-4 w-4" />
+                    <span>Inquire on WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

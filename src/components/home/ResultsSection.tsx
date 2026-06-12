@@ -5,7 +5,7 @@ import { studentResults } from "@/data/results";
 import { GraduationCap, School, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
-type CategoryFilter = "All" | "Engineering" | "University" | "Medical" | "Board";
+// Category filter type removed
 
 const getCardMotion = (offset: number, isMobile: boolean) => {
   const abs = Math.abs(offset);
@@ -211,7 +211,6 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
 };
 
 export default function ResultsSection() {
-  const [filter, setFilter] = useState<CategoryFilter>("All");
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -227,31 +226,21 @@ export default function ResultsSection() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const filteredResults = studentResults.filter((result) => {
-    if (filter === "All") return true;
-    return result.examType === filter;
-  });
-
   // Autoplay functionality: shifts index every 4.2 seconds (slower, cinematic pace)
   useEffect(() => {
-    if (isHovered || filteredResults.length <= 1) return;
+    if (isHovered || studentResults.length <= 1) return;
     const interval = setInterval(() => {
       handleNext();
     }, 4200);
     return () => clearInterval(interval);
-  }, [activeIndex, isHovered, filteredResults.length]);
-
-  const handleFilterChange = (val: CategoryFilter) => {
-    setFilter(val);
-    setActiveIndex(0);
-  };
+  }, [activeIndex, isHovered]);
 
   const handleNext = () => {
-    setActiveIndex((prev) => (filteredResults.length === 0 ? 0 : (prev + 1) % filteredResults.length));
+    setActiveIndex((prev) => (studentResults.length === 0 ? 0 : (prev + 1) % studentResults.length));
   };
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (filteredResults.length === 0 ? 0 : (prev - 1 + filteredResults.length) % filteredResults.length));
+    setActiveIndex((prev) => (studentResults.length === 0 ? 0 : (prev - 1 + studentResults.length) % studentResults.length));
   };
 
   const getCircularOffset = (index: number, active: number, total: number) => {
@@ -262,14 +251,6 @@ export default function ResultsSection() {
     }
     return offset;
   };
-
-  const filterTabs: { label: string; value: CategoryFilter }[] = [
-    { label: "All Success", value: "All" },
-    { label: "Engineering", value: "Engineering" },
-    { label: "Varsity A Unit", value: "University" },
-    { label: "Medical", value: "Medical" },
-    { label: "Board GPA 5.00", value: "Board" },
-  ];
 
   const headerVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 15 },
@@ -326,25 +307,11 @@ export default function ResultsSection() {
           </motion.p>
         </div>
 
-        {/* Filters Panel */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-14">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab.value}
-              onClick={() => handleFilterChange(tab.value)}
-              className={`px-4.5 py-2.5 text-xs sm:text-sm font-bold rounded-full border transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-95 ${
-                filter === tab.value
-                  ? "bg-accent border-accent text-primary shadow-sm"
-                  : "bg-white border-[#E7E0D2] text-[#6B7280] hover:text-[#010E62] hover:border-[#010E62]/40"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        {/* Filters Panel removed (showing all results at once) */}
+        <div className="mb-6" />
 
         {/* 3D Coverflow Carousel Container */}
-        {filteredResults.length > 0 ? (
+        {studentResults.length > 0 ? (
           <div className="flex flex-col items-center select-none">
             
             {/* Carousel Track with drag swipe capability */}
@@ -385,8 +352,8 @@ export default function ResultsSection() {
                 />
               </svg>
 
-              {filteredResults.map((result, idx) => {
-                const offset = getCircularOffset(idx, activeIndex, filteredResults.length);
+              {studentResults.map((result, idx) => {
+                const offset = getCircularOffset(idx, activeIndex, studentResults.length);
                 const cardMotion = getCardMotion(offset, isMobile);
 
                 return (
@@ -444,7 +411,7 @@ export default function ResultsSection() {
                 
                 {/* Dots indicator array */}
                 <div className="flex items-center space-x-2">
-                  {filteredResults.map((_, idx) => (
+                  {studentResults.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={() => setActiveIndex(idx)}

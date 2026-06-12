@@ -29,10 +29,98 @@ const getIcon = (iconName: string, isInverse: boolean = false) => {
   }
 };
 
+// Reusable vertical MethodologyCard component
+const MethodologyCard = ({
+  benefit,
+  id,
+  isActive,
+  onMouseEnter,
+  onMouseLeave,
+  cardVariants
+}: {
+  benefit: any;
+  id: string;
+  isActive: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  cardVariants: any;
+}) => {
+  if (!benefit) return null;
+  
+  return (
+    <motion.div
+      variants={cardVariants}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={`brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-[1.01] text-left cursor-pointer ${
+        isActive 
+          ? "border-[#010E62]/10 shadow-[0_20px_40px_rgba(1,14,98,0.25)]" 
+          : "border-[#E7E0D2] shadow-md hover:border-accent/40"
+      }`}
+    >
+      {/* Blue background overlay */}
+      <div className={`absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] transition-opacity duration-500 ease-out z-0 ${isActive ? "opacity-100" : "opacity-0"}`} />
+      
+      {/* Background waves in blue overlay with floating fluid wave animation */}
+      <div className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl ${isActive ? "opacity-12" : "opacity-0"}`}>
+        <motion.div
+          animate={isActive ? { 
+            x: ["-5%", "5%", "-5%"], 
+            y: ["-5%", "5%", "-5%"],
+            rotate: [0, 2, 0] 
+          } : {}}
+          transition={{ 
+            duration: 10, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }}
+          className="w-[120%] h-[120%] absolute -top-[10%] -left-[10%]"
+        >
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+            <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+          </svg>
+        </motion.div>
+      </div>
+
+      {/* Decoration Dot pattern grid for Card 06 */}
+      {id === "b06" && (
+        <svg className={`absolute bottom-3 right-4 transition-colors duration-500 w-16 h-12 pointer-events-none z-10 ${isActive ? "text-accent/15" : "text-accent/10"}`} fill="currentColor">
+          <pattern id="dot-pattern-06" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.2" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#dot-pattern-06)" />
+        </svg>
+      )}
+
+      {/* Glow Icon container relative z-10 */}
+      <div className="relative w-14 h-14 shrink-0 z-10">
+        <div className={`absolute inset-0 rounded-full transition-all duration-500 blur-md ${isActive ? "bg-[#FBB503]/30 scale-110" : "bg-[#FBB503]/15 scale-100"}`} />
+        <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
+          {getIcon(benefit.iconName)}
+        </div>
+      </div>
+
+      {/* Title & Desc relative z-10 */}
+      <div className="space-y-2.5 relative z-10">
+        <h3 className={`text-lg font-bold transition-colors duration-500 tracking-tight ${isActive ? "!text-white" : "!text-primary"}`}>
+          {benefit.title}
+        </h3>
+        <p className={`transition-colors duration-500 text-xs sm:text-sm leading-relaxed ${isActive ? "!text-white/85" : "!text-[#4B5563]"}`}>
+          {benefit.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
 export default function WhyChooseSection() {
   const shouldReduceMotion = useReducedMotion();
+  const [hoveredCard, setHoveredCard] = React.useState<string | null>(null);
 
-  // Find benefit objects by title/iconName to render them in correct grid cells
+  // Default active card is b02 (Small Batch Environment) when no card is hovered
+  const activeCardId = hoveredCard === null ? "b02" : hoveredCard;
+
   const getBenefit = (idx: number) => benefits[idx];
   
   const b01 = getBenefit(0); // Personal Guidance
@@ -77,7 +165,6 @@ export default function WhyChooseSection() {
         {/* Curved Connector 1: Title block to Card 02 */}
         <svg className="absolute text-[#FBB503]/40" style={{ left: "28%", top: "28%", width: "120px", height: "120px" }} viewBox="0 0 120 120" fill="none">
           <path d="M 10 90 Q 60 90 90 20" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" />
-          {/* Pulsing dots on line */}
           <circle cx="10" cy="90" r="4.5" fill="#FBB503" stroke="#FFF9EA" strokeWidth="1.5" />
           <circle cx="90" cy="20" r="4.5" fill="#FBB503" stroke="#FFF9EA" strokeWidth="1.5" />
         </svg>
@@ -136,292 +223,143 @@ export default function WhyChooseSection() {
             </p>
           </motion.div>
 
-          {/* Column 2: Highlight Card 02 (Col-span-4) - Blue by default */}
-          {b02 && (
-            <motion.div
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#010E62]/10 bg-gradient-to-br from-[#010E62] to-[#000940] shadow-xl hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
-            >
-              {/* Background abstract waves with float animation */}
-              <div className="absolute inset-0 opacity-12 pointer-events-none overflow-hidden rounded-3xl z-0">
-                <motion.div
-                  animate={{ y: [0, -5, 0], scale: [1, 1.02, 1] }}
-                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-full h-full"
-                >
-                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
-                    <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
-                  </svg>
-                </motion.div>
-              </div>
+          {/* Column 2: Highlight Card 02 (Col-span-4) */}
+          <div className="lg:col-span-4">
+            <MethodologyCard
+              benefit={b02}
+              id="b02"
+              isActive={activeCardId === "b02"}
+              onMouseEnter={() => setHoveredCard("b02")}
+              onMouseLeave={() => setHoveredCard(null)}
+              cardVariants={cardVariants}
+            />
+          </div>
 
-              {/* Glowing Icon Circle */}
-              <div className="relative w-14 h-14 shrink-0 z-10">
-                <div className="absolute inset-0 rounded-full bg-[#FBB503]/30 blur-md animate-pulse" />
-                <div className="relative w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg">
-                  {getIcon(b02.iconName)}
-                </div>
-              </div>
-
-              {/* Title & Desc */}
-              <div className="space-y-2.5 z-10">
-                <h3 className="text-lg font-bold text-white tracking-tight">
-                  {b02.title}
-                </h3>
-                <p className="text-white/85 text-xs sm:text-sm leading-relaxed">
-                  {b02.description}
-                </p>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Column 3: Card 03 (Col-span-4) - Cream default, Blue on hover */}
-          {b03 && (
-            <motion.div
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
-            >
-              {/* Blue background hover overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
-              
-              {/* Background waves in blue overlay with float animation */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
-                <motion.div
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-full h-full"
-                >
-                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
-                    <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
-                  </svg>
-                </motion.div>
-              </div>
-
-              {/* Glow Icon container relative z-10 */}
-              <div className="relative w-14 h-14 shrink-0 z-10">
-                <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
-                <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
-                  {getIcon(b03.iconName)}
-                </div>
-              </div>
-
-              {/* Title & Desc relative z-10 */}
-              <div className="space-y-2.5 relative z-10">
-                <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
-                  {b03.title}
-                </h3>
-                <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
-                  {b03.description}
-                </p>
-              </div>
-            </motion.div>
-          )}
+          {/* Column 3: Card 03 (Col-span-4) */}
+          <div className="lg:col-span-4">
+            <MethodologyCard
+              benefit={b03}
+              id="b03"
+              isActive={activeCardId === "b03"}
+              onMouseEnter={() => setHoveredCard("b03")}
+              onMouseLeave={() => setHoveredCard(null)}
+              cardVariants={cardVariants}
+            />
+          </div>
 
           {/* ================== BOTTOM ROW ================== */}
           
           {/* Row 2, Col 1-4: Card 01 Horizontal wide layout (Col-span-4) */}
-          {b01 && (
-            <motion.div
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col sm:flex-row items-start gap-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
-            >
-              {/* Blue background hover overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
-              
-              {/* Background waves in blue overlay with float animation */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
-                <motion.div
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-full h-full"
-                >
-                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
-                    <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
-                  </svg>
-                </motion.div>
-              </div>
+          {b01 && (() => {
+            const isActive = activeCardId === "b01";
+            return (
+              <motion.div
+                variants={cardVariants}
+                onMouseEnter={() => setHoveredCard("b01")}
+                onMouseLeave={() => setHoveredCard(null)}
+                className={`lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col sm:flex-row items-start gap-6 relative overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-[1.01] text-left cursor-pointer ${
+                  isActive 
+                    ? "border-[#010E62]/10 shadow-[0_20px_40px_rgba(1,14,98,0.25)]" 
+                    : "border-[#E7E0D2] shadow-md hover:border-accent/40"
+                }`}
+              >
+                {/* Blue background hover overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] transition-opacity duration-500 ease-out z-0 ${isActive ? "opacity-100" : "opacity-0"}`} />
+                
+                {/* Background waves in blue overlay with float animation */}
+                <div className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl ${isActive ? "opacity-12" : "opacity-0"}`}>
+                  <motion.div
+                    animate={isActive ? { 
+                      x: ["-5%", "5%", "-5%"], 
+                      y: ["-5%", "5%", "-5%"],
+                      rotate: [0, 2, 0] 
+                    } : {}}
+                    transition={{ 
+                      duration: 10, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                    className="w-[120%] h-[120%] absolute -top-[10%] -left-[10%]"
+                  >
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+                      <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+                    </svg>
+                  </motion.div>
+                </div>
 
-              {/* Top decoration Dot pattern grid */}
-              <svg className="absolute bottom-3 left-4 text-accent/10 group-hover:text-accent/15 transition-colors duration-500 w-16 h-12 pointer-events-none z-10" fill="currentColor">
-                <pattern id="dot-pattern-01" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1.2" />
-                </pattern>
-                <rect width="100%" height="100%" fill="url(#dot-pattern-01)" />
-              </svg>
+                {/* Top decoration Dot pattern grid */}
+                <svg className={`absolute bottom-3 left-4 transition-colors duration-500 w-16 h-12 pointer-events-none z-10 ${isActive ? "text-accent/15" : "text-accent/10"}`} fill="currentColor">
+                  <pattern id="dot-pattern-01" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1.2" />
+                  </pattern>
+                  <rect width="100%" height="100%" fill="url(#dot-pattern-01)" />
+                </svg>
 
-              {/* Large UserCheck Glow Icon relative z-10 */}
-              <div className="relative w-14 h-14 shrink-0 mt-2 z-10">
-                <div className="absolute inset-0 rounded-full bg-[#FBB503]/20 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
-                <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-md">
-                  <div className="relative">
-                    <UserCheck className="h-6 w-6 text-primary" />
-                    <div className="absolute -bottom-1 -right-1 bg-[#FBB503] p-0.5 rounded-full border border-white">
-                      <Star className="h-2 w-2 text-primary fill-primary" />
+                {/* Large UserCheck Glow Icon relative z-10 */}
+                <div className="relative w-14 h-14 shrink-0 mt-2 z-10">
+                  <div className={`absolute inset-0 rounded-full transition-all duration-500 blur-md ${isActive ? "bg-[#FBB503]/30 scale-110" : "bg-[#FBB503]/20 scale-100"}`} />
+                  <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-md">
+                    <div className="relative">
+                      <UserCheck className="h-6 w-6 text-primary" />
+                      <div className="absolute -bottom-1 -right-1 bg-[#FBB503] p-0.5 rounded-full border border-white">
+                        <Star className="h-2 w-2 text-primary fill-primary" />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Content block relative z-10 */}
-              <div className="space-y-2 flex-grow min-w-0 pr-4 relative z-10">
-                <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
-                  {b01.title}
-                </h3>
-                <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
-                  {b01.description}
-                </p>
-              </div>
-            </motion.div>
-          )}
+                {/* Content block relative z-10 */}
+                <div className="space-y-2 flex-grow min-w-0 pr-4 relative z-10">
+                  <h3 className={`text-lg font-bold transition-colors duration-500 tracking-tight ${isActive ? "!text-white" : "!text-primary"}`}>
+                    {b01.title}
+                  </h3>
+                  <p className={`transition-colors duration-500 text-xs sm:text-sm leading-relaxed ${isActive ? "!text-white/85" : "!text-[#4B5563]"}`}>
+                    {b01.description}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })()}
 
           {/* Row 2, Col 5-12: Sub-grid for Card 04, 05, 06 (Col-span-8) */}
           <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Card 04 */}
-            {b04 && (
-              <motion.div
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
-                
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
-                  <motion.div
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-full h-full"
-                  >
-                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
-                      <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
-                    </svg>
-                  </motion.div>
-                </div>
-
-                <div className="relative w-14 h-14 shrink-0 z-10">
-                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
-                  <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
-                    {getIcon(b04.iconName)}
-                  </div>
-                </div>
-
-                <div className="space-y-2.5 relative z-10">
-                  <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
-                    {b04.title}
-                  </h3>
-                  <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
-                    {b04.description}
-                  </p>
-                </div>
-              </motion.div>
-            )}
+            <div className="w-full">
+              <MethodologyCard
+                benefit={b04}
+                id="b04"
+                isActive={activeCardId === "b04"}
+                onMouseEnter={() => setHoveredCard("b04")}
+                onMouseLeave={() => setHoveredCard(null)}
+                cardVariants={cardVariants}
+              />
+            </div>
 
             {/* Card 05 */}
-            {b05 && (
-              <motion.div
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
-                
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
-                  <motion.div
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-full h-full"
-                  >
-                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
-                      <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
-                    </svg>
-                  </motion.div>
-                </div>
-
-                <div className="relative w-14 h-14 shrink-0 z-10">
-                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
-                  <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
-                    {getIcon(b05.iconName)}
-                  </div>
-                </div>
-
-                <div className="space-y-2.5 relative z-10">
-                  <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
-                    {b05.title}
-                  </h3>
-                  <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
-                    {b05.description}
-                  </p>
-                </div>
-              </motion.div>
-            )}
+            <div className="w-full">
+              <MethodologyCard
+                benefit={b05}
+                id="b05"
+                isActive={activeCardId === "b05"}
+                onMouseEnter={() => setHoveredCard("b05")}
+                onMouseLeave={() => setHoveredCard(null)}
+                cardVariants={cardVariants}
+              />
+            </div>
 
             {/* Card 06 */}
-            {b06 && (
-              <motion.div
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
-                
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
-                  <motion.div
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-full h-full"
-                  >
-                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
-                      <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
-                    </svg>
-                  </motion.div>
-                </div>
-
-                {/* Decoration Dot pattern grid */}
-                <svg className="absolute bottom-3 right-4 text-accent/10 group-hover:text-accent/15 transition-colors duration-500 w-16 h-12 pointer-events-none z-10" fill="currentColor">
-                  <pattern id="dot-pattern-06" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-                    <circle cx="2" cy="2" r="1.2" />
-                  </pattern>
-                  <rect width="100%" height="100%" fill="url(#dot-pattern-06)" />
-                </svg>
-
-                <div className="relative w-14 h-14 shrink-0 z-10">
-                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
-                  <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
-                    {getIcon(b06.iconName)}
-                  </div>
-                </div>
-
-                <div className="space-y-2.5 relative z-10">
-                  <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
-                    {b06.title}
-                  </h3>
-                  <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
-                    {b06.description}
-                  </p>
-                </div>
-              </motion.div>
-            )}
+            <div className="w-full">
+              <MethodologyCard
+                benefit={b06}
+                id="b06"
+                isActive={activeCardId === "b06"}
+                onMouseEnter={() => setHoveredCard("b06")}
+                onMouseLeave={() => setHoveredCard(null)}
+                cardVariants={cardVariants}
+              />
+            </div>
 
           </div>
 

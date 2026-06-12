@@ -97,8 +97,8 @@ export default function WhyChooseSection() {
       </div>
 
       <div className="brand-container relative z-10 space-y-12">
-        {/* Asymmetrical Methodology Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto">
+        {/* Asymmetrical Methodology Grid (stretched w-full for wider screen footprint) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch w-full mx-auto">
           
           {/* ================== TOP ROW ================== */}
           
@@ -136,27 +136,28 @@ export default function WhyChooseSection() {
             </p>
           </motion.div>
 
-          {/* Column 2: Highlight Card 02 (Col-span-4) */}
+          {/* Column 2: Highlight Card 02 (Col-span-4) - Blue by default */}
           {b02 && (
             <motion.div
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-300 ease-out border border-[#010E62]/10 bg-gradient-to-br from-[#010E62] to-[#000940] shadow-xl hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)]"
+              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#010E62]/10 bg-gradient-to-br from-[#010E62] to-[#000940] shadow-xl hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
             >
-              {/* Background abstract waves */}
-              <div className="absolute inset-0 opacity-12 pointer-events-none overflow-hidden rounded-3xl">
-                <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
-                  <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
-                </svg>
+              {/* Background abstract waves with float animation */}
+              <div className="absolute inset-0 opacity-12 pointer-events-none overflow-hidden rounded-3xl z-0">
+                <motion.div
+                  animate={{ y: [0, -5, 0], scale: [1, 1.02, 1] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-full h-full"
+                >
+                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+                    <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+                  </svg>
+                </motion.div>
               </div>
-
-              {/* Number Badge Tag */}
-              <span className="text-[10px] font-extrabold text-[#FBB503] bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-md self-start">
-                02
-              </span>
 
               {/* Glowing Icon Circle */}
               <div className="relative w-14 h-14 shrink-0 z-10">
@@ -167,7 +168,7 @@ export default function WhyChooseSection() {
               </div>
 
               {/* Title & Desc */}
-              <div className="space-y-2.5 z-10 text-left">
+              <div className="space-y-2.5 z-10">
                 <h3 className="text-lg font-bold text-white tracking-tight">
                   {b02.title}
                 </h3>
@@ -178,34 +179,46 @@ export default function WhyChooseSection() {
             </motion.div>
           )}
 
-          {/* Column 3: Card 03 (Col-span-4) */}
+          {/* Column 3: Card 03 (Col-span-4) - Cream default, Blue on hover */}
           {b03 && (
             <motion.div
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-300 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:border-accent/40"
+              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
             >
-              {/* Number Badge Tag */}
-              <span className="text-[10px] font-extrabold text-[#010E62] bg-[#010E62]/5 border border-[#010E62]/10 px-2.5 py-0.5 rounded-md self-start">
-                03
-              </span>
+              {/* Blue background hover overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
+              
+              {/* Background waves in blue overlay with float animation */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
+                <motion.div
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-full h-full"
+                >
+                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+                    <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+                  </svg>
+                </motion.div>
+              </div>
 
-              {/* Glow Icon container */}
-              <div className="relative w-14 h-14 shrink-0">
-                <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 blur-md" />
+              {/* Glow Icon container relative z-10 */}
+              <div className="relative w-14 h-14 shrink-0 z-10">
+                <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
                 <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
                   {getIcon(b03.iconName)}
                 </div>
               </div>
 
-              {/* Title & Desc */}
-              <div className="space-y-2.5 text-left">
-                <h3 className="text-lg font-bold text-primary tracking-tight">
+              {/* Title & Desc relative z-10 */}
+              <div className="space-y-2.5 relative z-10">
+                <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
                   {b03.title}
                 </h3>
-                <p className="text-[#4B5563] text-xs sm:text-sm leading-relaxed">
+                <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
                   {b03.description}
                 </p>
               </div>
@@ -221,24 +234,36 @@ export default function WhyChooseSection() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col sm:flex-row items-start gap-6 relative overflow-hidden group transition-all duration-300 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:border-accent/40 text-left"
+              className="lg:col-span-4 brand-card rounded-3xl p-7 flex flex-col sm:flex-row items-start gap-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
             >
+              {/* Blue background hover overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
+              
+              {/* Background waves in blue overlay with float animation */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
+                <motion.div
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-full h-full"
+                >
+                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+                    <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+                  </svg>
+                </motion.div>
+              </div>
+
               {/* Top decoration Dot pattern grid */}
-              <svg className="absolute bottom-3 left-4 text-accent/10 w-16 h-12 pointer-events-none" fill="currentColor">
+              <svg className="absolute bottom-3 left-4 text-accent/10 group-hover:text-accent/15 transition-colors duration-500 w-16 h-12 pointer-events-none z-10" fill="currentColor">
                 <pattern id="dot-pattern-01" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
                   <circle cx="2" cy="2" r="1.2" />
                 </pattern>
                 <rect width="100%" height="100%" fill="url(#dot-pattern-01)" />
               </svg>
 
-              {/* Number Badge Tag */}
-              <span className="absolute top-7 right-7 text-[10px] font-extrabold text-[#010E62] bg-[#010E62]/5 border border-[#010E62]/10 px-2.5 py-0.5 rounded-md">
-                01
-              </span>
-
-              {/* Large UserCheck Glow Icon */}
-              <div className="relative w-14 h-14 shrink-0 mt-2">
-                <div className="absolute inset-0 rounded-full bg-[#FBB503]/20 blur-md" />
+              {/* Large UserCheck Glow Icon relative z-10 */}
+              <div className="relative w-14 h-14 shrink-0 mt-2 z-10">
+                <div className="absolute inset-0 rounded-full bg-[#FBB503]/20 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
                 <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-md">
                   <div className="relative">
                     <UserCheck className="h-6 w-6 text-primary" />
@@ -249,12 +274,12 @@ export default function WhyChooseSection() {
                 </div>
               </div>
 
-              {/* Content block */}
-              <div className="space-y-2 flex-grow min-w-0 pr-4">
-                <h3 className="text-lg font-bold text-primary tracking-tight">
+              {/* Content block relative z-10 */}
+              <div className="space-y-2 flex-grow min-w-0 pr-4 relative z-10">
+                <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
                   {b01.title}
                 </h3>
-                <p className="text-[#4B5563] text-xs sm:text-sm leading-relaxed">
+                <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
                   {b01.description}
                 </p>
               </div>
@@ -263,6 +288,7 @@ export default function WhyChooseSection() {
 
           {/* Row 2, Col 5-12: Sub-grid for Card 04, 05, 06 (Col-span-8) */}
           <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            
             {/* Card 04 */}
             {b04 && (
               <motion.div
@@ -270,27 +296,35 @@ export default function WhyChooseSection() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-300 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:border-accent/40 text-left"
+                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
               >
-                {/* Number Badge Tag */}
-                <span className="text-[10px] font-extrabold text-[#010E62] bg-[#010E62]/5 border border-[#010E62]/10 px-2.5 py-0.5 rounded-md self-start">
-                  04
-                </span>
+                <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
+                
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-full h-full"
+                  >
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+                      <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+                    </svg>
+                  </motion.div>
+                </div>
 
-                {/* Glow Icon container */}
-                <div className="relative w-14 h-14 shrink-0">
-                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 blur-md" />
+                <div className="relative w-14 h-14 shrink-0 z-10">
+                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
                   <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
                     {getIcon(b04.iconName)}
                   </div>
                 </div>
 
-                {/* Title & Desc */}
-                <div className="space-y-2.5">
-                  <h3 className="text-lg font-bold text-primary tracking-tight">
+                <div className="space-y-2.5 relative z-10">
+                  <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
                     {b04.title}
                   </h3>
-                  <p className="text-[#4B5563] text-xs sm:text-sm leading-relaxed">
+                  <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
                     {b04.description}
                   </p>
                 </div>
@@ -304,27 +338,35 @@ export default function WhyChooseSection() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-300 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:border-accent/40 text-left"
+                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
               >
-                {/* Number Badge Tag */}
-                <span className="text-[10px] font-extrabold text-[#010E62] bg-[#010E62]/5 border border-[#010E62]/10 px-2.5 py-0.5 rounded-md self-start">
-                  05
-                </span>
+                <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
+                
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-full h-full"
+                  >
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+                      <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+                    </svg>
+                  </motion.div>
+                </div>
 
-                {/* Glow Icon container */}
-                <div className="relative w-14 h-14 shrink-0">
-                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 blur-md" />
+                <div className="relative w-14 h-14 shrink-0 z-10">
+                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
                   <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
                     {getIcon(b05.iconName)}
                   </div>
                 </div>
 
-                {/* Title & Desc */}
-                <div className="space-y-2.5">
-                  <h3 className="text-lg font-bold text-primary tracking-tight">
+                <div className="space-y-2.5 relative z-10">
+                  <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
                     {b05.title}
                   </h3>
-                  <p className="text-[#4B5563] text-xs sm:text-sm leading-relaxed">
+                  <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
                     {b05.description}
                   </p>
                 </div>
@@ -338,40 +380,49 @@ export default function WhyChooseSection() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-300 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:border-accent/40 text-left"
+                className="brand-card rounded-3xl p-7 flex flex-col space-y-6 relative overflow-hidden group transition-all duration-500 ease-out border border-[#E7E0D2] bg-gradient-to-b from-white to-[#FFFDF6] shadow-md hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(1,14,98,0.25)] text-left cursor-pointer"
               >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
+                
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-12 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl">
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-full h-full"
+                  >
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <path d="M0,40 C30,60 70,20 100,40 L100,100 L0,100 Z" fill="#FBB503" />
+                      <path d="M0,60 C40,40 60,80 100,60 L100,100 L0,100 Z" fill="#FFFFFF" />
+                    </svg>
+                  </motion.div>
+                </div>
+
                 {/* Decoration Dot pattern grid */}
-                <svg className="absolute bottom-3 right-4 text-accent/10 w-16 h-12 pointer-events-none" fill="currentColor">
+                <svg className="absolute bottom-3 right-4 text-accent/10 group-hover:text-accent/15 transition-colors duration-500 w-16 h-12 pointer-events-none z-10" fill="currentColor">
                   <pattern id="dot-pattern-06" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
                     <circle cx="2" cy="2" r="1.2" />
                   </pattern>
                   <rect width="100%" height="100%" fill="url(#dot-pattern-06)" />
                 </svg>
 
-                {/* Number Badge Tag */}
-                <span className="text-[10px] font-extrabold text-[#010E62] bg-[#010E62]/5 border border-[#010E62]/10 px-2.5 py-0.5 rounded-md self-start">
-                  06
-                </span>
-
-                {/* Glow Icon container */}
-                <div className="relative w-14 h-14 shrink-0">
-                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 blur-md" />
+                <div className="relative w-14 h-14 shrink-0 z-10">
+                  <div className="absolute inset-0 rounded-full bg-[#FBB503]/15 group-hover:bg-[#FBB503]/35 group-hover:scale-110 blur-md transition-all duration-300" />
                   <div className="relative w-14 h-14 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center shadow-sm">
                     {getIcon(b06.iconName)}
                   </div>
                 </div>
 
-                {/* Title & Desc */}
-                <div className="space-y-2.5">
-                  <h3 className="text-lg font-bold text-primary tracking-tight">
+                <div className="space-y-2.5 relative z-10">
+                  <h3 className="text-lg font-bold text-primary group-hover:text-white transition-colors duration-300 tracking-tight">
                     {b06.title}
                   </h3>
-                  <p className="text-[#4B5563] text-xs sm:text-sm leading-relaxed">
+                  <p className="text-[#4B5563] group-hover:text-white/85 transition-colors duration-300 text-xs sm:text-sm leading-relaxed">
                     {b06.description}
                   </p>
                 </div>
               </motion.div>
             )}
+
           </div>
 
         </div>

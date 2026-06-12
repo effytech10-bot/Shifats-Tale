@@ -2,14 +2,17 @@
 
 import React, { useState } from "react";
 import { youtubeClasses, YouTubeClass } from "@/data/youtubeClasses";
-import { Play, Clock, Eye, X } from "lucide-react";
+import { Play, Clock, Eye, Send, Sparkles } from "lucide-react";
 import { YoutubeIcon } from "@/components/ui/Icons";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { siteInfo } from "@/data/site";
+import Image from "next/image";
 
 export default function YouTubeClassesSection() {
-  const [activeVideo, setActiveVideo] = useState<YouTubeClass | null>(null);
+  const whatsappNumber = siteInfo.whatsapp;
   const shouldReduceMotion = useReducedMotion();
+  const [currentVideo, setCurrentVideo] = useState<YouTubeClass>(youtubeClasses[0]);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const headerVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 15 },
@@ -20,33 +23,16 @@ export default function YouTubeClassesSection() {
     }
   };
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.1,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: shouldReduceMotion ? 0 : 25 
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        duration: 0.5, 
-        ease: "easeOut" as const
-      } 
-    },
+  const handleSelectVideo = (video: YouTubeClass) => {
+    setCurrentVideo(video);
+    setIsPlaying(false); // Reset player to cover view when changing video
   };
 
   return (
     <section id="youtube-classes" className="brand-section-wrapper bg-bg relative overflow-hidden">
-      <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-accent/5 rounded-full blur-[140px] pointer-events-none" />
+      {/* Background ambient glows */}
+      <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-accent/3 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[450px] h-[450px] bg-primary/4 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="brand-container">
         {/* Section Header */}
@@ -56,9 +42,10 @@ export default function YouTubeClassesSection() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-xs font-bold text-accent tracking-widest uppercase"
+            className="text-xs font-bold text-accent tracking-widest uppercase flex items-center justify-center gap-1.5"
           >
-            Free Classes
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Concept Lectures</span>
           </motion.h2>
           <motion.p
             variants={headerVariants}
@@ -67,7 +54,7 @@ export default function YouTubeClassesSection() {
             viewport={{ once: true }}
             className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
           >
-            Concept Breakdown Lectures
+            Concept Breakdown Theater
           </motion.p>
           <motion.p
             variants={headerVariants}
@@ -76,162 +63,201 @@ export default function YouTubeClassesSection() {
             viewport={{ once: true }}
             className="text-text text-sm sm:text-base"
           >
-            Review Shifat Sir's pedagogy first-hand. Check out some of our most-watched math & physics conceptual explanations.
+            Experience Shifat Sir's pedagogy. Select a lecture from the playlist below to load it directly into the theater screen.
           </motion.p>
         </div>
 
-        {/* Video Grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
-        >
-          {youtubeClasses.map((v) => (
-            <motion.div
-              key={v.id}
-              variants={cardVariants}
-              className="brand-card rounded-2xl overflow-hidden flex flex-col group bg-white border border-border hover:-translate-y-1 hover:shadow-lg hover:border-accent/40 transition-all duration-300"
-            >
-              {/* YouTube Thumbnail Placeholder */}
-              <div
-                onClick={() => setActiveVideo(v)}
-                className="relative w-full aspect-video bg-bg flex flex-col items-center justify-center cursor-pointer overflow-hidden border-b border-border p-4"
-              >
-                <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:16px_16px]" />
-                
-                {/* Subject Name Tag */}
-                <span className="absolute top-4 left-4 z-20 px-2.5 py-1 rounded-md bg-white border border-border text-primary text-[10px] font-bold uppercase tracking-wider">
-                  {v.topic}
+        {/* Asymmetric Theater Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto">
+          {/* Left Side: Modern Video Player Showcase Screen (Theater Mode) */}
+          <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-6">
+            {/* Unified Showcase Player Screen */}
+            <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-border shadow-2xl bg-black group/player">
+              <AnimatePresence mode="wait">
+                {isPlaying ? (
+                  /* Live Embedded Iframe Player */
+                  <motion.div
+                    key="iframe-player"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 w-full h-full"
+                  >
+                    <iframe
+                      className="w-full h-full"
+                      src={`https://www.youtube.com/embed/${currentVideo.embedId}?autoplay=1`}
+                      title={currentVideo.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </motion.div>
+                ) : (
+                  /* Custom Glowing Cover Screen with Play Button */
+                  <motion.div
+                    key="cover-player"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setIsPlaying(true)}
+                    className="absolute inset-0 w-full h-full flex flex-col items-center justify-center cursor-pointer select-none group"
+                  >
+                    {/* Background cover image with overlay blur */}
+                    <div className="absolute inset-0 z-0">
+                      <Image
+                        src={currentVideo.thumbnailUrl}
+                        alt={currentVideo.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-103 opacity-80"
+                        priority
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/95 via-primary-dark/40 to-transparent" />
+                    </div>
+
+                    {/* Subject badge on top-left of the player screen */}
+                    <span className="absolute top-6 left-6 z-10 px-3 py-1 text-[9px] font-extrabold uppercase tracking-widest bg-accent text-primary border border-accent/20 rounded-md">
+                      {currentVideo.subject}
+                    </span>
+
+                    {/* Central Neon Gold Glowing Play Button */}
+                    <div className="relative z-10 w-20 h-20 rounded-full bg-white/95 border border-border flex items-center justify-center shadow-2xl transition-all duration-300 transform group-hover:scale-110 group-hover:bg-[#FBB503] group-hover:border-[#FBB503] group-hover:text-primary-dark text-[#FBB503] group-hover:shadow-[0_0_30px_rgba(251,181,3,0.4)]">
+                      <Play className="h-8 w-8 fill-current ml-1" />
+                    </div>
+
+                    {/* Click CTA Indicator */}
+                    <span className="absolute bottom-6 text-[10px] font-bold text-white/80 uppercase tracking-widest group-hover:text-accent transition-colors duration-200 z-10">
+                      Click Screen to Watch Lecture
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Selected Lesson Metadata Panel Below Player */}
+            <div className="p-6 rounded-2xl bg-white border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-sm">
+              <div className="space-y-2 flex-grow min-w-0">
+                <span className="text-[10px] font-extrabold text-accent uppercase tracking-wider block">
+                  {currentVideo.topic}
                 </span>
-
-                {/* Dark premium overlay that fades in on hover */}
-                <div className="absolute inset-0 bg-primary-dark/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center" />
-
-                {/* Big YouTube Play Button with hover scale */}
-                <div className="relative z-20 w-16 h-16 rounded-full bg-white border border-border flex items-center justify-center transform group-hover:scale-110 group-hover:bg-accent group-hover:text-primary group-hover:border-accent text-accent transition-all duration-300 shadow-md">
-                  <Play className="h-6 w-6 fill-current ml-1" />
-                </div>
-
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-primary z-20">
-                  <span className="flex items-center space-x-1 font-bold bg-white/95 px-2 py-0.5 rounded border border-border shadow-sm">
-                    <Clock className="h-3.5 w-3.5" />
-                    <span>{v.duration}</span>
+                <h3 className="font-extrabold text-primary text-base sm:text-lg md:text-xl leading-tight">
+                  {currentVideo.title}
+                </h3>
+                <div className="flex items-center space-x-4 pt-1 text-xs text-muted font-bold">
+                  <span className="flex items-center space-x-1">
+                    <Clock className="h-4 w-4 text-accent shrink-0" />
+                    <span>Duration: {currentVideo.duration}</span>
                   </span>
-                  {v.views && (
-                    <span className="flex items-center space-x-1 font-bold bg-white/95 px-2 py-0.5 rounded border border-border shadow-sm">
-                      <Eye className="h-3.5 w-3.5" />
-                      <span>{v.views}</span>
+                  {currentVideo.views && (
+                    <span className="flex items-center space-x-1 border-l border-border pl-4">
+                      <Eye className="h-4 w-4 text-accent shrink-0" />
+                      <span>{currentVideo.views}</span>
                     </span>
                   )}
                 </div>
-
-                {/* Center Title overlay */}
-                <span className="absolute text-[10px] font-bold text-muted bottom-12 uppercase tracking-widest group-hover:text-slate-100 transition-colors z-20">
-                  YouTube Thumbnail Placeholder
-                </span>
               </div>
 
-              {/* Video Title Details */}
-              <div className="p-5 flex-grow flex flex-col justify-between space-y-4 bg-white">
-                <h3
-                  onClick={() => setActiveVideo(v)}
-                  className="font-extrabold text-primary text-base sm:text-lg hover:text-accent transition-colors cursor-pointer leading-snug"
-                >
-                  {v.title}
-                </h3>
-                <div className="pt-2 flex items-center justify-between">
-                  <button
-                    onClick={() => setActiveVideo(v)}
-                    className="primary-btn px-4 py-2 rounded-xl text-xs font-bold hover:scale-[1.01] transition-transform"
-                  >
-                    <span>Watch Class</span>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* YouTube Channel CTA */}
-        <div className="mt-16 text-center">
-          <a
-            href={siteInfo.youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="secondary-btn inline-flex items-center justify-center space-x-2 w-full sm:w-auto text-center hover:bg-primary hover:text-white transition-all duration-300"
-          >
-            <YoutubeIcon className="h-5 w-5" />
-            <span>Watch More on YouTube</span>
-          </a>
-        </div>
-      </div>
-
-      {/* Video Lightbox Modal */}
-      <AnimatePresence>
-        {activeVideo && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary-dark/85 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="relative w-full max-w-4xl bg-white border border-border rounded-2xl overflow-hidden shadow-2xl"
-            >
-              {/* Modal Header */}
-              <div className="p-4 border-b border-border flex items-center justify-between">
-                <div>
-                  <span className="text-xs text-accent font-bold uppercase tracking-wider block">
-                    {activeVideo.topic}
-                  </span>
-                  <h4 className="font-extrabold text-primary text-sm sm:text-base line-clamp-1">
-                    {activeVideo.title}
-                  </h4>
-                </div>
-                <button
-                  onClick={() => setActiveVideo(null)}
-                  className="p-1 rounded-lg text-muted hover:text-primary hover:bg-bg-soft transition-colors cursor-pointer"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              {/* YouTube Embed container */}
-              <div className="relative w-full aspect-video bg-black">
-                <iframe
-                  className="absolute inset-0 w-full h-full"
-                  src={`https://www.youtube.com/embed/${activeVideo.embedId}?autoplay=1`}
-                  title={activeVideo.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-
-              {/* Modal Footer CTA */}
-              <div className="p-4 bg-bg-soft border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                <span className="text-text font-medium text-center sm:text-left">
-                  Like this class? Inquire about upcoming batches to learn directly with Sir.
-                </span>
+              {/* Inquiry Action specific to the active class */}
+              <div className="shrink-0 w-full sm:w-auto">
                 <a
-                  href={`https://wa.me/${siteInfo.whatsapp}?text=Hello%20Sir%2C%20I%20just%20watched%20your%20class%20on%20${encodeURIComponent(
-                    activeVideo.title
-                  )}.%20Please%20let%20me%20know%20how%20to%20register.`}
+                  href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                    `Hello Sir, I watched your free YouTube class: "${currentVideo.title}". Please let me know the admission schedule for this batch.`
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="primary-btn w-full sm:w-auto text-center"
+                  className="w-full sm:w-auto primary-btn flex items-center justify-center space-x-2 text-center shadow-md py-3 text-xs"
                 >
-                  Ask Sir about Admissions
+                  <Send className="h-4 w-4" />
+                  <span>Ask Sir about Batch</span>
                 </a>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Right Side: Interactive Playlist Sidebar */}
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col justify-between space-y-6">
+            <div className="flex flex-col gap-4 flex-grow max-h-[460px] lg:max-h-none overflow-y-auto pr-1">
+              <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted px-1">
+                Playlist Classes
+              </h4>
+              {youtubeClasses.map((item, idx) => {
+                const isActive = item.id === currentVideo.id;
+                const indexNum = String(idx + 1).padStart(2, "0");
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSelectVideo(item)}
+                    style={{
+                      backgroundColor: isActive ? "#010E62" : "#FFFFFF",
+                      borderColor: isActive ? "#FBB503" : undefined,
+                    }}
+                    className={`w-full flex items-center justify-between gap-4 p-4.5 rounded-2xl border transition-all duration-300 cursor-pointer text-left shadow-sm ${
+                      isActive 
+                        ? "shadow-md scale-[1.01]" 
+                        : "border-border hover:border-accent/40 hover:-translate-y-0.5"
+                    }`}
+                  >
+                    {/* Index & Title Section */}
+                    <div className="flex items-center space-x-4 min-w-0 flex-grow">
+                      {/* Animated Equalizer Wave on Active, index number on inactive */}
+                      {isActive ? (
+                        <div className="flex items-end gap-[2px] h-4 w-6 shrink-0 justify-center">
+                          <span className="w-[3px] bg-[#FBB503] rounded-full animate-equalizer-bar-1" />
+                          <span className="w-[3px] bg-[#FBB503] rounded-full animate-equalizer-bar-2" />
+                          <span className="w-[3px] bg-[#FBB503] rounded-full animate-equalizer-bar-3" />
+                        </div>
+                      ) : (
+                        <span className="text-xs font-extrabold text-[#6B7280] shrink-0 w-6 text-center">
+                          {indexNum}
+                        </span>
+                      )}
+                      <div className="min-w-0 space-y-1">
+                        <h4 className={`text-xs sm:text-sm font-extrabold truncate leading-snug ${
+                          isActive ? "!text-white" : "!text-primary"
+                        }`}>
+                          {item.title}
+                        </h4>
+                        <span className={`text-[10px] font-bold block ${
+                          isActive ? "!text-[#FBB503]" : "!text-muted"
+                        }`}>
+                          {item.chapter}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Duration badge */}
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border shrink-0 ${
+                      isActive 
+                        ? "bg-[#FBB503]/15 text-[#FBB503] border-[#FBB503]/30" 
+                        : "bg-bg-soft text-muted border-border"
+                    }`}>
+                      {item.duration}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Bottom YouTube Channel Subscription banner */}
+            <div className="p-5 rounded-2xl bg-bg-soft border border-border text-center space-y-4 flex flex-col justify-center shadow-sm">
+              <span className="text-[10px] font-extrabold text-muted uppercase tracking-wider block">
+                More free lectures
+              </span>
+              <p className="text-xs text-text font-semibold leading-relaxed">
+                Watch dozens of detailed concept breakdowns, board solutions, and shortcuts on Sir's official channel.
+              </p>
+              <a
+                href={siteInfo.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="secondary-btn w-full flex items-center justify-center space-x-2 text-center py-3 text-xs"
+              >
+                <YoutubeIcon className="h-5 w-5" />
+                <span>Visit YouTube Channel</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

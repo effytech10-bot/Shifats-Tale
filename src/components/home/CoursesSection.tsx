@@ -60,7 +60,7 @@ export default function CoursesSection() {
       }
       if (diff === 1) {
         return {
-          x: 20,
+          x: 12,
           y: 8,
           rotate: 2.5,
           scale: 0.94,
@@ -71,7 +71,7 @@ export default function CoursesSection() {
       }
       if (diff === -1) {
         return {
-          x: -20,
+          x: -12,
           y: 8,
           rotate: -2.5,
           scale: 0.94,

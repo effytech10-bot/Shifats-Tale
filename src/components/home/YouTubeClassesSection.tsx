@@ -45,7 +45,7 @@ export default function YouTubeClassesSection() {
   };
 
   return (
-    <section id="youtube-classes" className="brand-section-wrapper bg-bg relative">
+    <section id="youtube-classes" className="brand-section-wrapper bg-bg relative overflow-hidden">
       <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-accent/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="brand-container">

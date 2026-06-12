@@ -112,9 +112,9 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-lg text-primary hover:text-primary-dark hover:bg-bg focus:outline-none transition-colors duration-200"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-primary hover:text-primary-dark hover:bg-bg focus:outline-none transition-colors duration-200 relative z-50"
               aria-controls="mobile-menu"
-              aria-expanded="false"
+              aria-expanded={isOpen}
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -126,8 +126,10 @@ export default function Navbar() {
       {/* Mobile Drawer Menu */}
       <div
         className={cn(
-          "lg:hidden fixed inset-y-0 right-0 w-full sm:w-80 bg-bg-soft/98 backdrop-blur-xl border-l border-border/80 shadow-2xl z-40 transform transition-transform duration-350 ease-in-out p-6 pt-24",
-          isOpen ? "translate-x-0" : "translate-x-full"
+          "lg:hidden fixed inset-y-0 right-0 w-full sm:w-80 bg-bg-soft/98 backdrop-blur-xl border-l border-border/80 shadow-2xl z-40 transform transition-all duration-350 ease-in-out p-6 pt-24",
+          isOpen 
+            ? "translate-x-0 opacity-100 pointer-events-auto" 
+            : "translate-x-full opacity-0 pointer-events-none invisible"
         )}
         id="mobile-menu"
       >

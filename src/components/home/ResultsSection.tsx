@@ -146,7 +146,7 @@ export default function ResultsSection() {
                       </h4>
                       <p className="text-xs text-text flex items-center space-x-1.5 font-semibold mt-1">
                         <School className="h-3.5 w-3.5 text-muted shrink-0" />
-                        <span className="truncate max-w-[150px]">{result.college}</span>
+                        <span className="truncate max-w-[180px] sm:max-w-none">{result.college}</span>
                       </p>
                     </div>
                   </div>

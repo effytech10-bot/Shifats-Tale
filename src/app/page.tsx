@@ -97,7 +97,7 @@ export default function Home() {
       <Navbar />
 
       {/* Main Sections Body */}
-      <main className="flex-grow">
+      <main className="flex-grow overflow-x-hidden">
         <HeroSection isTeacherFlying={isFlying} onImageClick={handleTeacherPhotoClick} />
         <TrustStats />
         <CoursesSection />

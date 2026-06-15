@@ -29,10 +29,39 @@ export default function GallerySection() {
 
   const cardWidth = isMobile ? 220 : isTablet ? 280 : 320;
   const cardHeight = isMobile ? 290 : isTablet ? 370 : 420;
-  const spacingX = isMobile ? 65 : isTablet ? 130 : 180;
-  const spacingY = isMobile ? 6 : isTablet ? 12 : 18;
-  const rotationFactor = isMobile ? 1.5 : isTablet ? 2.5 : 3.5;
-  const scaleFactor = 0.08;
+
+  // Scattered arrangements matching the mockup screenshot
+  // zIndex logic: 
+  // - Card 1 (wedding) is on top of Card 2 (lake)
+  // - Card 3 (middle/guy) is on top of Card 2 and Card 4
+  // - Card 4 (couple) is on top of Card 5 (peacock)
+  // All cards are tilted clockwise (positive rotation)
+  const desktopStyles = [
+    { x: -350, y: 30,  scale: 0.90, rotate: 6, zIndex: 30 },
+    { x: -190, y: -15, scale: 0.85, rotate: 4, zIndex: 10 },
+    { x: 0,    y: -30, scale: 1.0,  rotate: 2, zIndex: 40 },
+    { x: 180,  y: -10, scale: 0.88, rotate: 3, zIndex: 20 },
+    { x: 340,  y: 50,  scale: 0.82, rotate: 6, zIndex: 10 },
+  ];
+
+  const tabletStyles = [
+    { x: -270, y: 20,  scale: 0.90, rotate: 5, zIndex: 30 },
+    { x: -140, y: -10, scale: 0.85, rotate: 3, zIndex: 10 },
+    { x: 0,    y: -20, scale: 1.0,  rotate: 1.5, zIndex: 40 },
+    { x: 140,  y: -8,  scale: 0.88, rotate: 2.5, zIndex: 20 },
+    { x: 270,  y: 40,  scale: 0.82, rotate: 5, zIndex: 10 },
+  ];
+
+  const mobileStyles = [
+    { x: -150, y: 15,  scale: 0.85, rotate: 4, zIndex: 30 },
+    { x: -75,  y: -5,  scale: 0.80, rotate: 2.5, zIndex: 10 },
+    { x: 0,    y: -10, scale: 1.0,  rotate: 1, zIndex: 40 },
+    { x: 75,   y: -4,  scale: 0.82, rotate: 2, zIndex: 20 },
+    { x: 150,  y: 25,  scale: 0.78, rotate: 4, zIndex: 10 },
+  ];
+
+  const activeStyles = isMobile ? mobileStyles : isTablet ? tabletStyles : desktopStyles;
+  const containerHeight = isMobile ? cardHeight + 60 : isTablet ? cardHeight + 80 : cardHeight + 100;
 
   // Active index is fixed at 2 (the middle image)
   const activeIndex = 2;
@@ -48,7 +77,7 @@ export default function GallerySection() {
             A JOURNEY THROUGH VISUAL STORIES
           </p>
           <h2 className="text-4xl sm:text-5xl font-extrabold text-primary tracking-tight leading-tight">
-            Welcome to My Stories
+            Explore Life at Shifat's Tales
           </h2>
         </div>
 
@@ -56,21 +85,20 @@ export default function GallerySection() {
         <div 
           ref={containerRef}
           className="relative w-full flex items-center justify-center overflow-hidden py-4"
-          style={{ height: `${cardHeight + 40}px` }}
+          style={{ height: `${containerHeight}px` }}
         >
           {displayItems.map((item, idx) => {
-            // Static offsets relative to activeIndex (2)
+            const style = activeStyles[idx];
             const offset = idx - activeIndex; // -2, -1, 0, 1, 2
-            const absOffset = Math.abs(offset);
             const isActive = offset === 0;
 
             const isCollapsed = !isInView;
             
-            let targetX = isCollapsed ? 0 : offset * spacingX;
-            let targetY = isCollapsed ? 0 : Math.pow(absOffset, 1.4) * spacingY;
-            let targetScale = isCollapsed ? 0.8 : Math.max(0.72, 1 - absOffset * scaleFactor);
-            let targetRotate = isCollapsed ? 0 : offset * rotationFactor;
-            let targetZIndex = 100 - absOffset;
+            let targetX = isCollapsed ? 0 : style.x;
+            let targetY = isCollapsed ? 0 : style.y;
+            let targetScale = isCollapsed ? 0.8 : style.scale;
+            let targetRotate = isCollapsed ? 0 : style.rotate;
+            let targetZIndex = style.zIndex;
             let targetOpacity = isCollapsed ? 0 : 1;
 
             if (shouldReduceMotion) {

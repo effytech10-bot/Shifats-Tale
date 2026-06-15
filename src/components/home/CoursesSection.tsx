@@ -1,19 +1,29 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { courses } from "@/data/courses";
-import { Calendar, Clock, Send, ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, Eye, X, Send } from "lucide-react";
+import { motion, useReducedMotion, AnimatePresence, useInView } from "framer-motion";
 import { siteInfo } from "@/data/site";
+import { getCircularOffset } from "@/lib/circular";
 
 export default function CoursesSection() {
   const whatsappNumber = siteInfo.whatsapp;
   const shouldReduceMotion = useReducedMotion();
-  const [activeIndex, setActiveIndex] = useState(1); // Default to Class 11/12 Academic Batch
-  const [windowWidth, setWindowWidth] = useState(1024);
-  const [selectedCourse, setSelectedCourse] = useState<typeof courses[0] | null>(null);
+  const [windowWidth, setWindowWidth] = useState(1200);
 
+  // Carousel Staging State
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.25 });
+
+  const [activeIndex, setActiveIndex] = useState(1); // Default to Class 11/12 (index 1)
+  const [selectedCourse, setSelectedCourse] = useState<typeof courses[0] | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [hasAnimatedEntrance, setHasAnimatedEntrance] = useState(false);
+
+  // Resize listener
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -21,187 +31,77 @@ export default function CoursesSection() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % courses.length);
-  };
-
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + courses.length) % courses.length);
-  };
-
-  const getCardPositionProps = (index: number) => {
-    let diff = index - activeIndex;
-    
-    // Handle wrap-around circular math
-    if (diff < -courses.length / 2) {
-      diff += courses.length;
-    } else if (diff > courses.length / 2) {
-      diff -= courses.length;
-    }
-    return diff;
-  };
-
-  // Determine offsets based on screen width
   const isMobile = windowWidth < 640;
   const isTablet = windowWidth >= 640 && windowWidth < 1024;
 
-  const getCardStyles = (diff: number) => {
-    if (isMobile) {
-      if (diff === 0) {
-        return {
-          x: 0,
-          y: 0,
-          rotate: 0,
-          scale: 1,
-          opacity: 1,
-          zIndex: 30,
-          pointerEvents: "auto" as const,
-        };
-      }
-      if (diff === 1) {
-        return {
-          x: 12,
-          y: 8,
-          rotate: 2.5,
-          scale: 0.94,
-          opacity: 0.4,
-          zIndex: 20,
-          pointerEvents: "auto" as const,
-        };
-      }
-      if (diff === -1) {
-        return {
-          x: -12,
-          y: 8,
-          rotate: -2.5,
-          scale: 0.94,
-          opacity: 0.4,
-          zIndex: 20,
-          pointerEvents: "auto" as const,
-        };
-      }
-      return {
-        x: 0,
-        y: 16,
-        rotate: 0,
-        scale: 0.85,
-        opacity: 0,
-        zIndex: 0,
-        pointerEvents: "none" as const,
-      };
-    }
+  // Responsive Layout Constants (matching gallery layout exactly)
+  const cardWidth = isMobile ? 250 : isTablet ? 300 : 350;
+  const cardHeight = isMobile ? 330 : isTablet ? 400 : 450;
+  const spacingX = isMobile ? 75 : isTablet ? 150 : 230;
+  const spacingY = isMobile ? 6 : isTablet ? 12 : 18;
+  const rotationFactor = isMobile ? 1.5 : isTablet ? 2.5 : 3.5;
+  const scaleFactor = 0.08;
+  const maxVisibleOffset = isMobile ? 1 : isTablet ? 2 : 3;
 
-    if (isTablet) {
-      if (diff === 0) {
-        return {
-          x: 0,
-          y: 0,
-          rotate: 0,
-          scale: 1.02,
-          opacity: 1,
-          zIndex: 30,
-          pointerEvents: "auto" as const,
-        };
-      }
-      if (diff === 1) {
-        return {
-          x: 220,
-          y: 12,
-          rotate: 4,
-          scale: 0.92,
-          opacity: 0.75,
-          zIndex: 20,
-          pointerEvents: "auto" as const,
-        };
-      }
-      if (diff === -1) {
-        return {
-          x: -220,
-          y: 12,
-          rotate: -4,
-          scale: 0.92,
-          opacity: 0.75,
-          zIndex: 20,
-          pointerEvents: "auto" as const,
-        };
-      }
-      return {
-        x: 0,
-        y: 24,
-        rotate: 0,
-        scale: 0.8,
-        opacity: 0,
-        zIndex: 0,
-        pointerEvents: "none" as const,
-      };
-    }
+  const N = courses.length;
 
-    // Desktop
-    if (diff === 0) {
-      return {
-        x: 0,
-        y: 0,
-        rotate: 0,
-        scale: 1.03,
-        opacity: 1,
-        zIndex: 30,
-        pointerEvents: "auto" as const,
-      };
-    }
-    if (diff === 1) {
-      return {
-        x: 320,
-        y: 16,
-        rotate: 5,
-        scale: 0.92,
-        opacity: 0.7,
-        zIndex: 20,
-        pointerEvents: "auto" as const,
-      };
-    }
-    if (diff === -1) {
-      return {
-        x: -320,
-        y: 16,
-        rotate: -5,
-        scale: 0.92,
-        opacity: 0.7,
-        zIndex: 20,
-        pointerEvents: "auto" as const,
-      };
-    }
-    if (diff === 2) {
-      return {
-        x: 600,
-        y: 32,
-        rotate: 9,
-        scale: 0.82,
-        opacity: 0.25,
-        zIndex: 10,
-        pointerEvents: "auto" as const,
-      };
-    }
-    if (diff === -2) {
-      return {
-        x: -600,
-        y: 32,
-        rotate: -9,
-        scale: 0.82,
-        opacity: 0.25,
-        zIndex: 10,
-        pointerEvents: "auto" as const,
-      };
-    }
-    return {
-      x: 0,
-      y: 40,
-      rotate: 0,
-      scale: 0.75,
-      opacity: 0,
-      zIndex: 0,
-      pointerEvents: "none" as const,
-    };
+  const handleNext = () => {
+    if (N <= 1) return;
+    setActiveIndex((prev) => (prev + 1) % N);
   };
+
+  const handlePrev = () => {
+    if (N <= 1) return;
+    setActiveIndex((prev) => (prev - 1 + N) % N);
+  };
+
+  // Keyboard navigation handler
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      handlePrev();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      handleNext();
+    }
+  };
+
+  // Drag ending calculation
+  const handleDragEnd = (event: any, info: any) => {
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) {
+      handleNext();
+    } else if (info.offset.x > swipeThreshold) {
+      handlePrev();
+    }
+  };
+
+  // Entrance Stagger timing normalization
+  const isAnimatingEntrance = isInView && !hasAnimatedEntrance;
+  useEffect(() => {
+    if (isInView && !hasAnimatedEntrance && N > 0) {
+      const duration = Math.min(1.6, 0.4 + N * 0.1) * 1000;
+      const timer = setTimeout(() => {
+        setHasAnimatedEntrance(true);
+      }, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [isInView, hasAnimatedEntrance, N]);
+
+  // Autoplay Effect
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    if (!isInView) return;
+    if (isHovered || isFocused) return;
+
+    const interval = setInterval(() => {
+      if (!document.hidden) {
+        handleNext();
+      }
+    }, 4800);
+
+    return () => clearInterval(interval);
+  }, [isInView, isHovered, isFocused, activeIndex, N, shouldReduceMotion]);
 
   const headerVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 15 },
@@ -250,166 +150,238 @@ export default function CoursesSection() {
           </motion.p>
         </div>
 
-        {/* 3D Fanning Deck Stack Carousel Track */}
-        <div className="relative w-full min-h-[550px] sm:min-h-[510px] flex items-center justify-center select-none overflow-visible py-4">
-          {courses.map((course, index) => {
-            const diff = getCardPositionProps(index);
-            const style = getCardStyles(diff);
-            const isActive = diff === 0;
+        {/* Cinematic Carousel Staging Area */}
+        <div 
+          ref={containerRef}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          aria-live="polite"
+          className="relative w-full flex flex-col items-center justify-center outline-none select-none"
+          style={{ height: `${cardHeight + 40}px` }}
+        >
+          {/* Card track container with horizontal drag detection */}
+          <motion.div
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.1}
+            onDragEnd={handleDragEnd}
+            className="w-full h-full flex items-center justify-center relative cursor-grab active:cursor-grabbing overflow-hidden"
+          >
+            <AnimatePresence initial={false}>
+              {courses.map((course, idx) => {
+                const offset = getCircularOffset(idx, activeIndex, N);
+                const absOffset = Math.abs(offset);
+                const isActive = offset === 0;
 
-            const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-              `Hello Sir, I want to inquire about the batch: ${course.title}. Please provide timing and seat availability.`
-            )}`;
+                // Position calculation overrides for collapsed/intro states
+                const isCollapsed = !isInView;
+                
+                let targetX = isCollapsed ? 0 : offset * spacingX;
+                let targetY = isCollapsed ? 0 : Math.pow(absOffset, 1.4) * spacingY;
+                let targetScale = isCollapsed ? 0.8 : Math.max(0.72, 1 - absOffset * scaleFactor);
+                let targetRotate = isCollapsed ? 0 : offset * rotationFactor;
+                let targetZIndex = isCollapsed ? 1 : 100 - absOffset;
 
-            return (
-              <motion.div
-                key={course.id}
-                initial={false}
-                animate={{
-                  x: style.x,
-                  y: style.y,
-                  rotate: style.rotate,
-                  scale: style.scale,
-                  opacity: style.opacity,
-                  zIndex: style.zIndex,
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 150,
-                  damping: 20,
-                  mass: 0.8
-                }}
-                style={{
-                  pointerEvents: style.pointerEvents,
-                  position: "absolute",
-                  width: "100%",
-                  maxWidth: "390px",
-                }}
-                className="origin-bottom cursor-pointer animate-none"
-                onClick={!isActive ? () => setActiveIndex(index) : undefined}
-              >
-                {/* Chamfered Card Border Wrapper */}
-                <div 
-                  style={{
-                    clipPath: "polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 0 100%)",
-                    backgroundColor: isActive ? "#FBB503" : "#E2E8F0",
-                  }}
-                  className={`w-full transition-all duration-300 p-[1.5px] ${
-                    isActive 
-                      ? "shadow-2xl scale-[1.03]" 
-                      : "shadow-md opacity-85 hover:opacity-100"
-                  }`}
-                >
-                  {/* Chamfered Card Content */}
-                  <div 
+                let targetOpacity = 1;
+                if (isCollapsed) {
+                  targetOpacity = 0;
+                } else if (absOffset > maxVisibleOffset) {
+                  targetOpacity = 0;
+                } else {
+                  targetOpacity = 1 - absOffset * 0.15;
+                }
+
+                // Apply prefers-reduced-motion optimizations
+                if (shouldReduceMotion) {
+                  targetRotate = 0;
+                  targetScale = isActive ? 1 : 0.92;
+                  targetY = 0;
+                }
+
+                // Sequence calculation for entrance Stagger delay
+                let sequence = 0;
+                if (offset > 0) {
+                  sequence = offset * 2 - 1;
+                } else if (offset < 0) {
+                  sequence = Math.abs(offset) * 2;
+                }
+                const currentDelay = isAnimatingEntrance && !shouldReduceMotion ? sequence * 0.09 : 0;
+
+                return (
+                  <motion.div
+                    key={course.id}
                     style={{
-                      clipPath: "polygon(0 0, calc(100% - 31.5px) 0, 100% 31.5px, 100% 100%, 0 100%)",
-                      backgroundColor: isActive ? "#010E62" : "#FFFFFF",
+                      position: "absolute",
+                      width: `${cardWidth}px`,
+                      height: `${cardHeight}px`,
+                      zIndex: targetZIndex,
+                      pointerEvents: targetOpacity > 0 ? "auto" : "none",
+                      willChange: "transform, opacity",
                     }}
-                    className="w-full flex flex-col justify-between p-6 sm:p-7 space-y-5 rounded-none"
+                    animate={{
+                      x: targetX,
+                      y: targetY,
+                      scale: targetScale,
+                      rotate: targetRotate,
+                      opacity: targetOpacity,
+                    }}
+                    transition={{
+                      delay: currentDelay,
+                      type: "spring",
+                      stiffness: shouldReduceMotion ? 200 : 150,
+                      damping: shouldReduceMotion ? 25 : 20,
+                      mass: 0.8,
+                    }}
+                    className="brand-card rounded-2xl overflow-hidden relative group bg-white border border-border shadow-md transition-shadow duration-300"
+                    onClick={() => {
+                      if (!isActive) {
+                        setActiveIndex(idx);
+                      }
+                    }}
                   >
-                    {/* Header Row: Flyer Thumbnail & Title/Info */}
-                    <div className="flex items-start gap-4">
-                      {/* Square Flyer Thumbnail */}
-                      <div className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 border-2 ${
-                        isActive ? "border-[#FBB503]/40" : "border-border"
-                      }`}>
-                        <Image 
-                          src={course.bannerImage}
-                          alt={course.title}
-                          fill
-                          sizes="96px"
-                          className="object-cover"
-                          priority={isActive}
-                        />
-                      </div>
-
-                      {/* Text info and Target Badge */}
-                      <div className="flex-grow min-w-0 space-y-1.5">
-                        <span className={`inline-block text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded border ${
-                          isActive 
-                            ? 'bg-[#FBB503]/15 text-[#FBB503] border-[#FBB503]/25' 
-                            : 'bg-bg-soft text-primary border-border'
-                        }`}>
+                    {/* Full banner image (visible on side cards, hidden on active center card) */}
+                    <div 
+                      className={`absolute inset-0 transition-opacity duration-500 z-0 ${
+                        isActive ? "opacity-0 pointer-events-none" : "opacity-100"
+                      }`}
+                    >
+                      <Image 
+                        src={course.bannerImage}
+                        alt={course.title}
+                        fill
+                        sizes={`${cardWidth}px`}
+                        className="object-cover pointer-events-none"
+                        priority={absOffset <= 1}
+                      />
+                      {/* Dark overlay for side cards */}
+                      <div className="absolute inset-0 bg-primary/60 group-hover:bg-primary/50 transition-colors duration-300" />
+                      
+                      {/* Course target and title overlay on side cards for identification */}
+                      <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col space-y-1.5 z-10 text-left bg-gradient-to-t from-primary/90 to-transparent">
+                        <span className="text-[8px] font-extrabold uppercase tracking-widest text-accent">
                           {course.target}
                         </span>
-                        <div>
-                          <h3 className={`text-sm sm:text-base font-extrabold tracking-tight leading-tight line-clamp-2 ${
-                            isActive ? '!text-white' : '!text-primary'
-                          }`}>
-                            {course.title}
-                          </h3>
-                          <p className={`text-[10px] font-bold italic mt-0.5 truncate ${
-                            isActive ? '!text-[#FBB503]' : '!text-muted'
-                          }`}>
-                            {course.subtitle}
+                        <h4 className="font-extrabold text-white text-sm line-clamp-1">
+                          {course.title}
+                        </h4>
+                      </div>
+                    </div>
+
+                    {/* Detail card content (visible on active card, hidden on side cards) */}
+                    <div 
+                      className={`absolute inset-0 transition-all duration-500 z-10 h-full w-full ${
+                        isActive 
+                          ? "opacity-100 scale-100 pointer-events-auto" 
+                          : "opacity-0 scale-95 pointer-events-none"
+                      }`}
+                    >
+                      {/* The chamfered course card content block */}
+                      <div 
+                        style={{
+                          clipPath: "polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 0 100%)",
+                          backgroundColor: "#FBB503", // Gold border outline
+                          height: "100%",
+                        }}
+                        className="w-full p-[1.5px]"
+                      >
+                        <div 
+                          style={{
+                            clipPath: "polygon(0 0, calc(100% - 31.5px) 0, 100% 31.5px, 100% 100%, 0 100%)",
+                            backgroundColor: "#010E62", // Deep Navy background
+                            height: "100%",
+                          }}
+                          className="w-full flex flex-col justify-between p-6 sm:p-7 space-y-4 h-full"
+                        >
+                          {/* Header Row: Flyer Thumbnail & Title/Info */}
+                          <div className="flex items-start gap-4">
+                            {/* Square Flyer Thumbnail */}
+                            <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 border border-white/20">
+                              <Image 
+                                src={course.bannerImage}
+                                alt={course.title}
+                                fill
+                                sizes="80px"
+                                className="object-cover"
+                              />
+                            </div>
+
+                            {/* Text info and Target Badge */}
+                            <div className="flex-grow min-w-0 space-y-1 text-left">
+                              <span className="inline-block text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded border bg-accent/15 text-accent border-accent/25">
+                                {course.target}
+                              </span>
+                              <h3 className="text-xs sm:text-sm font-extrabold tracking-tight leading-tight line-clamp-2 text-white">
+                                {course.title}
+                              </h3>
+                              <p className="text-[9px] font-bold italic mt-0.5 text-accent truncate">
+                                {course.subtitle}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Course Description */}
+                          <p className="text-xs leading-relaxed line-clamp-3 text-[#E7E0D2] flex-grow text-left">
+                            {course.description}
                           </p>
+
+                          {/* Schedule / Time details */}
+                          <div className="grid grid-cols-2 gap-2 pt-2.5 text-[10px] font-bold border-t border-white/10 text-white/90 text-left">
+                            <div>
+                              <span className="block text-[8px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Schedule</span>
+                              <span className="truncate block">{course.schedule}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="block text-[8px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Duration</span>
+                              <span className="truncate block">{course.duration}</span>
+                            </div>
+                          </div>
+
+                          {/* View Details button */}
+                          <div className="pt-1">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCourse(course);
+                              }}
+                              className="w-full flex items-center justify-center space-x-2 text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer bg-white text-primary hover:bg-[#FBB503] hover:text-primary-dark shadow-md focus:outline-none focus:ring-2 focus:ring-accent"
+                            >
+                              <Eye className="h-3.5 w-3.5" />
+                              <span>View Details</span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Course Description */}
-                    <p className={`text-xs sm:text-sm leading-relaxed line-clamp-3 ${
-                      isActive ? '!text-[#E7E0D2]' : '!text-text'
-                    }`}>
-                      {course.description}
-                    </p>
-
-                    {/* Schedule / Time details */}
-                    <div className={`grid grid-cols-2 gap-2 pt-3 text-[11px] font-bold border-t ${
-                      isActive ? 'border-white/10 !text-white/90' : 'border-border !text-primary-dark'
-                    }`}>
-                      <div>
-                        <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Schedule</span>
-                        <span className="truncate">{course.schedule}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Duration</span>
-                        <span className="truncate">{course.duration}</span>
-                      </div>
-                    </div>
-
-                    {/* View Details Modal Trigger */}
-                    <div className="pt-1">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedCourse(course);
-                        }}
-                        className={`w-full flex items-center justify-center space-x-2 text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
-                          isActive 
-                            ? "bg-white !text-primary hover:bg-[#FBB503] hover:text-primary-dark shadow-md pointer-events-auto" 
-                            : "bg-bg-soft border border-border !text-primary hover:bg-border pointer-events-none"
-                        }`}
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                        <span>View Details</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
         </div>
 
-        {/* Outline Square Controls Center-Bottom */}
-        <div className="flex justify-center space-x-4 mt-8">
-          <button 
-            onClick={handlePrev} 
-            className="w-12 h-12 border border-primary text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-colors cursor-pointer rounded-xl bg-white shadow-sm"
-            aria-label="Previous batch"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <button 
-            onClick={handleNext} 
-            className="w-12 h-12 border border-primary text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-colors cursor-pointer rounded-xl bg-white shadow-sm"
-            aria-label="Next batch"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-        </div>
+        {/* Navigation Arrows Controls */}
+        {N > 1 && (
+          <div className="flex justify-center items-center space-x-6 mt-8">
+            <button
+              onClick={handlePrev}
+              className="w-12 h-12 rounded-xl border border-primary text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 cursor-pointer bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              aria-label="Previous batch"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="w-12 h-12 rounded-xl border border-primary text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 cursor-pointer bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              aria-label="Next batch"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
+        )}
 
       </div>
 
@@ -457,7 +429,7 @@ export default function CoursesSection() {
               {/* Right Side: Course Details & Action */}
               <div className="p-6 md:p-8 flex flex-col justify-between flex-grow overflow-y-auto space-y-6">
                 <div className="space-y-5">
-                  <div className="space-y-2.5">
+                  <div className="space-y-2.5 text-left">
                     <span className="inline-block text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded bg-[#FBB503]/10 text-primary border border-[#FBB503]/25">
                       {selectedCourse.target}
                     </span>
@@ -469,13 +441,13 @@ export default function CoursesSection() {
                     </p>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-text leading-relaxed">
+                  <p className="text-xs sm:text-sm text-text leading-relaxed text-left">
                     {selectedCourse.description}
                   </p>
 
                   {/* Highlights/Features of the Batch */}
                   {selectedCourse.features && selectedCourse.features.length > 0 && (
-                    <div className="space-y-2">
+                    <div className="space-y-2 text-left">
                       <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-primary">Key Features</h4>
                       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-text font-medium">
                         {selectedCourse.features.map((feature: string, fIdx: number) => (
@@ -489,7 +461,7 @@ export default function CoursesSection() {
                   )}
 
                   {/* Schedule Details Box */}
-                  <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-bg-soft border border-border text-xs font-bold text-primary">
+                  <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-bg-soft border border-border text-xs font-bold text-primary text-left">
                     <div>
                       <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Weekly Schedule</span>
                       <span>{selectedCourse.schedule}</span>

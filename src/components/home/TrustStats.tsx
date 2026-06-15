@@ -43,7 +43,7 @@ export default function TrustStats() {
   };
 
   return (
-    <section className="relative z-10 px-4 sm:px-6 lg:px-8 -mt-8">
+    <section className="relative z-10 px-4 sm:px-6 lg:px-8 mt-8">
       <div className="brand-container">
         <motion.div 
           variants={containerVariants}

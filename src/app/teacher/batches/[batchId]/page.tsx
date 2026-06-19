@@ -16,8 +16,12 @@ import {
   GraduationCap, 
   ArrowLeft,
   Settings,
-  HelpCircle
+  HelpCircle,
+  Sparkles,
+  Plus
 } from "lucide-react";
+import { formatCurrency } from "@/lib/currency";
+import { GenerateDuesForm } from "./payments/generate-dues-form";
 
 interface PageProps {
   params: Promise<{
@@ -85,6 +89,48 @@ export default async function TeacherBatchDetailsPage({ params, searchParams }: 
     .eq("batch_id", batchId)
     .order("created_at", { ascending: false })
     .limit(5);
+
+  // Fetch payments for this batch in the current month/year
+  const currentMonthNum = new Date().getMonth() + 1;
+  const currentYearNum = new Date().getFullYear();
+
+  const { data: batchPayments } = await supabase
+    .from("payments")
+    .select(`
+      *,
+      student:student_profiles (
+        student_code,
+        profile:profiles (
+          full_name
+        )
+      )
+    `)
+    .eq("batch_id", batchId)
+    .eq("billing_month", currentMonthNum)
+    .eq("billing_year", currentYearNum);
+
+  let curMonthExpected = 0;
+  let curMonthPaid = 0;
+  let curMonthDue = 0;
+  let curMonthPaidCount = 0;
+  let curMonthPartialCount = 0;
+  let curMonthUnpaidCount = 0;
+
+  batchPayments?.forEach((p) => {
+    const exp = Number(p.expected_amount) || 0;
+    const paid = Number(p.paid_amount) || 0;
+    curMonthExpected += exp;
+    curMonthPaid += paid;
+    if (p.status === "WAIVED") {
+      curMonthDue += 0;
+    } else {
+      curMonthDue += Math.max(exp - paid, 0);
+    }
+
+    if (p.status === "PAID") curMonthPaidCount++;
+    else if (p.status === "PARTIALLY_PAID") curMonthPartialCount++;
+    else if (p.status === "UNPAID") curMonthUnpaidCount++;
+  });
 
   const schedule = (
     batch.schedule && typeof batch.schedule === "object"
@@ -329,14 +375,114 @@ export default async function TeacherBatchDetailsPage({ params, searchParams }: 
         </div>
       )}
 
-      {/* Placeholders */}
+      {/* Payments tab */}
       {activeTab === "payments" && (
-        <div className="p-8 bg-white border border-dashed border-border rounded-2xl flex flex-col items-center justify-center text-center">
-          <CreditCard className="h-10 w-10 text-muted stroke-1 mb-4" />
-          <h3 className="text-sm font-extrabold text-primary">Payments Ledger Placeholder</h3>
-          <p className="text-xs text-muted max-w-sm font-medium mt-1 leading-relaxed">
-            The student monthly fees ledgers, invoice generations, online gateways mapping, and payment confirmations panel will be fully implemented in the next phase.
-          </p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs font-bold text-primary">
+          <div className="lg:col-span-2 space-y-6">
+            {/* Stats row */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-slate-50 border border-border/20 rounded-2xl p-4 text-center">
+                <span className="text-[10px] text-muted uppercase block">Total Expected</span>
+                <span className="text-lg font-black text-slate-800 mt-1 block">{formatCurrency(curMonthExpected)}</span>
+              </div>
+              <div className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-4 text-center">
+                <span className="text-[10px] text-muted uppercase block">Total Collected</span>
+                <span className="text-lg font-black text-emerald-700 mt-1 block">{formatCurrency(curMonthPaid)}</span>
+              </div>
+              <div className="bg-rose-50/50 border border-rose-100 rounded-2xl p-4 text-center">
+                <span className="text-[10px] text-muted uppercase block">Outstanding Due</span>
+                <span className={`text-lg font-black mt-1 block ${curMonthDue > 0 ? "text-rose-700" : "text-muted"}`}>{formatCurrency(curMonthDue)}</span>
+              </div>
+            </div>
+
+            {/* Payments List */}
+            <div className="bg-white p-6 rounded-2xl border border-border/40 shadow-sm space-y-4">
+              <div className="flex justify-between items-center border-b border-border/20 pb-3">
+                <h3 className="text-sm font-extrabold font-display">Current Month Tuition Slips ({currentMonthNum}/{currentYearNum})</h3>
+                <Link
+                  href={`/teacher/batches/${batchId}/payments`}
+                  className="text-[10px] text-primary hover:underline"
+                >
+                  View Full History &rarr;
+                </Link>
+              </div>
+
+              {batchPayments && batchPayments.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs font-semibold text-primary">
+                    <thead>
+                      <tr className="border-b border-border/20 text-muted uppercase tracking-wider text-[9px] font-extrabold font-sans">
+                        <th className="pb-3">Student</th>
+                        <th className="pb-3 text-right">Expected</th>
+                        <th className="pb-3 text-right">Paid</th>
+                        <th className="pb-3 text-right">Due</th>
+                        <th className="pb-3 text-center">Status</th>
+                        <th className="pb-3 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/10">
+                      {batchPayments.map((p) => {
+                        const due = p.status === "WAIVED" ? 0 : Math.max(Number(p.expected_amount) - Number(p.paid_amount), 0);
+                        const sName = (p.student as any)?.profile?.full_name || "Unknown";
+                        const sCode = (p.student as any)?.student_code || "";
+                        return (
+                          <tr key={p.id} className="hover:bg-slate-50/20">
+                            <td className="py-2.5">
+                              <span className="font-extrabold text-sm block">{sName}</span>
+                              <span className="text-[9px] text-muted block uppercase mt-0.5">{sCode}</span>
+                            </td>
+                            <td className="py-2.5 text-right font-bold text-slate-800">{formatCurrency(p.expected_amount)}</td>
+                            <td className="py-2.5 text-right font-bold text-emerald-700">{formatCurrency(p.paid_amount)}</td>
+                            <td className={`py-2.5 text-right font-bold ${due > 0 ? "text-rose-700" : "text-muted"}`}>{formatCurrency(due)}</td>
+                            <td className="py-2.5 text-center">
+                              <span className="inline-flex"><StatusBadge status={p.status} /></span>
+                            </td>
+                            <td className="py-2.5 text-right">
+                              <Link href={`/teacher/payments/${p.id}`} className="px-2 py-1 text-[9px] border rounded hover:bg-slate-50">Manage</Link>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-center py-6 text-xs text-muted font-bold">No payments generated for this month yet. Use the Generate Dues panel on the right.</p>
+              )}
+            </div>
+          </div>
+
+          {/* Dues action & summary sidebars */}
+          <div className="space-y-6">
+            <div className="bg-white p-5 rounded-2xl border border-border/40 shadow-sm space-y-4">
+              <h3 className="text-sm font-extrabold font-display border-b border-border/20 pb-2">Collections Progress</h3>
+              <div className="space-y-3 font-bold text-primary">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted">Paid Count:</span>
+                  <span className="text-emerald-700">{curMonthPaidCount} students</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted">Partial Count:</span>
+                  <span className="text-amber-700">{curMonthPartialCount} students</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted">Unpaid Count:</span>
+                  <span className="text-rose-700">{curMonthUnpaidCount} students</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-border/40 shadow-sm space-y-4">
+              <h3 className="text-sm font-extrabold font-display border-b border-border/30 pb-2 flex items-center gap-1.5">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span>Generate Monthly Dues</span>
+              </h3>
+              <p className="text-[10px] text-muted font-medium leading-relaxed">
+                Add billing rows for all active students enrolled in this batch for the current billing cycle. Duplicate checks are automatically enforced.
+              </p>
+              <GenerateDuesForm batchId={batchId} defaultMonth={currentMonthNum} defaultYear={currentYearNum} />
+            </div>
+          </div>
         </div>
       )}
 

@@ -16,8 +16,11 @@ import {
   ArrowLeft,
   Calendar,
   Shield,
-  BookOpen
+  BookOpen,
+  Plus,
+  CreditCard
 } from "lucide-react";
+import { formatCurrency } from "@/lib/currency";
 
 interface PageProps {
   params: Promise<{
@@ -96,6 +99,42 @@ export default async function TeacherStudentDetailsPage({ params }: PageProps) {
     `)
     .eq("student_id", studentId)
     .order("created_at", { ascending: false });
+
+  // Fetch student payments
+  const { data: studentPayments } = await supabase
+    .from("payments")
+    .select(`
+      *,
+      batch:batches (
+        id,
+        name,
+        code
+      )
+    `)
+    .eq("student_id", studentId)
+    .order("billing_year", { ascending: false })
+    .order("billing_month", { ascending: false });
+
+  const currentMonthNum = new Date().getMonth() + 1;
+  const currentYearNum = new Date().getFullYear();
+
+  let curMonthExpected = 0;
+  let curMonthPaid = 0;
+  let curMonthDue = 0;
+
+  studentPayments?.forEach((p) => {
+    if (p.billing_month === currentMonthNum && p.billing_year === currentYearNum) {
+      const exp = Number(p.expected_amount) || 0;
+      const paid = Number(p.paid_amount) || 0;
+      curMonthExpected += exp;
+      curMonthPaid += paid;
+      if (p.status === "WAIVED") {
+        curMonthDue += 0;
+      } else {
+        curMonthDue += Math.max(exp - paid, 0);
+      }
+    }
+  });
 
   // Fetch audit log summary for this student (combining student profile ID, profile user ID, and enrollment IDs)
   const enrollmentIds = enrollments?.map((e) => e.id) || [];
@@ -269,6 +308,109 @@ export default async function TeacherStudentDetailsPage({ params }: PageProps) {
         batches={allBatches || []}
         enrollments={enrollments || []}
       />
+
+      {/* Tuition Payments Summary & History Integration */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-border/40 shadow-sm space-y-4">
+          <div className="flex justify-between items-center border-b border-border/20 pb-3">
+            <h3 className="text-sm font-extrabold font-display flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-primary" />
+              <span>Student Payments History</span>
+            </h3>
+            <Link
+              href="/teacher/payments/new"
+              className="px-3 py-1.5 bg-primary hover:bg-primary/95 text-white text-[10px] uppercase font-black rounded-lg transition-all flex items-center gap-1 shadow-sm"
+            >
+              <Plus className="h-3 w-3" />
+              <span>Record Payment</span>
+            </Link>
+          </div>
+
+          {studentPayments && studentPayments.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-semibold text-primary">
+                <thead>
+                  <tr className="border-b border-border/20 text-muted uppercase tracking-wider text-[9px] font-extrabold font-sans">
+                    <th className="pb-3">Month/Year</th>
+                    <th className="pb-3">Batch</th>
+                    <th className="pb-3 text-right">Expected</th>
+                    <th className="pb-3 text-right">Paid</th>
+                    <th className="pb-3 text-right">Due</th>
+                    <th className="pb-3 text-center">Status</th>
+                    <th className="pb-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/10">
+                  {studentPayments.map((p) => {
+                    const dueAmt = p.status === "WAIVED" ? 0 : Math.max(Number(p.expected_amount) - Number(p.paid_amount), 0);
+                    return (
+                      <tr key={p.id} className="hover:bg-slate-50/20">
+                        <td className="py-2.5 font-extrabold">{p.billing_month}/{p.billing_year}</td>
+                        <td className="py-2.5 text-slate-700">{(p.batch as any)?.name}</td>
+                        <td className="py-2.5 text-right font-bold">{formatCurrency(p.expected_amount)}</td>
+                        <td className="py-2.5 text-right font-bold text-emerald-700">{formatCurrency(p.paid_amount)}</td>
+                        <td className={`py-2.5 text-right font-bold ${dueAmt > 0 ? "text-rose-700" : "text-muted"}`}>{formatCurrency(dueAmt)}</td>
+                        <td className="py-2.5 text-center">
+                          <span className="inline-flex"><StatusBadge status={p.status} /></span>
+                        </td>
+                        <td className="py-2.5 text-right">
+                          <Link href={`/teacher/payments/${p.id}`} className="px-2 py-1 text-[9px] border rounded hover:bg-slate-50">Manage</Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-center py-6 text-xs text-muted font-bold">No payments recorded for this student yet.</p>
+          )}
+        </div>
+
+        {/* Current month stats & Batch-wise balances */}
+        <div className="space-y-6">
+          <div className="bg-white p-5 rounded-2xl border border-border/40 shadow-sm space-y-4">
+            <h3 className="text-sm font-extrabold font-display border-b border-border/20 pb-2">Current Month Summary</h3>
+            <div className="space-y-2 text-xs font-bold text-primary">
+              <div className="flex justify-between">
+                <span className="text-muted">Expected:</span>
+                <span>{formatCurrency(curMonthExpected)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted">Paid:</span>
+                <span className="text-emerald-700">{formatCurrency(curMonthPaid)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted">Outstanding Due:</span>
+                <span className={curMonthDue > 0 ? "text-rose-700" : ""}>{formatCurrency(curMonthDue)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-border/40 shadow-sm space-y-4">
+            <h3 className="text-sm font-extrabold font-display border-b border-border/20 pb-2">Batch Status Details</h3>
+            <div className="divide-y divide-border/10 space-y-2.5">
+              {enrollments?.map((enr) => {
+                // Find latest payment for this batch
+                const latestPayment = studentPayments?.find(p => p.batch_id === enr.batch_id);
+                return (
+                  <div key={enr.id} className="pt-2 first:pt-0 flex justify-between items-center text-xs">
+                    <div>
+                      <span className="font-extrabold block">{(enr.batch as any)?.name}</span>
+                      <span className="text-[9px] text-muted block mt-0.5">Status: {enr.status}</span>
+                    </div>
+                    {latestPayment ? (
+                      <span className="inline-flex"><StatusBadge status={latestPayment.status} /></span>
+                    ) : (
+                      <span className="text-[10px] text-muted italic">No billing</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Audit Trail Summary logs */}
       <DashboardCard

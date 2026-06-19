@@ -1,20 +1,24 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase/client";
 import { 
   BookOpen, 
   LayoutDashboard, 
   CreditCard, 
-  Bell, 
-  FileText, 
   User,
-  GraduationCap
+  GraduationCap,
+  LogOut,
+  Loader2
 } from "lucide-react";
 
 interface SidebarProps {
   className?: string;
   onLinkClick?: () => void;
+  activeBatches?: any[];
 }
 
 interface NavItem {
@@ -23,17 +27,43 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-const studentNavItems: NavItem[] = [
-  { label: "Overview", href: "/student", icon: LayoutDashboard },
-  { label: "My Classes", href: "/student/classes", icon: BookOpen },
-  { label: "Payments", href: "/student/payments", icon: CreditCard },
-  { label: "Announcements", href: "/student/notices", icon: Bell },
-  { label: "Study Resources", href: "/student/resources", icon: FileText },
-  { label: "My Profile", href: "/student/profile", icon: User },
-];
-
-export function StudentSidebar({ className, onLinkClick }: SidebarProps) {
+export function StudentSidebar({ className, onLinkClick, activeBatches = [] }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  // Dynamic Navigation Items
+  const navItems: NavItem[] = [
+    { label: "Dashboard", href: "/student", icon: LayoutDashboard },
+  ];
+
+  // Map active batches to individual navigation links
+  activeBatches.forEach((batch) => {
+    navItems.push({
+      label: batch.name || `${batch.subject} Batch`,
+      href: `/student/batches/${batch.id}`,
+      icon: BookOpen,
+    });
+  });
+
+  // Base links
+  navItems.push(
+    { label: "Payments", href: "/student/payments", icon: CreditCard },
+    { label: "Profile", href: "/student/profile", icon: User }
+  );
+
+  const handleSignOut = async () => {
+    setLoggingOut(true);
+    try {
+      await supabase.auth.signOut();
+      router.push("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Sign out error:", error);
+    } finally {
+      setLoggingOut(false);
+    }
+  };
 
   return (
     <div className={cn("flex flex-col h-full bg-primary text-white border-r border-primary-dark", className)}>
@@ -54,7 +84,7 @@ export function StudentSidebar({ className, onLinkClick }: SidebarProps) {
 
       {/* Nav links */}
       <nav className="flex-grow p-4 space-y-1 overflow-y-auto">
-        {studentNavItems.map((item) => {
+        {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
 
@@ -78,9 +108,23 @@ export function StudentSidebar({ className, onLinkClick }: SidebarProps) {
             </Link>
           );
         })}
+
+        {/* Logout action directly inside sidebar */}
+        <button
+          onClick={handleSignOut}
+          disabled={loggingOut}
+          className="w-full flex items-center gap-3.5 px-4 py-3 text-sm font-bold rounded-xl text-white/70 hover:text-rose-200 hover:bg-rose-950/20 transition-all duration-200 text-left disabled:opacity-50"
+        >
+          {loggingOut ? (
+            <Loader2 className="h-5 w-5 shrink-0 animate-spin text-white/50" />
+          ) : (
+            <LogOut className="h-5 w-5 shrink-0 text-white/50 group-hover:text-rose-300" />
+          )}
+          <span>Logout</span>
+        </button>
       </nav>
 
-      {/* Footer / Account indicator */}
+      {/* Footer */}
       <div className="p-4 border-t border-primary-dark bg-primary-dark/20 text-xs font-semibold text-white/50 text-center">
         &copy; {new Date().getFullYear()} Shifat's Tales
       </div>

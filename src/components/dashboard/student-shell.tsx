@@ -9,26 +9,30 @@ interface StudentShellProps {
   children: React.ReactNode;
   userName: string;
   userEmail: string;
+  activeBatches?: any[];
 }
 
 export function StudentShell({
   children,
   userName,
   userEmail,
+  activeBatches = [],
 }: StudentShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen w-screen bg-bg-soft text-text overflow-hidden">
       {/* Desktop sidebar */}
-      <StudentSidebar className="hidden lg:flex lg:w-64 lg:shrink-0" />
+      <StudentSidebar className="hidden lg:flex lg:w-64 lg:shrink-0" activeBatches={activeBatches} />
 
       {/* Mobile sidebar drawer */}
       <MobileDashboardNav
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         role="STUDENT"
+        activeBatches={activeBatches}
       />
+
 
       {/* Main viewport area */}
       <div className="flex flex-1 flex-col overflow-hidden">

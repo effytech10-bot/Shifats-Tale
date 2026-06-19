@@ -10,12 +10,14 @@ interface MobileDashboardNavProps {
   isOpen: boolean;
   onClose: () => void;
   role: "STUDENT" | "TEACHER";
+  activeBatches?: any[];
 }
 
 export function MobileDashboardNav({
   isOpen,
   onClose,
   role,
+  activeBatches = [],
 }: MobileDashboardNavProps) {
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -48,7 +50,7 @@ export function MobileDashboardNav({
       {/* Slideout content drawer */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 w-72 max-w-[80vw] bg-white shadow-2xl transition-transform duration-350 ease-out transform flex flex-col z-50",
+          "fixed inset-y-0 left-0 w-72 max-w-[80vw] bg-white shadow-2xl transition-transform duration-355 ease-out transform flex flex-col z-50",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -68,7 +70,7 @@ export function MobileDashboardNav({
         {/* Dynamic Sidebar Container */}
         <div className="h-full flex-grow">
           {role === "STUDENT" ? (
-            <StudentSidebar onLinkClick={onClose} className="h-full border-r-0" />
+            <StudentSidebar onLinkClick={onClose} className="h-full border-r-0" activeBatches={activeBatches} />
           ) : (
             <TeacherSidebar onLinkClick={onClose} className="h-full border-r-0" />
           )}
@@ -77,3 +79,4 @@ export function MobileDashboardNav({
     </div>
   );
 }
+

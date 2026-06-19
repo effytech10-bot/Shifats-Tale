@@ -1,0 +1,314 @@
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { batchSchema, type BatchFormInput } from "@/lib/validations/batch";
+import { createBatchAction } from "@/app/actions/teacher";
+import { Loader2, ArrowLeft, Save } from "lucide-react";
+import Link from "next/link";
+
+export function NewBatchForm() {
+  const router = useRouter();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(batchSchema),
+    defaultValues: {
+      name: "",
+      code: "",
+      subject: "",
+      academicLevel: "",
+      description: "",
+      startDate: new Date().toISOString().split("T")[0],
+      endDate: "",
+      monthlyFee: 0,
+      admissionFee: 0,
+      capacity: undefined,
+      status: "DRAFT",
+      admissionOpen: false,
+      scheduleDays: "",
+      scheduleTime: "",
+      coverImageUrl: "",
+    },
+  });
+
+  const onSubmit = async (data: any) => {
+    setIsSubmitting(true);
+    setErrorMsg(null);
+    try {
+      const res = await createBatchAction(data);
+      if (!res.success) {
+        if (res.errors) {
+          // Flattened errors returned from server
+          const firstErrKey = Object.keys(res.errors)[0];
+          const firstErrMsg = (res.errors as any)[firstErrKey][0];
+          setErrorMsg(`${firstErrKey}: ${firstErrMsg}`);
+        } else {
+          setErrorMsg(res.message || "Failed to create batch.");
+        }
+      } else {
+        router.push("/teacher/batches");
+        router.refresh();
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-4xl bg-white p-6 sm:p-8 rounded-2xl border border-border/40 shadow-sm text-xs font-bold text-primary">
+      {errorMsg && (
+        <div className="p-4 bg-rose-50 border border-rose-150 text-rose-700 rounded-xl text-xs font-extrabold">
+          {errorMsg}
+        </div>
+      )}
+
+      {/* Grid: Core Batch fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Batch Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            {...register("name")}
+            placeholder="e.g. Physics HSC 2026 Batch A"
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.name && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.name.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Batch Code <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            {...register("code")}
+            placeholder="e.g. PHY-HSC26-A"
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none font-display uppercase"
+          />
+          {errors.code && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.code.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Subject <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            {...register("subject")}
+            placeholder="e.g. Physics"
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.subject && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.subject.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Academic Level <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            {...register("academicLevel")}
+            placeholder="e.g. HSC"
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.academicLevel && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.academicLevel.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Start Date <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            {...register("startDate")}
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.startDate && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.startDate.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            End Date (Optional)
+          </label>
+          <input
+            type="date"
+            {...register("endDate")}
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.endDate && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.endDate.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Monthly Fee (BDT) <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            {...register("monthlyFee")}
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.monthlyFee && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.monthlyFee.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Admission Fee (BDT)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            {...register("admissionFee")}
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.admissionFee && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.admissionFee.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Capacity (Student limit)
+          </label>
+          <input
+            type="number"
+            {...register("capacity")}
+            placeholder="No limit"
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+          {errors.capacity && (
+            <p className="mt-1.5 text-rose-600 text-[10px] font-bold">{errors.capacity.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Initial Status
+          </label>
+          <select
+            {...register("status")}
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          >
+            <option value="DRAFT">Draft</option>
+            <option value="OPEN">Open (Accepting Admission)</option>
+            <option value="RUNNING">Running</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="ARCHIVED">Archived</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Class Schedule Days
+          </label>
+          <input
+            type="text"
+            {...register("scheduleDays")}
+            placeholder="e.g. Sat, Mon, Wed"
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+            Class Schedule Time
+          </label>
+          <input
+            type="text"
+            {...register("scheduleTime")}
+            placeholder="e.g. 04:00 PM - 05:30 PM"
+            className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+          Description
+        </label>
+        <textarea
+          rows={3}
+          {...register("description")}
+          placeholder="Brief description about the curriculum, focus topics, or prerequisites..."
+          className="w-full px-4 py-3 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none resize-y"
+        />
+      </div>
+
+      <div>
+        <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
+          Cover Image URL
+        </label>
+        <input
+          type="text"
+          {...register("coverImageUrl")}
+          placeholder="https://example.com/cover-image.jpg"
+          className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
+        />
+      </div>
+
+      {/* Checkbox settings */}
+      <div className="flex items-center gap-2 p-3 bg-bg/20 rounded-xl border border-border/30">
+        <input
+          type="checkbox"
+          id="admissionOpen"
+          {...register("admissionOpen")}
+          className="h-4.5 w-4.5 rounded border-border text-primary focus:ring-primary"
+        />
+        <label htmlFor="admissionOpen" className="text-xs font-extrabold text-primary select-none cursor-pointer">
+          Open Admissions Immediately
+        </label>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-between items-center pt-6 border-t border-border/30">
+        <Link
+          href="/teacher/batches"
+          className="px-5 py-2.5 border border-border/80 bg-white hover:bg-slate-50 text-xs font-bold text-muted rounded-xl transition-all flex items-center gap-1.5"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to Batches</span>
+        </Link>
+        
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-6 py-2.5 primary-btn text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md shadow-primary/10 transition-all hover:scale-[1.02]"
+        >
+          {isSubmitting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4" />
+          )}
+          <span>Create Batch</span>
+        </button>
+      </div>
+    </form>
+  );
+}

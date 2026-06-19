@@ -1,8 +1,20 @@
 (process.env as any).NODE_ENV = "test";
 import test from "node:test";
 import assert from "node:assert";
-import { sanitizeFilename, getCloudinaryResourceType } from "../src/lib/cloudinary/upload";
-import { validateUploadedFile, validateFileMagicBytes } from "../src/lib/cloudinary/validation";
+
+let sanitizeFilename: any;
+let getCloudinaryResourceType: any;
+let validateUploadedFile: any;
+let validateFileMagicBytes: any;
+
+test.before(async () => {
+  const upload = await import("../src/lib/cloudinary/upload");
+  const validation = await import("../src/lib/cloudinary/validation");
+  sanitizeFilename = upload.sanitizeFilename;
+  getCloudinaryResourceType = upload.getCloudinaryResourceType;
+  validateUploadedFile = validation.validateUploadedFile;
+  validateFileMagicBytes = validation.validateFileMagicBytes;
+});
 
 // =========================================================================
 // IN-MEMORY MOCK SERVICE FOR BATCH-MATERIAL AND ANNOUNCEMENT RULES

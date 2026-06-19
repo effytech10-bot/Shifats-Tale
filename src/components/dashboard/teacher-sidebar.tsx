@@ -11,7 +11,8 @@ import {
   FileText, 
   UserCheck,
   Settings,
-  ShieldAlert
+  ShieldAlert,
+  GraduationCap
 } from "lucide-react";
 
 interface SidebarProps {
@@ -33,6 +34,7 @@ const teacherNavItems: NavItem[] = [
   { label: "Payment Ledger", href: "/teacher/payments", icon: CreditCard },
   { label: "Announcements", href: "/teacher/announcements", icon: Bell },
   { label: "Study Materials", href: "/teacher/materials", icon: FileText },
+  { label: "Exams & Grading", href: "/teacher/exams", icon: GraduationCap },
   { label: "Portal Settings", href: "/teacher/settings", icon: Settings },
 ];
 

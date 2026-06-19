@@ -98,10 +98,10 @@ export default async function BatchStudentsPage({ params }: PageProps) {
           Materials (Placeholder)
         </Link>
         <Link
-          href={`/teacher/batches/${batchId}?tab=exams`}
+          href={`/teacher/batches/${batchId}/exams`}
           className="pb-3 px-1 transition-all border-b-2 border-transparent hover:text-primary"
         >
-          Exams (Placeholder)
+          Exams
         </Link>
       </div>
 

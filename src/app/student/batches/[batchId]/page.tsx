@@ -114,6 +114,39 @@ export default async function StudentBatchDetailsPage({ params }: PageProps) {
   const recentAnnouncements = activeAnnouncements.slice(0, 3);
   const announcementsCount = activeAnnouncements.length;
 
+  // Fetch upcoming/scheduled/taken batch exams (excluding DRAFT)
+  const { data: dbExams } = await supabase
+    .from("exams")
+    .select("*")
+    .eq("batch_id", batchId)
+    .neq("status", "DRAFT");
+
+  const upcomingExams = (dbExams || [])
+    .filter((e) => e.status !== "RESULT_PUBLISHED")
+    .slice(0, 3);
+
+  // Fetch student published results for this batch
+  const { data: studentResults } = await supabase
+    .from("exam_results")
+    .select(`
+      *,
+      exam:exams (
+        id,
+        name,
+        exam_type,
+        exam_date,
+        total_marks,
+        pass_marks,
+        status,
+        batch_id
+      )
+    `)
+    .eq("student_id", studentProfile?.id || "");
+
+  const publishedBatchResults = (studentResults || [])
+    .filter((r: any) => r.exam && r.exam.batch_id === batchId && r.exam.status === "RESULT_PUBLISHED")
+    .slice(0, 3);
+
   const currentMonthNum = new Date().getMonth() + 1;
   const currentYearNum = new Date().getFullYear();
 
@@ -272,30 +305,86 @@ export default async function StudentBatchDetailsPage({ params }: PageProps) {
         {/* Examinations */}
         <DashboardCard
           title="Upcoming Exams & Tests"
-          description="Scheduled grading sheets"
+          description="Scheduled examinations and class tests"
           icon={<Award className="h-5 w-5 text-accent" />}
         >
-          <div className="p-5 border border-dashed border-border/60 rounded-xl bg-slate-50/30 flex flex-col items-center justify-center text-center py-8">
-            <Award className="h-8 w-8 text-muted/6 stroke-1 mb-2" />
-            <h4 className="text-xs font-extrabold text-primary">No Exams Scheduled</h4>
-            <p className="text-[10px] text-muted mt-1 leading-relaxed max-w-[250px]">
-              Weekly examinations, class tests schedules, and pass boundaries configurations will appear here during tests season.
-            </p>
+          <div className="space-y-4 pt-2 text-xs font-bold text-primary">
+            {upcomingExams.length > 0 ? (
+              <div className="space-y-2">
+                {upcomingExams.map((e) => (
+                  <div key={e.id} className="flex justify-between items-center bg-slate-50 px-3 py-2.5 rounded-xl border border-slate-100">
+                    <div>
+                      <span className="font-extrabold text-slate-800 text-sm block">{e.name}</span>
+                      <span className="text-[9px] text-slate-400 font-semibold block mt-0.5">Date: {e.exam_date}</span>
+                    </div>
+                    <span className="inline-flex px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-slate-200 text-slate-700">
+                      {e.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 border border-dashed border-border/60 rounded-xl bg-slate-50/30 text-center py-6">
+                <p className="text-[10px] text-muted font-semibold">No upcoming examinations.</p>
+              </div>
+            )}
+            <div className="pt-2 border-t border-border/20 text-center">
+              <Link
+                href={`/student/batches/${batchId}/exams`}
+                className="text-[10px] text-primary hover:underline"
+              >
+                View All Exams &rarr;
+              </Link>
+            </div>
           </div>
         </DashboardCard>
 
         {/* Results */}
         <DashboardCard
           title="Academic Performance Results"
-          description="Exam scores & percentile rankings"
+          description="Exam scores & letter grades"
           icon={<Layers className="h-5 w-5 text-accent" />}
         >
-          <div className="p-5 border border-dashed border-border/60 rounded-xl bg-slate-50/30 flex flex-col items-center justify-center text-center py-8">
-            <Layers className="h-8 w-8 text-muted/6 stroke-1 mb-2" />
-            <h4 className="text-xs font-extrabold text-primary">No Scores Logged</h4>
-            <p className="text-[10px] text-muted mt-1 leading-relaxed max-w-[250px]">
-              Exam obtained marks, pass/fail status updates, grade logs, and class rankings sheets will be published after test gradings.
-            </p>
+          <div className="space-y-4 pt-2 text-xs font-bold text-primary">
+            {publishedBatchResults.length > 0 ? (
+              <div className="space-y-2">
+                {publishedBatchResults.map((r: any) => {
+                  const isAbs = r.attendance_status === "ABSENT";
+                  const marks = r.obtained_marks !== null ? Number(r.obtained_marks) : 0;
+                  const total = Number(r.exam.total_marks) || 100;
+                  
+                  return (
+                    <Link 
+                      key={r.id} 
+                      href={`/student/batches/${batchId}/exams/${r.exam.id}`}
+                      className="flex justify-between items-center bg-slate-50 hover:bg-slate-100/80 px-3 py-2.5 rounded-xl border border-slate-100 transition-all block"
+                    >
+                      <div>
+                        <span className="font-extrabold text-slate-800 text-sm block">{r.exam.name}</span>
+                        <span className="text-[9px] text-slate-400 font-semibold block mt-0.5">
+                          Grade: {isAbs ? "F (ABSENT)" : `${r.grade || "-"} (${((marks/total)*100).toFixed(0)}%)`}
+                        </span>
+                      </div>
+                      <span className="text-xs font-extrabold text-primary">
+                        Details &rarr;
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="p-4 border border-dashed border-border/60 rounded-xl bg-slate-50/30 text-center py-6">
+                <p className="text-[10px] text-muted font-semibold">No graded results published yet.</p>
+              </div>
+            )}
+            <div className="pt-2 border-t border-border/20 text-center">
+              <Link
+                href={`/student/batches/${batchId}/results`}
+                className="text-[10px] text-primary hover:underline"
+              >
+                View Performance Ledger &rarr;
+              </Link>
+            </div>
           </div>
         </DashboardCard>
 

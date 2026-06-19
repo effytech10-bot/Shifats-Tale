@@ -429,6 +429,9 @@ export interface Database {
           published_at: string | null
           created_at: string
           updated_at: string
+          start_time: string | null
+          duration: number | null
+          result_publication_note: string | null
         }
         Insert: {
           id?: string
@@ -443,6 +446,9 @@ export interface Database {
           published_at?: string | null
           created_at?: string
           updated_at?: string
+          start_time?: string | null
+          duration?: number | null
+          result_publication_note?: string | null
         }
         Update: {
           id?: string
@@ -457,6 +463,9 @@ export interface Database {
           published_at?: string | null
           created_at?: string
           updated_at?: string
+          start_time?: string | null
+          duration?: number | null
+          result_publication_note?: string | null
         }
         Relationships: [
           {

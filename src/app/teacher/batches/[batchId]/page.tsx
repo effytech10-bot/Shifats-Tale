@@ -161,6 +161,12 @@ export default async function TeacherBatchDetailsPage({ params, searchParams }: 
 
   const recentBatchAnnouncements = batchAnnouncements?.slice(0, 5) || [];
 
+  // Fetch examinations count
+  const { count: examsCount } = await supabase
+    .from("exams")
+    .select("id", { count: "exact", head: true })
+    .eq("batch_id", batchId);
+
   const schedule = (
     batch.schedule && typeof batch.schedule === "object"
       ? batch.schedule
@@ -219,12 +225,10 @@ export default async function TeacherBatchDetailsPage({ params, searchParams }: 
           Materials ({totalMatCount})
         </Link>
         <Link
-          href={`/teacher/batches/${batchId}?tab=exams`}
-          className={`pb-3 px-1 transition-all border-b-2 hover:text-primary ${
-            activeTab === "exams" ? "border-primary text-primary" : "border-transparent"
-          }`}
+          href={`/teacher/batches/${batchId}/exams`}
+          className={`pb-3 px-1 transition-all border-b-2 hover:text-primary border-transparent`}
         >
-          Exams (Placeholder)
+          Exams ({examsCount ?? 0})
         </Link>
       </div>
 
@@ -614,16 +618,6 @@ export default async function TeacherBatchDetailsPage({ params, searchParams }: 
               )}
             </div>
           </div>
-        </div>
-      )}
-
-      {activeTab === "exams" && (
-        <div className="p-8 bg-white border border-dashed border-border rounded-2xl flex flex-col items-center justify-center text-center">
-          <GraduationCap className="h-10 w-10 text-muted stroke-1 mb-4" />
-          <h3 className="text-sm font-extrabold text-primary">Examinations & Grading Placeholder</h3>
-          <p className="text-xs text-muted max-w-sm font-medium mt-1 leading-relaxed">
-            Class tests, weekly exams scheduling, pass marks configurations, grade sheets entry, and auto percentile rankings will be released in the upcoming phases.
-          </p>
         </div>
       )}
     </div>

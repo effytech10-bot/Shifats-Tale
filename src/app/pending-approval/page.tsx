@@ -1,64 +1,48 @@
-"use client";
+import React from "react";
+import { redirect } from "next/navigation";
+import { resolveAuthenticatedDestination } from "@/lib/supabase/auth";
+import { siteInfo } from "@/data/site";
+import { PendingApprovalView } from "./pending-approval-view";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Clock, LogOut, Loader2 } from "lucide-react";
-import { supabase } from "@/lib/supabase/client";
+export default async function PendingApprovalPage() {
+  // Authoritative server-side verification checks
+  const {
+    destination,
+    profile,
+    studentProfile,
+  } = await resolveAuthenticatedDestination();
 
-export default function PendingApprovalPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  if (destination === "UNAUTHENTICATED") {
+    redirect("/login");
+  }
+  if (destination === "TEACHER_DASHBOARD") {
+    redirect("/teacher");
+  }
+  if (destination === "STUDENT_DASHBOARD") {
+    redirect("/student");
+  }
+  if (destination === "ACCOUNT_DISABLED") {
+    redirect("/account-disabled");
+  }
+  if (destination === "INVALID_PROFILE") {
+    redirect("/login?error=invalid_profile");
+  }
 
-  const handleLogout = async () => {
-    setLoading(true);
-    try {
-      await supabase.auth.signOut();
-      router.push("/login");
-      router.refresh();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const studentName = profile?.full_name || "Student";
+  const studentCode = studentProfile?.student_code || "N/A";
+  const regStatus = studentProfile?.registration_status || "PENDING";
+  const regDate = studentProfile?.registered_at
+    ? new Date(studentProfile.registered_at).toLocaleDateString()
+    : "N/A";
 
   return (
-    <div className="space-y-6">
-      {/* Clock icon with brand styling */}
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-200/60 animate-pulse">
-        <Clock className="h-7 w-7" />
-      </div>
-
-      <div className="space-y-2">
-        <h2 className="text-2xl font-extrabold font-display text-primary leading-tight">
-          Approval Pending
-        </h2>
-        <p className="text-sm text-muted font-medium leading-relaxed max-w-sm mx-auto">
-          Your account registration was received successfully! All new accounts must be verified manually by Sir before accessing dashboard courses.
-        </p>
-      </div>
-
-      <div className="pt-4 border-t border-border/40 space-y-3">
-        <button
-          onClick={() => router.refresh()}
-          className="w-full primary-btn py-2.5 rounded-xl text-sm font-bold block"
-        >
-          Check Status Again
-        </button>
-
-        <button
-          onClick={handleLogout}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 border border-border/80 bg-white hover:bg-slate-50 text-xs font-bold text-muted hover:text-primary py-2.5 rounded-xl transition-all duration-200"
-        >
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <LogOut className="h-4 w-4" />
-          )}
-          <span>Sign Out</span>
-        </button>
-      </div>
-    </div>
+    <PendingApprovalView
+      studentName={studentName}
+      studentCode={studentCode}
+      registrationStatus={regStatus}
+      registrationDate={regDate}
+      contactPhone={siteInfo.phone}
+      contactEmail={siteInfo.email}
+    />
   );
 }

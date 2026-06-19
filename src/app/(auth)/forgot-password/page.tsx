@@ -5,14 +5,14 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Mail, Loader2, AlertCircle, Sparkles } from "lucide-react";
+import { Mail, Loader2, AlertCircle, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
-const forgotSchema = z.object({
+const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
-type ForgotInput = z.infer<typeof forgotSchema>;
+type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
@@ -23,17 +23,22 @@ export default function ForgotPasswordPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotInput>({
-    resolver: zodResolver(forgotSchema),
+  } = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = async (data: ForgotInput) => {
+  const onSubmit = async (data: ForgotPasswordInput) => {
     setLoading(true);
     setError(null);
     try {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(data.email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
+      // Get current host location to construct redirection URL for password recovery
+      const siteUrl = window.location.origin;
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+        data.email.toLowerCase().trim(),
+        {
+          redirectTo: `${siteUrl}/reset-password`,
+        }
+      );
 
       if (resetError) {
         throw new Error(resetError.message);
@@ -41,7 +46,7 @@ export default function ForgotPasswordPage() {
 
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || "Failed to send reset link. Please try again.");
+      setError(err.message || "Failed to submit request. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -51,19 +56,19 @@ export default function ForgotPasswordPage() {
     return (
       <div className="bg-white border border-border/60 rounded-2xl p-8 shadow-sm text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 mb-4 border border-emerald-100">
-          <Sparkles className="h-6 w-6" />
+          <Mail className="h-6 w-6" />
         </div>
         <h2 className="text-2xl font-bold font-display text-primary mb-2">
-          Reset Email Sent
+          Request Sent
         </h2>
         <p className="text-sm text-muted font-medium mb-6 leading-relaxed">
-          Please check your inbox for instructions to reset your password.
+          If an account exists matching that email, a secure password reset link has been sent to it. Please check your inbox.
         </p>
         <Link
           href="/login"
           className="w-full primary-btn py-2.5 rounded-xl text-sm font-bold block"
         >
-          Return to Login
+          Back to Login
         </Link>
       </div>
     );
@@ -73,10 +78,10 @@ export default function ForgotPasswordPage() {
     <div className="bg-white border border-border/60 rounded-2xl p-8 shadow-sm">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold font-display text-primary leading-tight">
-          Forgot Password
+          Forgot Password?
         </h2>
         <p className="text-xs text-muted font-medium mt-1">
-          Enter your email to receive a password reset link
+          Enter your email to receive a recovery link
         </p>
       </div>
 
@@ -100,6 +105,7 @@ export default function ForgotPasswordPage() {
             <input
               type="email"
               {...register("email")}
+              disabled={loading}
               className="w-full pl-10 pr-4 py-2.5 bg-bg/30 border border-border/80 focus:border-primary/40 focus:ring-1 focus:ring-primary/45 rounded-xl text-sm transition-all focus:outline-none placeholder-muted font-medium"
               placeholder="name@example.com"
             />
@@ -120,7 +126,7 @@ export default function ForgotPasswordPage() {
           {loading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Sending link...</span>
+              <span>Sending Request...</span>
             </>
           ) : (
             <span>Send Reset Link</span>
@@ -129,15 +135,13 @@ export default function ForgotPasswordPage() {
       </form>
 
       <div className="mt-6 pt-5 border-t border-border/30 text-center">
-        <p className="text-xs text-muted font-medium">
-          Remember your credentials?{" "}
-          <Link
-            href="/login"
-            className="font-bold text-primary hover:text-accent transition-colors"
-          >
-            Login Here
-          </Link>
-        </p>
+        <Link
+          href="/login"
+          className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-muted hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Back to Login</span>
+        </Link>
       </div>
     </div>
   );

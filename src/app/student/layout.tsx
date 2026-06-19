@@ -1,64 +1,38 @@
-"use client";
+import React from "react";
+import { redirect } from "next/navigation";
+import { resolveAuthenticatedDestination } from "@/lib/supabase/auth";
+import { StudentShell } from "@/components/dashboard/student-shell";
 
-import React, { useState, useEffect } from "react";
-import { StudentSidebar } from "@/components/dashboard/student-sidebar";
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { MobileDashboardNav } from "@/components/dashboard/mobile-dashboard-nav";
-import { supabase } from "@/lib/supabase/client";
-
-export default function StudentLayout({
+export default async function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string }>({
-    name: "Student",
-    email: "student@coaching.com",
-  });
+  // Authoritative server-side status resolution
+  const { destination, profile } = await resolveAuthenticatedDestination();
 
-  useEffect(() => {
-    async function getUserDetails() {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (authUser) {
-        setUser({
-          name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Student",
-          email: authUser.email || "student@coaching.com",
-        });
-      }
-    }
-    getUserDetails();
-  }, []);
+  if (destination === "UNAUTHENTICATED") {
+    redirect("/login");
+  }
+  if (destination === "TEACHER_DASHBOARD") {
+    redirect("/teacher");
+  }
+  if (destination === "PENDING_APPROVAL") {
+    redirect("/pending-approval");
+  }
+  if (destination === "ACCOUNT_DISABLED") {
+    redirect("/account-disabled");
+  }
+  if (destination === "INVALID_PROFILE") {
+    redirect("/login?error=invalid_profile");
+  }
+
+  const userName = profile?.full_name || "Student";
+  const userEmail = profile?.email || "";
 
   return (
-    <div className="flex h-screen w-screen bg-bg-soft text-text overflow-hidden">
-      {/* Desktop sidebar */}
-      <StudentSidebar className="hidden lg:flex lg:w-64 lg:shrink-0" />
-
-      {/* Mobile sidebar drawer */}
-      <MobileDashboardNav
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        role="STUDENT"
-      />
-
-      {/* Main viewport area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Portal Header */}
-        <DashboardHeader
-          role="STUDENT"
-          userName={user.name}
-          userEmail={user.email}
-          onMenuToggle={() => setSidebarOpen(true)}
-        />
-
-        {/* Scrollable Main Content Container */}
-        <main className="flex-1 overflow-y-auto px-6 py-8 focus:outline-none">
-          <div className="mx-auto max-w-7xl">
-            {children}
-          </div>
-        </main>
-      </div>
-    </div>
+    <StudentShell userName={userName} userEmail={userEmail}>
+      {children}
+    </StudentShell>
   );
 }

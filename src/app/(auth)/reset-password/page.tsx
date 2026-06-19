@@ -6,18 +6,20 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Lock, Loader2, AlertCircle, Sparkles } from "lucide-react";
+import { Lock, Loader2, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
-const resetSchema = z.object({
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+const resetPasswordSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
-type ResetInput = z.infer<typeof resetSchema>;
+type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -29,25 +31,25 @@ export default function ResetPasswordPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ResetInput>({
-    resolver: zodResolver(resetSchema),
+  } = useForm<ResetPasswordInput>({
+    resolver: zodResolver(resetPasswordSchema),
   });
 
-  const onSubmit = async (data: ResetInput) => {
+  const onSubmit = async (data: ResetPasswordInput) => {
     setLoading(true);
     setError(null);
     try {
-      const { error: resetError } = await supabase.auth.updateUser({
+      const { error: updateError } = await supabase.auth.updateUser({
         password: data.password,
       });
 
-      if (resetError) {
-        throw new Error(resetError.message);
+      if (updateError) {
+        throw new Error(updateError.message);
       }
 
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || "Failed to update password. Please try again.");
+      setError(err.message || "Failed to reset password. Link may be expired.");
     } finally {
       setLoading(false);
     }
@@ -57,13 +59,13 @@ export default function ResetPasswordPage() {
     return (
       <div className="bg-white border border-border/60 rounded-2xl p-8 shadow-sm text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 mb-4 border border-emerald-100">
-          <Sparkles className="h-6 w-6" />
+          <Lock className="h-6 w-6" />
         </div>
         <h2 className="text-2xl font-bold font-display text-primary mb-2">
-          Password Reset Success
+          Password Updated
         </h2>
         <p className="text-sm text-muted font-medium mb-6 leading-relaxed">
-          Your credentials have been successfully updated. You can now login.
+          Your account password was updated successfully. You can now use your new password to sign in.
         </p>
         <Link
           href="/login"
@@ -94,7 +96,7 @@ export default function ResetPasswordPage() {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Password */}
+        {/* New Password */}
         <div>
           <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
             New Password
@@ -106,6 +108,7 @@ export default function ResetPasswordPage() {
             <input
               type="password"
               {...register("password")}
+              disabled={loading}
               className="w-full pl-10 pr-4 py-2.5 bg-bg/30 border border-border/80 focus:border-primary/40 focus:ring-1 focus:ring-primary/45 rounded-xl text-sm transition-all focus:outline-none placeholder-muted font-medium"
               placeholder="••••••••"
             />
@@ -129,6 +132,7 @@ export default function ResetPasswordPage() {
             <input
               type="password"
               {...register("confirmPassword")}
+              disabled={loading}
               className="w-full pl-10 pr-4 py-2.5 bg-bg/30 border border-border/80 focus:border-primary/40 focus:ring-1 focus:ring-primary/45 rounded-xl text-sm transition-all focus:outline-none placeholder-muted font-medium"
               placeholder="••••••••"
             />
@@ -149,10 +153,10 @@ export default function ResetPasswordPage() {
           {loading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Updating password...</span>
+              <span>Updating Password...</span>
             </>
           ) : (
-            <span>Update Password</span>
+            <span>Reset Password</span>
           )}
         </button>
       </form>

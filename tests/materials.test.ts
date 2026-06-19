@@ -288,10 +288,20 @@ class MaterialsMockService {
     const oldRecord = this.materials[materialId];
     if (!oldRecord) throw new Error("Material not found.");
 
+    // Perform validation
+    const validation = validateUploadedFile(file.name, file.type, file.size, oldRecord.content_type);
+    if (!validation.isValid) {
+      throw new Error(validation.error);
+    }
     const ext = file.name.split(".").pop()?.toLowerCase() || "";
+    if (!validateFileMagicBytes(file.buffer, ext)) {
+      throw new Error("File contents mismatch (failed magic bytes verification).");
+    }
+
+    const { sanitizedName } = sanitizeFilename(file.name);
     const resourceType = getCloudinaryResourceType(ext);
     const uuid = crypto.randomUUID();
-    const publicId = `coaching-center/batches/${oldRecord.batch_id}/2026/${uuid}-${file.name}`;
+    const publicId = `coaching-center/batches/${oldRecord.batch_id}/2026/${uuid}-${sanitizedName}`;
 
     // Upload replacement as new asset first
     const uploadRes = this.uploadToCloudinary(publicId, resourceType, file.buffer);
@@ -467,8 +477,13 @@ class MaterialsMockService {
     if (!material.cloudinary_public_id) throw new Error("No file asset.");
 
     // Return short-lived signed access URL
+    const ext = material.cloudinary_format && material.cloudinary_resource_type !== "raw"
+      ? `.${material.cloudinary_format}`
+      : "";
+
+    // Return short-lived signed access URL
     return {
-      url: `https://api.cloudinary.com/v1_1/mock/authenticated/${material.cloudinary_public_id}?expires=120&signature=hash`,
+      url: `https://api.cloudinary.com/v1_1/mock/authenticated/${material.cloudinary_public_id}${ext}?expires=120&signature=hash`,
       expiresIn: 120, // 2 minutes short expiration
     };
   }
@@ -884,7 +899,7 @@ test("Batch-Material and Announcement System Test Suite", async (t) => {
 
     // Check newly uploaded asset is deleted
     const deletedList = service.cloudinaryDeleted;
-    assert.ok(deletedList.some(id => id.includes("repl.pdf")));
+    assert.ok(deletedList.some(id => id.includes("repl")));
 
     // Check original public ID remains on DB record
     assert.strictEqual(service.materials[material.id].cloudinary_public_id, origPublicId);
@@ -910,7 +925,7 @@ test("Batch-Material and Announcement System Test Suite", async (t) => {
     });
 
     // Check database has the new public ID
-    assert.ok(service.materials[material.id].cloudinary_public_id?.includes("repl.pdf"));
+    assert.ok(service.materials[material.id].cloudinary_public_id?.includes("repl"));
     
     // Check old asset was cleaned up from Cloudinary store
     assert.ok(service.cloudinaryDeleted.includes(oldPublicId));
@@ -929,7 +944,7 @@ test("Batch-Material and Announcement System Test Suite", async (t) => {
     });
 
     // Verify it uploaded and then was deleted (rollback)
-    assert.ok(service.cloudinaryDeleted.some(id => id.includes("fail.pdf")));
+    assert.ok(service.cloudinaryDeleted.some(id => id.includes("fail")));
   });
 
   await t.test("27. Student cannot submit an arbitrary Cloudinary public ID (handled by server-only generation)", () => {

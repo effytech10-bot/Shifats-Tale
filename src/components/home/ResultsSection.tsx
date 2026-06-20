@@ -15,9 +15,9 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
     if (offset === 0) {
       return {
         x: 0,
-        z: 80,
+        z: 0,
         rotateY: 0,
-        scale: 0.95,
+        scale: 1.05,
         opacity: 1,
         blur: 0,
         zIndex: 50,
@@ -27,7 +27,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
     if (offset === -1) {
       return {
         x: -190,
-        z: -40,
+        z: -20,
         rotateY: 25,
         scale: 0.82,
         opacity: 0.55,
@@ -39,7 +39,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
     if (offset === 1) {
       return {
         x: 190,
-        z: -40,
+        z: -20,
         rotateY: -25,
         scale: 0.82,
         opacity: 0.55,
@@ -50,7 +50,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
     }
     return {
       x: offset > 0 ? 300 : -300,
-      z: -200,
+      z: -50,
       rotateY: offset > 0 ? -45 : 45,
       scale: 0.6,
       opacity: 0,
@@ -65,7 +65,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
   if (!visible) {
     return {
       x: offset > 0 ? 620 : -620,
-      z: -420,
+      z: -120,
       rotateY: offset > 0 ? -70 : 70,
       scale: 0.58,
       opacity: 0,
@@ -78,9 +78,9 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
   if (offset === 0) {
     return {
       x: 0,
-      z: 180,
+      z: 0,
       rotateY: 0,
-      scale: 1,
+      scale: 1.15,
       opacity: 1,
       blur: 0,
       zIndex: 50,
@@ -91,7 +91,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
   if (offset === -1) {
     return {
       x: -300,
-      z: 20,
+      z: -20,
       rotateY: 42,
       scale: 0.86,
       opacity: 0.72,
@@ -104,7 +104,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
   if (offset === 1) {
     return {
       x: 300,
-      z: 20,
+      z: -20,
       rotateY: -42,
       scale: 0.86,
       opacity: 0.72,
@@ -117,7 +117,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
   if (offset === -2) {
     return {
       x: -500,
-      z: -180,
+      z: -60,
       rotateY: 62,
       scale: 0.68,
       opacity: 0.28,
@@ -129,7 +129,7 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
 
   return {
     x: 500,
-    z: -180,
+    z: -60,
     rotateY: -62,
     scale: 0.68,
     opacity: 0.28,
@@ -376,9 +376,9 @@ export default function ResultsSection() {
                     className="absolute left-1/2 top-1/2 w-[280px] sm:w-[360px] h-[420px] sm:h-[480px]"
                     style={{
                       zIndex: cardMotion.zIndex,
-                      transformStyle: "preserve-3d",
+                      transformStyle: offset === 0 ? "flat" : "preserve-3d",
                       pointerEvents: cardMotion.pointerEvents,
-                      backfaceVisibility: "hidden",
+                      backfaceVisibility: offset === 0 ? "visible" : "hidden",
                       transformOrigin: "center center"
                     }}
                     transformTemplate={({ x, z, rotateY, scale }) =>

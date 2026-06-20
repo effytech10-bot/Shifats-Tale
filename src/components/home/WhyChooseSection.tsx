@@ -62,7 +62,7 @@ const MethodologyCard = ({
       <div className={`absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] transition-opacity duration-500 ease-out z-0 ${isActive ? "opacity-100" : "opacity-0"}`} />
       
       {/* Background waves in blue overlay with floating fluid wave animation */}
-      <div className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl ${isActive ? "opacity-12" : "opacity-0"}`}>
+      <div className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl ${isActive ? "opacity-10" : "opacity-0"}`}>
         <motion.div
           animate={isActive ? { 
             x: ["-5%", "5%", "-5%"], 
@@ -267,7 +267,7 @@ export default function WhyChooseSection() {
                 <div className={`absolute inset-0 bg-gradient-to-br from-[#010E62] to-[#000940] transition-opacity duration-500 ease-out z-0 ${isActive ? "opacity-100" : "opacity-0"}`} />
                 
                 {/* Background waves in blue overlay with float animation */}
-                <div className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl ${isActive ? "opacity-12" : "opacity-0"}`}>
+                <div className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 overflow-hidden rounded-3xl ${isActive ? "opacity-10" : "opacity-0"}`}>
                   <motion.div
                     animate={isActive ? { 
                       x: ["-5%", "5%", "-5%"], 

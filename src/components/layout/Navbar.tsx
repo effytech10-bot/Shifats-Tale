@@ -13,14 +13,12 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { label: "Home", href: "#home" },
   { label: "Courses", href: "#courses" },
   { label: "Results", href: "#results" },
   { label: "Free Classes", href: "#youtube-classes" },
   { label: "Gallery", href: "#gallery" },
   { label: "Location", href: "#location" },
   { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -89,31 +87,24 @@ export default function Navbar() {
           </div>
 
           {/* Call to Action CTA */}
-          <div className="hidden sm:flex items-center space-x-3">
+          <div className="hidden sm:flex items-center space-x-4">
             <a
               href={`tel:${siteInfo.phone.replace(/[\s-]/g, "")}`}
-              className="flex items-center space-x-1.5 px-4 py-2 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary text-xs sm:text-sm font-bold hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
+              className="flex items-center space-x-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold text-primary hover:text-primary-dark transition-colors duration-200"
+              title="Call Sir"
             >
-              <Phone className="h-4 w-4" />
-              <span>Call Sir</span>
-            </a>
-            <a
-              href="#contact"
-              onClick={(e) => handleLinkClick(e, "#contact")}
-              className="primary-btn flex items-center space-x-1.5 px-4.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-accent/25 transition-all duration-300"
-            >
-              <MessageSquare className="h-4 w-4" />
-              <span>Contact Sir</span>
+              <Phone className="h-4 w-4 text-primary" />
+              <span className="hidden md:inline">Call Sir</span>
             </a>
             <Link
               href="/login"
-              className="flex items-center justify-center px-4 py-2 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary text-xs sm:text-sm font-bold hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
+              className="px-4 py-2 rounded-xl border-2 border-primary/10 hover:border-primary/30 text-primary text-xs sm:text-sm font-bold hover:bg-primary/5 transition-all duration-200"
             >
               <span>Login</span>
             </Link>
             <Link
               href="/register"
-              className="primary-btn flex items-center justify-center px-4.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-accent/25 transition-all duration-300"
+              className="primary-btn px-4.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-accent/25 transition-all duration-300"
             >
               <span>Register</span>
             </Link>
@@ -159,23 +150,15 @@ export default function Navbar() {
           <div className="pt-6 flex flex-col space-y-3.5">
             <a
               href={`tel:${siteInfo.phone.replace(/[\s-]/g, "")}`}
-              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary font-bold hover:bg-primary hover:text-white transition-all duration-200"
+              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/10 bg-primary/5 text-primary font-bold hover:bg-primary/10 hover:text-primary-dark transition-all duration-200"
             >
               <Phone className="h-4 w-4" />
               <span>Call Sir Now</span>
             </a>
-            <a
-              href="#contact"
-              onClick={(e) => handleLinkClick(e, "#contact")}
-              className="primary-btn flex items-center justify-center space-x-2 py-3 rounded-xl font-bold shadow-lg shadow-accent/15"
-            >
-              <MessageSquare className="h-4 w-4" />
-              <span>Contact Sir</span>
-            </a>
             <Link
               href="/login"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary font-bold hover:bg-primary hover:text-white transition-all duration-200"
+              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/10 bg-primary/5 text-primary font-bold hover:bg-primary/10 hover:text-primary-dark transition-all duration-200"
             >
               <span>Login</span>
             </Link>

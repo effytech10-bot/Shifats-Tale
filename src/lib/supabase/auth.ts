@@ -1,4 +1,3 @@
-import { createClient } from "./server";
 import { Database } from "../../types/database.types";
 
 export type AuthDestination =
@@ -150,10 +149,8 @@ export async function resolveUserDestination(supabase: any): Promise<AuthResolut
   }
 }
 
-/**
- * Resolves the destination using the default server client.
- */
 export async function resolveAuthenticatedDestination(): Promise<AuthResolution> {
+  const { createClient } = await import("./server");
   const supabase = await createClient();
   return resolveUserDestination(supabase);
 }

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAuditLog } from "@/lib/audit";
-import { formatCurrency } from "@/lib/currency";
+import { requireTeacher } from "@/lib/auth-guards";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 function escapeCSV(val: any): string {
   if (val === null || val === undefined) return "";
@@ -15,25 +16,24 @@ function escapeCSV(val: any): string {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // 1. Authenticate user
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return new NextResponse("Unauthorized", { status: 401 });
+    // 1. Rate limiting by Client IP
+    const ip = await getClientIp();
+    try {
+      await rateLimit(`csv-export-${ip}`, 5, 600); // 5 exports max per 10 mins
+    } catch {
+      return new NextResponse("Too many requests. Please try again later.", { status: 429 });
     }
 
-    // 2. Fetch profile and verify TEACHER role
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id, role, account_status")
-      .eq("auth_user_id", user.id)
-      .single();
-
-    if (!profile || profile.role !== "TEACHER" || profile.account_status !== "ACTIVE") {
+    // 2. Authenticate and authorize Teacher
+    let profile;
+    try {
+      const auth = await requireTeacher();
+      profile = auth.profile;
+    } catch {
       return new NextResponse("Forbidden: Teacher access required.", { status: 403 });
     }
 
+    const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     const tab = searchParams.get("tab") || "enrollment";
     

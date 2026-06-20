@@ -43,6 +43,7 @@ const teacherNavItems: NavItem[] = [
   { label: "Notifications", href: "/teacher/notifications", icon: Bell },
   { label: "My Profile", href: "/teacher/profile", icon: User },
   { label: "Portal Settings", href: "/teacher/settings", icon: Settings },
+  { label: "Security Audit Logs", href: "/teacher/audit-logs", icon: ShieldAlert },
 ];
 
 export function TeacherSidebar({ className, onLinkClick }: SidebarProps) {

@@ -178,14 +178,11 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
           {/* Outer Ring */}
           <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-accent via-[#010E62] to-accent shadow-xl group-hover/card:scale-105 transition-transform duration-300">
             {/* Inner Ring holding the image */}
-            <div className="w-full h-full rounded-full overflow-hidden border-4 border-white relative bg-[#F8F7F2]">
-              <Image
+            <div className="w-full h-full rounded-full overflow-hidden border-4 border-white bg-[#F8F7F2]">
+              <img
                 src="/images/student.png"
                 alt={result.name}
-                fill
-                sizes="(max-width: 768px) 112px, 128px"
-                className="object-cover"
-                priority={isActive}
+                className="w-full h-full object-cover"
               />
             </div>
             

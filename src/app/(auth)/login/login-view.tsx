@@ -9,7 +9,7 @@ import * as z from "zod";
 import { Mail, Lock, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
-const loginSchema = z.object({
+export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });

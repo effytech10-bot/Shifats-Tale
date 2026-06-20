@@ -3,16 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAuditLog } from "@/lib/audit";
 import { requireTeacher } from "@/lib/auth-guards";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-
-function escapeCSV(val: any): string {
-  if (val === null || val === undefined) return "";
-  let str = String(val);
-  if (str.includes(",") || str.includes('"') || str.includes("\n") || str.includes("\r")) {
-    str = str.replace(/"/g, '""');
-    return `"${str}"`;
-  }
-  return str;
-}
+import { escapeCSV } from "@/lib/csv";
 
 export async function GET(request: NextRequest) {
   try {

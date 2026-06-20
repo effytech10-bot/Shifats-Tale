@@ -9,7 +9,7 @@ import * as z from "zod";
 import { Mail, Lock, User, Phone, Loader2, AlertCircle, Home, GraduationCap, Calendar } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
-const registerSchema = z
+export const registerSchema = z
   .object({
     fullName: z.string().min(2, "Full name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),

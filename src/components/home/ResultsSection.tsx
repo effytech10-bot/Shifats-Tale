@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { studentResults } from "@/data/results";
-import { GraduationCap, School, ChevronLeft, ChevronRight } from "lucide-react";
+import { GraduationCap, School, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 // Category filter type removed
@@ -139,19 +140,15 @@ const getCardMotion = (offset: number, isMobile: boolean) => {
 };
 
 const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boolean }) => {
-  const initials = result.name 
-    ? result.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) 
-    : "ST";
-  
   return (
-    <div className={`w-full h-full rounded-3xl p-6 flex flex-col justify-between bg-[#FFFDF9] border border-[#E7E0D2] transition-all duration-300 shadow-md relative group/card select-none text-left ${
+    <div className={`w-full h-full rounded-3xl p-6 flex flex-col justify-between bg-[#FFFDF9] border border-[#E7E0D2] transition-all duration-500 shadow-lg relative group/card select-none text-center ${
       isActive 
-        ? "hover:shadow-[0_15px_35px_rgba(251,181,3,0.18)] hover:border-accent/60" 
-        : "opacity-80 border-transparent bg-white/70"
+        ? "hover:shadow-[0_20px_45px_rgba(251,181,3,0.25)] hover:border-accent/80 hover:bg-[#FFFDF9]" 
+        : "opacity-60 border-transparent bg-white/50"
     }`}>
       {/* Background card corner ambient glow */}
       {isActive && (
-        <div className="absolute -top-12 -right-12 w-24 h-24 bg-[#FBB503]/8 rounded-full blur-xl pointer-events-none group-hover/card:bg-[#FBB503]/15 transition-all duration-500" />
+        <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#FBB503]/10 rounded-full blur-2xl pointer-events-none group-hover/card:bg-[#FBB503]/20 transition-all duration-700" />
       )}
       
       {/* Decorative dot pattern */}
@@ -162,9 +159,9 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
         <rect width="100%" height="100%" fill={`url(#card-dots-${result.id})`} />
       </svg>
 
-      <div className="space-y-4 relative z-10">
+      <div className="space-y-5 relative z-10 flex flex-col items-center w-full">
         {/* Category Badge & Class Year */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between w-full">
           <span className="text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-md bg-[#010E62]/5 text-[#010E62] border border-[#010E62]/10 group-hover/card:bg-primary group-hover/card:text-white group-hover/card:border-primary transition-all duration-300">
             {result.examType}
           </span>
@@ -173,35 +170,55 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
           </span>
         </div>
 
-        {/* Student Profile Block */}
-        <div className="flex items-center space-x-3.5 pt-3">
-          {/* Avatar circle containing initials */}
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#FFF9EA] to-[#FFF1D0] border border-[#E7E0D2] flex items-center justify-center text-primary font-extrabold text-lg shadow-sm group-hover/card:scale-105 transition-transform duration-300">
-            {initials}
+        {/* Student Photo - Boldly Highlighted with glowing borders & shadow */}
+        <div className="relative pt-3 pb-1">
+          {/* Animated pulsing outer halo glow */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-accent via-[#010E62] to-accent rounded-full blur-md opacity-45 group-hover/card:opacity-85 transition-opacity duration-300 -m-1.5 animate-pulse" />
+          
+          {/* Outer Ring */}
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-accent via-[#010E62] to-accent shadow-xl group-hover/card:scale-105 transition-transform duration-300">
+            {/* Inner Ring holding the image */}
+            <div className="w-full h-full rounded-full overflow-hidden border-4 border-white relative bg-[#F8F7F2]">
+              <Image
+                src="/images/student.png"
+                alt={result.name}
+                fill
+                sizes="(max-width: 768px) 112px, 128px"
+                className="object-cover"
+                priority={isActive}
+              />
+            </div>
+            
+            {/* Achievement Badge Overlay */}
+            <div className="absolute -bottom-1 -right-1 bg-accent text-primary p-2 rounded-full border-2 border-white shadow-md group-hover/card:scale-110 transition-transform duration-300">
+              <Star className="h-4 w-4 fill-primary text-primary stroke-[2]" />
+            </div>
           </div>
-          <div className="text-left min-w-0">
-            <h4 className="font-extrabold text-primary text-lg leading-snug truncate group-hover/card:text-primary-dark transition-colors">
-              {result.name}
-            </h4>
-            <p className="text-xs text-[#4B5563] flex items-center space-x-1.5 font-bold mt-1">
-              <School className="h-3.5 w-3.5 text-accent shrink-0" />
-              <span className="truncate">{result.college}</span>
-            </p>
-          </div>
+        </div>
+
+        {/* Student Info */}
+        <div className="text-center w-full space-y-1.5">
+          <h4 className="font-extrabold text-primary text-xl sm:text-2xl leading-tight truncate group-hover/card:text-primary-dark transition-colors">
+            {result.name}
+          </h4>
+          <p className="text-xs sm:text-sm text-[#4B5563] flex items-center justify-center space-x-1.5 font-bold">
+            <School className="h-4 w-4 text-accent shrink-0" />
+            <span className="truncate">{result.college}</span>
+          </p>
         </div>
       </div>
 
       {/* Achieved Result highlight box at bottom */}
-      <div className="bg-[#FFFDF9] border border-[#E7E0D2] p-4 rounded-2xl flex items-center space-x-3.5 relative z-10 transition-colors duration-300 group-hover/card:border-accent/40 shadow-[inset_0_2px_4px_rgba(0,0,0,0.01)] mt-4">
-        {/* Glowing circle for cap icon */}
-        <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover/card:scale-110 transition-transform">
+      <div className="bg-[#FFFDF9] border border-[#E7E0D2] p-4 rounded-2xl flex items-center space-x-3.5 relative z-10 transition-all duration-300 group-hover/card:border-accent/60 group-hover/card:bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.01)] mt-5 w-full text-left">
+        {/* Glowing cap icon container */}
+        <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover/card:scale-110 group-hover/card:bg-accent/20 transition-all duration-300">
           <GraduationCap className="h-5 w-5 text-primary" />
         </div>
-        <div className="text-left min-w-0">
+        <div className="min-w-0">
           <span className="block text-[8px] text-muted font-extrabold uppercase tracking-widest leading-none">
             Secured Result
           </span>
-          <span className="text-xs sm:text-[13px] font-extrabold text-primary mt-1.5 block leading-tight truncate">
+          <span className="text-xs sm:text-sm font-extrabold text-primary mt-1.5 block leading-tight truncate">
             {result.achievement}
           </span>
         </div>
@@ -331,7 +348,7 @@ export default function ResultsSection() {
               onMouseLeave={() => setIsHovered(false)}
               onFocus={() => setIsHovered(true)}
               onBlur={() => setIsHovered(false)}
-              className="relative w-full h-[440px] sm:h-[500px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing"
+              className="relative w-full h-[490px] sm:h-[550px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing"
               style={{ perspective: "1400px", transformStyle: "preserve-3d" }}
             >
               {/* Soft radial glow behind the active card */}
@@ -359,7 +376,7 @@ export default function ResultsSection() {
                 return (
                   <motion.div
                     key={result.id}
-                    className="absolute left-1/2 top-1/2 w-[280px] sm:w-[360px] h-[370px] sm:h-[430px]"
+                    className="absolute left-1/2 top-1/2 w-[280px] sm:w-[360px] h-[420px] sm:h-[480px]"
                     style={{
                       zIndex: cardMotion.zIndex,
                       transformStyle: "preserve-3d",

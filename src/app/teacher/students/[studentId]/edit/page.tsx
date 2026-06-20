@@ -46,6 +46,7 @@ export default async function TeacherStudentEditPage({ params }: PageProps) {
     .single();
 
   if (error || !student) {
+    console.error("DEBUG [TeacherStudentEditPage]: Fetching student_profile failed:", { studentId, error, student });
     notFound();
   }
 

@@ -60,6 +60,7 @@ export default async function TeacherStudentDetailsPage({ params }: PageProps) {
     .single();
 
   if (error || !student) {
+    console.error("DEBUG [TeacherStudentDetailsPage]: Fetching student_profile failed:", { studentId, error, student });
     notFound();
   }
 

@@ -3,8 +3,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { galleryItems } from "@/data/gallery";
-import { Camera } from "lucide-react";
+import { getHomepageGalleryPreview, getCategoryLabel } from "@/data/gallery";
+import { Camera, ArrowRight, ExternalLink } from "lucide-react";
 import { motion, useReducedMotion, useInView } from "framer-motion";
 
 export default function GallerySection() {
@@ -22,8 +22,8 @@ export default function GallerySection() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Display exactly the first 5 images for the landing page static preview
-  const displayItems = galleryItems.slice(0, 5);
+  // Display configured preview subset (first 5 records) from shared data adapter
+  const displayItems = getHomepageGalleryPreview(5);
 
   const isMobile = windowWidth < 640;
   const isTablet = windowWidth >= 640 && windowWidth < 1024;
@@ -31,12 +31,6 @@ export default function GallerySection() {
   const cardWidth = isMobile ? 130 : isTablet ? 200 : 280;
   const cardHeight = isMobile ? 180 : isTablet ? 270 : 370;
 
-  // Scattered arrangements matching the mockup screenshot (dimension-safe to prevent clipping)
-  // zIndex logic: 
-  // - Card 1 (wedding) is on top of Card 2 (lake)
-  // - Card 3 (middle/guy) is on top of Card 2 and Card 4
-  // - Card 4 (couple) is on top of Card 5 (peacock)
-  // All cards are tilted clockwise (positive rotation)
   const desktopStyles = [
     { x: -340, y: 25,  scale: 0.90, rotate: 6, zIndex: 30 },
     { x: -170, y: -10, scale: 0.85, rotate: 4, zIndex: 10 },
@@ -63,8 +57,6 @@ export default function GallerySection() {
 
   const activeStyles = isMobile ? mobileStyles : isTablet ? tabletStyles : desktopStyles;
   const containerHeight = isMobile ? cardHeight + 60 : isTablet ? cardHeight + 80 : cardHeight + 100;
-
-  // Active index is fixed at 2 (the middle image)
   const activeIndex = 2;
 
   return (
@@ -78,7 +70,7 @@ export default function GallerySection() {
             A JOURNEY THROUGH VISUAL STORIES
           </p>
           <h2 className="text-4xl sm:text-5xl font-extrabold text-primary tracking-tight leading-tight">
-            Explore Life at Shifat's Tales
+            Explore Life at Shifat&apos;s Tales
           </h2>
         </div>
 
@@ -90,7 +82,7 @@ export default function GallerySection() {
         >
           {displayItems.map((item, idx) => {
             const style = activeStyles[idx];
-            const offset = idx - activeIndex; // -2, -1, 0, 1, 2
+            const offset = idx - activeIndex;
             const isActive = offset === 0;
             const isHovered = hoveredIndex === idx;
 
@@ -109,7 +101,6 @@ export default function GallerySection() {
               targetY = 0;
             }
 
-            // Sequence for entrance Stagger delay (fans outward from center)
             let sequence = 0;
             if (offset > 0) {
               sequence = offset * 2 - 1;
@@ -129,7 +120,7 @@ export default function GallerySection() {
                   height: `${cardHeight}px`,
                   zIndex: targetZIndex,
                   willChange: "transform, opacity",
-                  transition: "none", // Prevent CSS transition conflicts with Framer Motion spring physics
+                  transition: "none",
                 }}
                 animate={{
                   x: targetX,
@@ -154,27 +145,42 @@ export default function GallerySection() {
 
                 <Image
                   src={item.imageUrl}
-                  alt={item.title}
+                  alt={item.alt || item.title}
                   fill
                   sizes={`${cardWidth}px`}
                   priority={isActive}
                   className="object-cover pointer-events-none"
                 />
 
-                {/* Subtle dark overlay for depth */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-transparent opacity-40" />
+                {/* Card-Level View Details Action & Overlay (Touch and Hover accessible) */}
+                <Link
+                  href={`/gallery?category=${item.category}`}
+                  className="absolute inset-0 z-20 flex flex-col justify-end p-3 sm:p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-2xl"
+                  aria-label={`View details for ${item.title}`}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4">
+                    <span className="text-[9px] font-extrabold text-accent uppercase tracking-wider block mb-1 line-clamp-1">
+                      {item.title}
+                    </span>
+                    <span className="inline-flex items-center space-x-1 text-[10px] sm:text-xs font-extrabold text-primary bg-accent px-2.5 py-1 rounded-lg w-max shadow-sm hover:scale-105 transition-transform">
+                      <span>View Details</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </span>
+                  </div>
+                </Link>
               </motion.div>
             );
           })}
         </div>
 
-        {/* View All Stories Button */}
+        {/* Section-Level CTA: View Full Gallery */}
         <div className="mt-8">
           <Link
             href="/gallery"
-            className="primary-btn flex items-center justify-center space-x-2 text-center cursor-pointer shadow-md hover:scale-[1.01] active:scale-95 transition-all duration-200"
+            className="primary-btn flex items-center justify-center space-x-2 text-center cursor-pointer shadow-md hover:scale-[1.02] active:scale-95 transition-all duration-200"
           >
-            <span>View All Stories</span>
+            <span>View Full Gallery</span>
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

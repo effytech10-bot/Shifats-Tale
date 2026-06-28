@@ -4,24 +4,62 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Phone, MessageSquare } from "lucide-react";
+import {
+  Home,
+  User,
+  BookOpen,
+  TrendingUp,
+  PlayCircle,
+  Image as ImageIcon,
+  Mail,
+  HelpCircle,
+  Phone,
+  Menu,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteInfo } from "@/data/site";
 
-interface NavLink {
+interface NavItemConfig {
   label: string;
   href: string;
+  iconName: string;
+  match?: "exact" | "prefix";
 }
 
-const navLinks: NavLink[] = [
-  { label: "Home", href: "/" },
-  { label: "Courses", href: "#courses" },
-  { label: "Results", href: "#results" },
-  { label: "Free Classes", href: "#youtube-classes" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Location", href: "#location" },
-  { label: "FAQ", href: "#faq" },
+const navItems: NavItemConfig[] = [
+  { label: "Home", href: "/", iconName: "Home", match: "exact" },
+  { label: "About", href: "#teacher", iconName: "User" },
+  { label: "Courses", href: "#courses", iconName: "BookOpen" },
+  { label: "Results", href: "#results", iconName: "TrendingUp" },
+  { label: "Free Classes", href: "#youtube-classes", iconName: "PlayCircle" },
+  { label: "Gallery", href: "/gallery", iconName: "Image" },
+  { label: "Contact Me", href: "#contact", iconName: "Mail" },
+  { label: "FAQ", href: "#faq", iconName: "HelpCircle" },
 ];
+
+const renderNavIcon = (iconName: string, className: string = "h-4 w-4") => {
+  switch (iconName) {
+    case "Home":
+      return <Home className={className} />;
+    case "User":
+      return <User className={className} />;
+    case "BookOpen":
+      return <BookOpen className={className} />;
+    case "TrendingUp":
+      return <TrendingUp className={className} />;
+    case "PlayCircle":
+      return <PlayCircle className={className} />;
+    case "Image":
+      return <ImageIcon className={className} />;
+    case "Mail":
+      return <Mail className={className} />;
+    case "HelpCircle":
+      return <HelpCircle className={className} />;
+    default:
+      return <Home className={className} />;
+  }
+};
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +96,7 @@ export default function Navbar() {
         e.preventDefault();
         const targetElement = document.querySelector(href);
         if (targetElement) {
-          const offsetTop = (targetElement as HTMLElement).offsetTop - 80; // height of navbar
+          const offsetTop = (targetElement as HTMLElement).offsetTop - 80;
           window.scrollTo({
             top: offsetTop,
             behavior: "smooth",
@@ -68,12 +106,12 @@ export default function Navbar() {
     }
   };
 
-  const isActive = (href: string) => {
-    if (href === "/") {
+  const isActive = (item: NavItemConfig) => {
+    if (item.href === "/") {
       return pathname === "/";
     }
-    if (href.startsWith("/")) {
-      return pathname === href;
+    if (item.href.startsWith("/")) {
+      return pathname === item.href || pathname.startsWith(item.href + "/");
     }
     return false;
   };
@@ -81,16 +119,20 @@ export default function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 w-full z-50 transition-all duration-300",
+        "fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b select-none",
         scrolled
-          ? "bg-bg-soft/90 backdrop-blur-md py-3 shadow-sm border-b border-border/50"
-          : "bg-transparent py-5 border-b border-transparent"
+          ? "bg-white/95 backdrop-blur-md py-2.5 shadow-sm border-accent/20"
+          : "bg-white/90 backdrop-blur-sm py-3.5 border-border/40 shadow-xs"
       )}
     >
       <div className="brand-container">
         <div className="flex items-center justify-between">
           {/* Logo Section */}
-          <Link href={pathname === "/" ? "#home" : "/"} onClick={(e) => handleLinkClick(e, pathname === "/" ? "#home" : "/")} className="relative h-12 w-48 sm:h-14 sm:w-56 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg">
+          <Link
+            href={pathname === "/" ? "#home" : "/"}
+            onClick={(e) => handleLinkClick(e, pathname === "/" ? "#home" : "/")}
+            className="relative h-11 w-44 sm:h-13 sm:w-52 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg shrink-0"
+          >
             <Image
               src="/images/logo_transparent.png"
               alt="Shifat's Tales Logo"
@@ -100,55 +142,78 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
-            {navLinks.map((link) => {
-              const active = isActive(link.href);
-              const targetHref = link.href.startsWith("#") && pathname !== "/" ? `/${link.href}` : link.href;
+          {/* Desktop Navigation (Stacked Icon above Label + Separator Dots) */}
+          <div className="hidden lg:flex items-center space-x-1 xl:space-x-1.5">
+            {navItems.map((item, index) => {
+              const active = isActive(item);
+              const targetHref = item.href.startsWith("#") && pathname !== "/" ? `/${item.href}` : item.href;
+              const isLast = index === navItems.length - 1;
+
               return (
-                <Link
-                  key={link.href}
-                  href={targetHref}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "relative px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 select-none",
-                    active
-                      ? "text-primary bg-accent/20 font-extrabold shadow-xs"
-                      : "text-primary-dark/85 hover:text-primary hover:bg-bg/60 hover:scale-[1.04] active:scale-[0.98]"
+                <React.Fragment key={item.label}>
+                  <Link
+                    href={targetHref}
+                    onClick={(e) => handleLinkClick(e, item.href)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "group relative flex flex-col items-center justify-center px-3 py-1.5 rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                      active
+                        ? "bg-accent/15 border border-accent/40 text-primary font-extrabold shadow-xs scale-[1.02] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-5 after:h-0.5 after:bg-accent after:rounded-full"
+                        : "text-primary-dark/80 hover:text-primary hover:bg-bg/80 hover:scale-[1.02] active:scale-[0.98]"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "transition-transform duration-200 group-hover:scale-110",
+                        active ? "text-primary" : "text-primary/70 group-hover:text-primary"
+                      )}
+                    >
+                      {renderNavIcon(item.iconName, "h-4 w-4 sm:h-4.5 sm:w-4.5")}
+                    </div>
+                    <span
+                      className={cn(
+                        "text-[11px] leading-tight mt-1 whitespace-nowrap",
+                        active ? "font-extrabold text-primary" : "font-bold text-primary-dark/80 group-hover:text-primary"
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+
+                  {/* Decorative Separator Dot */}
+                  {!isLast && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent/40 hidden xl:inline-block shrink-0 mx-0.5 pointer-events-none" />
                   )}
-                >
-                  {link.label}
-                </Link>
+                </React.Fragment>
               );
             })}
           </div>
 
-          {/* Call to Action CTA */}
-          <div className="hidden sm:flex items-center space-x-4">
+          {/* Call to Action Right-Side Group */}
+          <div className="hidden sm:flex items-center space-x-3 pl-2 xl:pl-4 border-l border-border/60">
             <a
               href={`tel:${siteInfo.phone.replace(/[\s-]/g, "")}`}
-              className="flex items-center space-x-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold text-primary hover:text-primary-dark hover:scale-[1.04] active:scale-[0.98] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs sm:text-sm font-extrabold text-primary hover:text-primary-dark hover:scale-[1.04] active:scale-[0.98] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
               title="Call Sir"
             >
               <Phone className="h-4 w-4 text-primary shrink-0" />
-              <span className="hidden md:inline">Call Sir</span>
+              <span className="hidden md:inline font-extrabold">Call Sir</span>
             </a>
             <Link
               href="/login"
-              className="px-4 py-2 rounded-xl border-2 border-primary/10 hover:border-primary/30 text-primary text-xs sm:text-sm font-bold hover:bg-primary/5 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="px-3.5 py-1.5 rounded-xl border-2 border-primary/20 hover:border-primary/40 text-primary text-xs sm:text-sm font-bold hover:bg-primary/5 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <span>Login</span>
             </Link>
             <Link
               href="/register"
-              className="primary-btn px-4.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-accent/25 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="primary-btn px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-accent/25 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <span>Register</span>
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button (Only visible on mobile/tablet) */}
           <div className="flex lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -168,37 +233,40 @@ export default function Navbar() {
       <div
         className={cn(
           "lg:hidden fixed inset-y-0 right-0 w-full sm:w-80 bg-bg-soft/98 backdrop-blur-xl border-l border-border/80 shadow-2xl z-40 transform transition-all duration-350 ease-in-out p-6 pt-24",
-          isOpen 
-            ? "translate-x-0 opacity-100 pointer-events-auto" 
+          isOpen
+            ? "translate-x-0 opacity-100 pointer-events-auto"
             : "translate-x-full opacity-0 pointer-events-none invisible"
         )}
         id="mobile-menu"
       >
-        <div className="flex flex-col space-y-4">
-          {navLinks.map((link) => {
-            const active = isActive(link.href);
-            const targetHref = link.href.startsWith("#") && pathname !== "/" ? `/${link.href}` : link.href;
+        <div className="flex flex-col space-y-3.5">
+          {navItems.map((item) => {
+            const active = isActive(item);
+            const targetHref = item.href.startsWith("#") && pathname !== "/" ? `/${item.href}` : item.href;
             return (
               <Link
-                key={link.href}
+                key={item.label}
                 href={targetHref}
-                onClick={(e) => handleLinkClick(e, link.href)}
+                onClick={(e) => handleLinkClick(e, item.href)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "text-lg font-bold border-b border-border/40 pb-2.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded",
+                  "flex items-center space-x-3 text-base font-bold border-b border-border/40 pb-2.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded",
                   active
-                    ? "text-primary font-extrabold pl-2 border-l-4 border-l-accent bg-accent/10 py-1"
+                    ? "text-primary font-extrabold pl-2 border-l-4 border-l-accent bg-accent/15 py-1.5"
                     : "text-primary-dark/90 hover:text-primary hover:pl-2"
                 )}
               >
-                {link.label}
+                <div className={active ? "text-primary" : "text-primary/70"}>
+                  {renderNavIcon(item.iconName, "h-5 w-5")}
+                </div>
+                <span>{item.label}</span>
               </Link>
             );
           })}
-          <div className="pt-6 flex flex-col space-y-3.5">
+          <div className="pt-4 flex flex-col space-y-3">
             <a
               href={`tel:${siteInfo.phone.replace(/[\s-]/g, "")}`}
-              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/10 bg-primary/5 text-primary font-bold hover:bg-primary/10 hover:text-primary-dark hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary font-extrabold hover:bg-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
             >
               <Phone className="h-4 w-4" />
               <span>Call Sir Now</span>
@@ -206,7 +274,7 @@ export default function Navbar() {
             <Link
               href="/login"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/10 bg-primary/5 text-primary font-bold hover:bg-primary/10 hover:text-primary-dark hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+              className="flex items-center justify-center space-x-2 py-3 rounded-xl border-2 border-primary/20 bg-primary/5 text-primary font-extrabold hover:bg-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
             >
               <span>Login</span>
             </Link>
@@ -223,4 +291,3 @@ export default function Navbar() {
     </nav>
   );
 }
-

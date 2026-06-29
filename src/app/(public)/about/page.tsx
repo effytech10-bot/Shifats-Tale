@@ -26,7 +26,10 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="pt-20 pb-16 bg-bg-soft text-text flex flex-col min-h-screen selection:bg-accent selection:text-primary">
+    <div className="relative pt-20 pb-0 bg-bg-soft text-text flex flex-col min-h-screen selection:bg-accent selection:text-primary overflow-x-hidden">
+      {/* Global Background Noise / Pattern */}
+      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.015] pointer-events-none mix-blend-overlay z-0" />
+      
       {/* 1. About Hero Section */}
       <AboutHero profile={profileData} />
 
@@ -50,11 +53,13 @@ export default function AboutPage() {
       <IndustrialTrainingBanner training={trainingData} />
 
       {/* Dynamic Data Notice Footer Bar */}
-      <div className="pt-8 pb-4 flex items-center justify-center space-x-2 text-xs font-semibold text-muted/80">
-        <Info className="h-4 w-4 text-accent shrink-0" />
-        <span>
-          All information is dynamic and managed from the admin panel. Content will be automatically updated from the database.
-        </span>
+      <div className="py-8 bg-bg-soft relative z-10 border-t border-[#E7E0D2]/50 mt-10">
+        <div className="brand-container flex items-center justify-center space-x-2 text-xs font-semibold text-muted/80">
+          <Info className="h-4 w-4 text-accent shrink-0" />
+          <span>
+            All information is dynamic and managed from the admin panel. Content will be automatically updated from the database.
+          </span>
+        </div>
       </div>
     </div>
   );

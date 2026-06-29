@@ -5,6 +5,19 @@
  * All UI components consume these structured entities to remain 100% database-ready.
  */
 
+export interface HeroStat {
+  iconName: "GraduationCap" | "Users" | "Youtube" | "MapPin";
+  label: string;
+  value: string;
+  subValue: string;
+}
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+  iconName: "Facebook" | "Instagram" | "Youtube" | "Linkedin" | "Twitter";
+}
+
 export interface ProfileInfo {
   name: string;
   role: string;
@@ -14,6 +27,11 @@ export interface ProfileInfo {
   phone: string;
   location: string;
   imageUrl: string;
+  greeting?: string;
+  subtitle?: string;
+  quote?: string;
+  heroStats?: HeroStat[];
+  socialLinks?: SocialLink[];
 }
 
 export interface MetricItem {
@@ -81,11 +99,27 @@ export const profileData: ProfileInfo = {
   name: "Md. Zia Uddin Azad Sifat",
   role: "CEO AT SHIFAT'S TALES",
   organization: "ACADEMIC & ADMISSION CARE",
-  summary: "Dedicated educator and researcher with a strong background in Electrical and Electronic Engineering. Passionate about teaching, research, and building innovative solutions that create impact.",
+  summary: "I help students build strong academic foundations while developing a consistent Islamic lifestyle. Learning with purpose. Living with tawakkul.",
   email: "ziauddin.sifat@cuet.ac.bd",
   phone: "+880 1879-169446",
   location: "Chattogram, Bangladesh",
   imageUrl: "/images/sir_photo_clean.png",
+  greeting: "Assalamu Alaikum, I'm",
+  subtitle: "Academic & Islamic Lifestyle Mentor",
+  quote: "Seeking knowledge is an obligation, implementing it is true success.",
+  heroStats: [
+    { iconName: "GraduationCap", label: "Educator", value: "5+ Years", subValue: "Teaching Experience" },
+    { iconName: "Users", label: "Students Impacted", value: "1,200+", subValue: "And Growing" },
+    { iconName: "Youtube", label: "Platforms", value: "YouTube", subValue: "& Online Programs" },
+    { iconName: "MapPin", label: "Location", value: "Bangladesh", subValue: "Serving Globally" },
+  ],
+  socialLinks: [
+    { platform: "Facebook", url: "#", iconName: "Facebook" },
+    { platform: "Instagram", url: "#", iconName: "Instagram" },
+    { platform: "YouTube", url: "#", iconName: "Youtube" },
+    { platform: "LinkedIn", url: "#", iconName: "Linkedin" },
+    { platform: "Twitter", url: "#", iconName: "Twitter" },
+  ]
 };
 
 export const metricsData: MetricItem[] = [

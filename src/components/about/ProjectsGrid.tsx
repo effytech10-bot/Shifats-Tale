@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Sun, Zap, Lock, Wind, Bot, Cpu, ArrowRight, X, Layers, CheckCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ProjectItem } from "@/data/about";
 
 interface ProjectsGridProps {
@@ -10,22 +11,28 @@ interface ProjectsGridProps {
 
 const renderProjectIcon = (iconName: string, className: string = "h-6 w-6") => {
   switch (iconName) {
-    case "Sun":
-      return <Sun className={className} />;
-    case "Zap":
-      return <Zap className={className} />;
-    case "Lock":
-      return <Lock className={className} />;
+    case "Sun": return <Sun className={className} />;
+    case "Zap": return <Zap className={className} />;
+    case "Lock": return <Lock className={className} />;
     case "Fan":
-    case "Wind":
-      return <Wind className={className} />;
-    case "Bot":
-      return <Bot className={className} />;
-    case "Cpu":
-      return <Cpu className={className} />;
-    default:
-      return <Layers className={className} />;
+    case "Wind": return <Wind className={className} />;
+    case "Bot": return <Bot className={className} />;
+    case "Cpu": return <Cpu className={className} />;
+    default: return <Layers className={className} />;
   }
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
 };
 
 export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects }) => {
@@ -33,130 +40,169 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects }) => {
 
   if (!projects || projects.length === 0) return null;
 
-  // Sort projects by displayOrder
   const sortedProjects = [...projects].sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
-    <section className="py-10">
-      <div className="brand-container space-y-8 text-left">
+    <section className="py-16 lg:py-24 relative z-10 bg-bg-soft/50">
+      <div className="brand-container max-w-7xl mx-auto space-y-12 text-left">
         {/* Section Header */}
-        <div className="flex items-center space-x-3">
-          <div className="w-1.5 h-6 bg-accent rounded-full shrink-0" />
-          <h3 className="text-xl sm:text-2xl font-extrabold text-primary tracking-tight uppercase font-display">
-            PROJECTS
-          </h3>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex flex-col items-center justify-center text-center space-y-4"
+        >
+          <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
+            <Cpu className="h-4 w-4 text-accent" />
+            <span className="text-xs font-bold text-primary uppercase tracking-widest">Engineering & Dev</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
+            Selected Projects
+          </h2>
+          <p className="text-muted font-medium max-w-2xl mx-auto">
+            A collection of robust engineering projects and software applications showcasing my problem-solving abilities.
+          </p>
+        </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 items-stretch">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
+        >
           {sortedProjects.map((project) => (
-            <div
+            <motion.div
+              variants={itemVariants}
               key={project.id}
               onClick={() => setSelectedProject(project)}
-              className="group brand-card rounded-3xl p-5 sm:p-6 bg-white border border-[#E7E0D2] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between text-center items-center h-full"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="group relative bg-white/70 backdrop-blur-xl border border-white rounded-[2rem] p-6 sm:p-8 shadow-lg hover:shadow-[0_20px_50px_-12px_rgba(1,14,98,0.15)] transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden"
             >
-              <div className="space-y-4 flex flex-col items-center w-full">
+              {/* Decorative gradient blob */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-[30px] -mr-10 -mt-10 group-hover:bg-accent/20 transition-colors duration-500" />
+              
+              <div className="space-y-6 relative z-10 flex flex-col w-full h-full">
                 {/* Icon Box */}
-                <div className="p-3.5 rounded-2xl bg-accent/15 text-primary group-hover:bg-accent group-hover:scale-110 transition-all duration-300 shrink-0">
-                  {renderProjectIcon(project.iconName, "h-6 w-6")}
+                <div className="p-4 rounded-2xl bg-white shadow-sm border border-[#E7E0D2]/50 text-primary group-hover:bg-primary group-hover:text-accent group-hover:border-primary transition-all duration-300 w-max">
+                  {renderProjectIcon(project.iconName, "h-7 w-7")}
                 </div>
 
                 {/* Title & Short Description */}
-                <div className="space-y-1.5 w-full">
-                  <h4 className="font-extrabold text-sm sm:text-base text-primary group-hover:text-primary-dark transition-colors line-clamp-1 font-display">
+                <div className="space-y-3 flex-1">
+                  <h4 className="font-extrabold text-lg sm:text-xl text-primary font-display leading-snug">
                     {project.title}
                   </h4>
-                  <p className="text-xs text-text/80 line-clamp-3 leading-relaxed font-medium">
+                  <p className="text-sm text-text/70 line-clamp-3 leading-relaxed font-medium">
                     {project.shortDescription}
                   </p>
                 </div>
-              </div>
 
-              {/* View Details Link */}
-              <div className="pt-4 flex items-center justify-center space-x-1.5 text-xs font-extrabold text-primary group-hover:text-accent transition-colors">
-                <span>View Details</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                {/* View Details Link */}
+                <div className="pt-4 flex items-center space-x-2 text-sm font-extrabold text-primary group-hover:text-accent transition-colors border-t border-[#E7E0D2]/50">
+                  <span>Explore Project</span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-2" />
+                </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
-      {/* Project Details Lightbox Modal */}
-      {selectedProject && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
-          onClick={() => setSelectedProject(null)}
-        >
-          <div
-            className="relative bg-white rounded-3xl border border-[#E7E0D2] shadow-2xl max-w-xl w-full p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200 text-left"
-            onClick={(e) => e.stopPropagation()}
+      {/* Project Details Modal Lightbox */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-primary/60 backdrop-blur-lg"
+            onClick={() => setSelectedProject(null)}
           >
-            {/* Header */}
-            <div className="flex items-start justify-between border-b border-[#E7E0D2] pb-4">
-              <div className="flex items-center space-x-3">
-                <div className="p-3 rounded-2xl bg-accent/20 text-primary">
-                  {renderProjectIcon(selectedProject.iconName, "h-6 w-6")}
-                </div>
-                <div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-accent block">
-                    {selectedProject.category || "Engineering Project"}
-                  </span>
-                  <h4 className="text-lg font-extrabold text-primary font-display mt-0.5">
-                    {selectedProject.title}
-                  </h4>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="p-2 rounded-full hover:bg-bg-soft text-primary transition-colors cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+            <motion.div
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative bg-white rounded-[2.5rem] border border-white/50 shadow-2xl max-w-2xl w-full p-8 sm:p-10 space-y-8 text-left max-h-[90vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Decorative top gradient */}
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-bg-soft to-transparent pointer-events-none" />
 
-            {/* Description */}
-            <div className="space-y-3">
-              <h5 className="text-xs font-extrabold text-primary uppercase tracking-wider">
-                Project Overview & Scope
-              </h5>
-              <p className="text-xs sm:text-sm text-text/90 leading-relaxed font-medium">
-                {selectedProject.fullDescription || selectedProject.shortDescription}
-              </p>
-            </div>
-
-            {/* Tech Stack Chips */}
-            {selectedProject.technologies && selectedProject.technologies.length > 0 && (
-              <div className="space-y-2 pt-2">
-                <h5 className="text-xs font-extrabold text-primary uppercase tracking-wider">
-                  Tools & Technologies Used
-                </h5>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProject.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-bg-soft border border-[#E7E0D2] text-xs font-extrabold text-primary"
-                    >
-                      <CheckCircle className="h-3 w-3 text-accent" />
-                      <span>{tech}</span>
+              {/* Header */}
+              <div className="flex items-start justify-between relative z-10 shrink-0">
+                <div className="flex items-center space-x-4">
+                  <div className="p-4 rounded-[1.5rem] bg-accent/20 text-primary border border-accent/10">
+                    {renderProjectIcon(selectedProject.iconName, "h-8 w-8")}
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">
+                      {selectedProject.category || "Engineering Project"}
                     </span>
-                  ))}
+                    <h4 className="text-2xl sm:text-3xl font-extrabold text-primary font-display mt-3 leading-tight">
+                      {selectedProject.title}
+                    </h4>
+                  </div>
                 </div>
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="p-3 rounded-full bg-white hover:bg-bg-soft text-primary shadow-sm border border-[#E7E0D2] transition-colors cursor-pointer shrink-0"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
-            )}
 
-            {/* Footer Close Button */}
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="primary-btn px-5 py-2 text-xs"
-              >
-                Close Details
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+              {/* Scrollable Content */}
+              <div className="overflow-y-auto custom-scrollbar pr-4 space-y-8 relative z-10 flex-1">
+                {/* Description */}
+                <div className="space-y-4">
+                  <h5 className="text-sm font-extrabold text-primary uppercase tracking-wider flex items-center space-x-2">
+                    <span className="w-2 h-2 rounded-full bg-accent" />
+                    <span>Project Overview & Scope</span>
+                  </h5>
+                  <p className="text-sm sm:text-base text-text/80 leading-relaxed font-medium">
+                    {selectedProject.fullDescription || selectedProject.shortDescription}
+                  </p>
+                </div>
+
+                {/* Tech Stack Chips */}
+                {selectedProject.technologies && selectedProject.technologies.length > 0 && (
+                  <div className="space-y-4 bg-bg-soft/50 p-6 rounded-3xl border border-[#E7E0D2]">
+                    <h5 className="text-sm font-extrabold text-primary uppercase tracking-wider flex items-center space-x-2">
+                      <span className="w-2 h-2 rounded-full bg-accent" />
+                      <span>Tech Stack & Tools</span>
+                    </h5>
+                    <div className="flex flex-wrap gap-3">
+                      {selectedProject.technologies.map((tech) => (
+                        <span
+                          key={tech}
+                          className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-white border border-[#E7E0D2] text-sm font-bold text-primary shadow-sm hover:border-accent hover:shadow-md transition-all"
+                        >
+                          <CheckCircle className="h-4 w-4 text-accent" />
+                          <span>{tech}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer Close Button */}
+              <div className="pt-4 flex justify-end shrink-0 relative z-10 border-t border-[#E7E0D2]/60 mt-4">
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="primary-btn px-8 py-3 text-sm rounded-xl shadow-lg hover:shadow-accent/40"
+                >
+                  Close Details
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
+

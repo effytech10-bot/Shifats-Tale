@@ -30,12 +30,10 @@ interface NavItemConfig {
 const navItems: NavItemConfig[] = [
   { label: "Home", href: "/", iconName: "Home", match: "exact" },
   { label: "About", href: "/about", iconName: "User" },
-  { label: "Courses", href: "#courses", iconName: "BookOpen" },
-  { label: "Results", href: "#results", iconName: "TrendingUp" },
-  { label: "Free Classes", href: "#youtube-classes", iconName: "PlayCircle" },
+  { label: "Courses", href: "/courses", iconName: "BookOpen" },
+  { label: "Results", href: "/results", iconName: "TrendingUp" },
   { label: "Gallery", href: "/gallery", iconName: "Image" },
-  { label: "Contact Me", href: "#contact", iconName: "Mail" },
-  { label: "FAQ", href: "#faq", iconName: "HelpCircle" },
+  { label: "Contact Me", href: "/contact", iconName: "Mail" },
 ];
 
 const renderNavIcon = (iconName: string, className: string = "h-4 w-4") => {

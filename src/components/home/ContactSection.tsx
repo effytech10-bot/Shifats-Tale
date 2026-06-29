@@ -79,42 +79,8 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="brand-section-wrapper bg-bg-soft relative">
-      <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[140px] pointer-events-none" />
-
-      <div className="brand-container">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <motion.h2
-            variants={headerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-xs font-bold text-accent tracking-widest uppercase"
-          >
-            Connect Now
-          </motion.h2>
-          <motion.p
-            variants={headerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
-          >
-            Inquire About Upcoming Batches
-          </motion.p>
-          <motion.p
-            variants={headerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-text text-sm sm:text-base"
-          >
-            Fill out the short form below to compile an direct inquiry. Submitting will immediately open a chat with {siteInfo.teacherName.split(" ").pop()!} Sir on WhatsApp.
-          </motion.p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
+    <div id="contact" className="w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
           
           {/* Quick info column */}
           <motion.div 
@@ -333,8 +299,7 @@ export default function ContactSection() {
             </form>
           </motion.div>
 
-        </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -230,7 +230,7 @@ export default function Navbar() {
       {/* Mobile Drawer Menu */}
       <div
         className={cn(
-          "lg:hidden fixed inset-y-0 right-0 w-full sm:w-80 bg-bg-soft/98 backdrop-blur-xl border-l border-border/80 shadow-2xl z-40 transform transition-all duration-350 ease-in-out p-6 pt-24",
+          "lg:hidden fixed inset-y-0 right-0 w-full sm:w-80 bg-white border-l border-border/80 shadow-2xl z-40 transform transition-all duration-350 ease-in-out p-6 pt-24",
           isOpen
             ? "translate-x-0 opacity-100 pointer-events-auto"
             : "translate-x-full opacity-0 pointer-events-none invisible"

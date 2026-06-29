@@ -1,195 +1,217 @@
 "use client";
 
-import React, { useState } from "react";
-import { Award, ExternalLink, ShieldCheck, X, FileText, CheckCircle2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { TrainingItem } from "@/data/about";
+import React from "react";
+import { motion } from "framer-motion";
+import { TrainingItem, profileData } from "@/data/about";
+import { Award, Calendar, Building, CheckCircle2, Cable, PhoneCall, Zap, Radio, FileText, ExternalLink } from "lucide-react";
 
 interface IndustrialTrainingBannerProps {
   training: TrainingItem;
 }
 
 export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> = ({ training }) => {
-  const [showModal, setShowModal] = useState(false);
-
   if (!training) return null;
 
+  const renderIcon = (name: string) => {
+    switch (name) {
+      case "Cable": return <Cable className="w-5 h-5 text-accent" />;
+      case "PhoneCall": return <PhoneCall className="w-5 h-5 text-accent" />;
+      case "Zap": return <Zap className="w-5 h-5 text-accent" />;
+      case "Radio": return <Radio className="w-5 h-5 text-accent" />;
+      default: return <CheckCircle2 className="w-5 h-5 text-accent" />;
+    }
+  };
+
   return (
-    <section className="py-16 lg:py-24 relative overflow-hidden bg-primary text-white mt-10">
-      {/* Dynamic Backgrounds */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary to-primary-dark pointer-events-none" />
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/10 rounded-full blur-[150px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px] pointer-events-none -translate-x-1/3 translate-y-1/3" />
+    <section className="py-16 lg:py-24 relative bg-[#FFF9F2] overflow-hidden">
       
-      {/* Decorative Grid Pattern */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10 pointer-events-none" />
-
-      {/* Top and Bottom Gold Borders */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-70" />
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-70" />
-
-      <div className="brand-container max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
-          {/* Left Content Area */}
-          <motion.div 
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, type: "spring", bounce: 0.3 }}
-            className="lg:col-span-7 space-y-8"
-          >
-            <div className="space-y-4">
-              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-                <Award className="h-4 w-4 text-accent" />
-                <span className="text-xs font-bold uppercase tracking-widest text-accent">
-                  Industrial Experience
-                </span>
-              </div>
-              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-display leading-tight">
-                {training.title}
-              </h3>
-              <div className="flex items-center space-x-3 text-lg font-medium text-white/90">
-                <span className="px-3 py-1 bg-white/10 rounded-lg">{training.organization}</span>
-                <span className="text-white/40">•</span>
-                <span className="text-accent">{training.duration}</span>
-              </div>
-            </div>
-
-            <p className="text-base lg:text-lg text-white/70 leading-relaxed font-medium max-w-2xl">
-              {training.description}
-            </p>
-            
-            <div className="flex flex-wrap gap-4 pt-2">
-              <div className="flex items-center space-x-2 text-sm text-white/80">
-                <CheckCircle2 className="w-5 h-5 text-accent" />
-                <span>Hands-on technical exposure</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-white/80">
-                <CheckCircle2 className="w-5 h-5 text-accent" />
-                <span>Industry-standard practices</span>
-              </div>
-            </div>
-
-            {/* View Certificate Button */}
-            <div className="pt-6">
-              <button
-                onClick={() => setShowModal(true)}
-                className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-extrabold text-primary bg-accent rounded-2xl overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(251,181,3,0.8)] active:scale-95"
-              >
-                <span className="relative z-10 flex items-center space-x-2">
-                  <span>View Official Certificate</span>
-                  <ExternalLink className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </span>
-                <div className="absolute inset-0 h-full w-full bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-              </button>
-            </div>
-          </motion.div>
-
-          {/* Right Graphic Certificate Mockup Display */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
-            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-            className="lg:col-span-5 flex items-center justify-center lg:justify-end"
-          >
-            <div
-              onClick={() => setShowModal(true)}
-              className="relative w-full max-w-[380px] aspect-[1.4/1] rounded-[2rem] bg-white p-6 text-primary shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] border-4 border-white/20 hover:border-accent/60 transform hover:-translate-y-4 hover:rotate-2 transition-all duration-500 cursor-pointer group flex flex-col justify-between overflow-hidden"
-            >
-              {/* Subtle texture for certificate */}
-              <div className="absolute inset-0 opacity-30 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
-              
-              <div className="relative z-10 flex items-center justify-between border-b-2 border-[#E7E0D2] pb-3">
-                <div className="flex items-center space-x-2">
-                  <ShieldCheck className="h-6 w-6 text-accent" />
-                  <span className="text-[11px] font-extrabold text-primary uppercase tracking-wider">Official Certificate</span>
-                </div>
-                <span className="text-[10px] font-bold text-muted bg-bg-soft px-2 py-1 rounded-md">BTCL</span>
-              </div>
-
-              <div className="relative z-10 text-center py-4 space-y-2">
-                <h4 className="text-sm font-extrabold text-primary uppercase tracking-widest">CERTIFICATE OF COMPLETION</h4>
-                <p className="text-xs text-muted font-semibold">{training.duration} Industrial Training</p>
-                <div className="mx-auto w-12 h-1 bg-accent/20 rounded-full mt-2" />
-                <p className="text-[10px] text-primary/80 font-extrabold uppercase mt-2">Bangladesh Telecommunication Company Limited</p>
-              </div>
-
-              <div className="relative z-10 flex justify-between items-end border-t-2 border-[#E7E0D2] pt-3">
-                <div className="w-10 h-10 rounded-full border-2 border-accent/40 flex items-center justify-center bg-accent/5">
-                  <Award className="h-5 w-5 text-accent" />
-                </div>
-                <span className="text-[10px] font-bold text-primary group-hover:text-accent transition-colors flex items-center space-x-1.5 bg-bg-soft px-3 py-1.5 rounded-full">
-                  <span>Click to verify</span>
-                  <ExternalLink className="h-3 w-3" />
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+      {/* Background Telecom Tower SVG Graphic */}
+      <div className="absolute top-0 right-0 opacity-20 pointer-events-none translate-x-1/4 -translate-y-1/4">
+        <svg width="500" height="700" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M200 100 L150 500 L250 500 Z" stroke="#FBB503" strokeWidth="2"/>
+          <path d="M150 500 L200 600 L250 500" stroke="#FBB503" strokeWidth="2"/>
+          <circle cx="200" cy="100" r="20" stroke="#FBB503" strokeWidth="2"/>
+          <circle cx="200" cy="100" r="40" stroke="#FBB503" strokeWidth="1" opacity="0.5"/>
+          <circle cx="200" cy="100" r="60" stroke="#FBB503" strokeWidth="1" opacity="0.2"/>
+          {/* Cross lines for the tower */}
+          <path d="M190 200 L210 200" stroke="#FBB503" strokeWidth="2"/>
+          <path d="M180 300 L220 300" stroke="#FBB503" strokeWidth="2"/>
+          <path d="M170 400 L230 400" stroke="#FBB503" strokeWidth="2"/>
+          <path d="M190 200 L220 300" stroke="#FBB503" strokeWidth="1"/>
+          <path d="M210 200 L180 300" stroke="#FBB503" strokeWidth="1"/>
+          <path d="M180 300 L230 400" stroke="#FBB503" strokeWidth="1"/>
+          <path d="M220 300 L170 400" stroke="#FBB503" strokeWidth="1"/>
+        </svg>
       </div>
 
-      {/* Certificate Modal Lightbox */}
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-xl"
-            onClick={() => setShowModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 30, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative bg-white rounded-[2.5rem] border border-white/10 shadow-2xl max-w-3xl w-full p-8 sm:p-12 space-y-8 text-center flex flex-col"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setShowModal(false)}
-                className="absolute top-6 right-6 p-3 rounded-full bg-bg-soft hover:bg-accent/20 text-primary transition-colors cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
+      {/* Wavy lines radiating */}
+      <div className="absolute top-[50px] right-0 opacity-10 pointer-events-none w-full h-[300px] overflow-hidden">
+        <svg viewBox="0 0 1000 300" preserveAspectRatio="none" className="w-full h-full">
+           <path d="M0,150 C300,50 700,250 1000,150" fill="none" stroke="#FBB503" strokeWidth="2"/>
+           <path d="M0,160 C300,70 700,270 1000,160" fill="none" stroke="#FBB503" strokeWidth="1.5"/>
+           <path d="M0,140 C300,30 700,230 1000,140" fill="none" stroke="#FBB503" strokeWidth="1"/>
+        </svg>
+      </div>
 
-              <div className="w-20 h-20 rounded-full bg-accent/10 text-primary mx-auto flex items-center justify-center border-4 border-accent shadow-[0_0_30px_rgba(251,181,3,0.3)]">
-                <Award className="h-10 w-10 text-accent" />
+      <div className="brand-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+        
+        {/* Section Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex flex-col items-center justify-center text-center space-y-4"
+        >
+          <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
+            <Radio className="h-4 w-4 text-accent" />
+            <span className="text-xs font-bold text-primary uppercase tracking-widest">Industrial Training</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
+            Industrial Training
+          </h2>
+          <p className="text-primary/70 font-medium text-lg leading-relaxed max-w-2xl mx-auto">
+            Practical industry exposure and hands-on professional training to bridge academic knowledge with real-world applications.
+          </p>
+        </motion.div>
+
+        {/* Main Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-white rounded-[2rem] p-6 sm:p-8 lg:p-10 shadow-sm border border-[#E7E0D2] flex flex-col lg:flex-row gap-10 lg:gap-16"
+        >
+          {/* Left Column (Details) */}
+          <div className="flex-1 space-y-8">
+            <div className="flex items-start gap-4 sm:gap-6">
+              <div className="w-14 h-14 rounded-full bg-[#0A1A44] flex items-center justify-center shrink-0 border border-accent/20 shadow-lg relative overflow-hidden">
+                <Radio className="w-6 h-6 text-accent relative z-10" />
               </div>
-              
-              <div className="space-y-4">
-                <span className="text-xs font-bold uppercase tracking-widest text-muted">
-                  Verified Training Document
-                </span>
-                <h5 className="font-extrabold text-2xl sm:text-3xl text-primary font-display">
+              <div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-primary font-display leading-tight mb-2">
                   {training.title}
-                </h5>
-                <p className="text-sm sm:text-base font-bold text-primary/70 inline-block px-4 py-2 bg-bg-soft rounded-lg">
-                  {training.organization} &bull; {training.duration}
+                </h3>
+                <p className="text-base font-bold text-primary/80">
+                  {training.organization}
                 </p>
               </div>
-              
-              <div className="p-6 bg-bg-soft/50 rounded-2xl border border-[#E7E0D2] mx-auto max-w-xl">
-                <p className="text-sm sm:text-base text-text/80 leading-relaxed font-medium">
-                  {training.description}
-                </p>
-              </div>
+            </div>
 
-              <div className="pt-4">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="primary-btn px-8 py-3 text-sm shadow-lg hover:shadow-accent/40 rounded-xl"
-                >
-                  Close Certificate
-                </button>
+            {/* Chips */}
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-[#E7E0D2] bg-white">
+                <Calendar className="w-4 h-4 text-primary/60" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase font-bold text-primary/50 tracking-wider">Duration</span>
+                  <span className="text-xs font-bold text-primary">{training.duration}</span>
+                </div>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-[#E7E0D2] bg-white">
+                <Building className="w-4 h-4 text-primary/60" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase font-bold text-primary/50 tracking-wider">Organization Type</span>
+                  <span className="text-xs font-bold text-primary">{training.organizationType || "Government"}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-[#E7E0D2] bg-white">
+                <CheckCircle2 className="w-4 h-4 text-primary/60" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase font-bold text-primary/50 tracking-wider">Status</span>
+                  <span className="text-xs font-bold text-primary">{training.status || "Completed"}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full h-px bg-[#E7E0D2]" />
+
+            <p className="text-primary/70 font-medium leading-relaxed">
+              {training.description}
+            </p>
+
+            {/* Features */}
+            {training.features && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {training.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-center gap-3 p-4 rounded-xl bg-[#FFF9F2] border border-[#E7E0D2]">
+                    <div className="shrink-0 bg-white p-1.5 rounded-lg border border-[#E7E0D2] shadow-sm">
+                      {renderIcon(feature.iconName)}
+                    </div>
+                    <span className="text-xs font-bold text-primary leading-tight">
+                      {feature.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Action Button */}
+            <div className="pt-2">
+              <a href={training.certificateUrl || "#"} className="inline-flex items-center space-x-2 px-8 py-4 bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl shadow-md transition-all hover:-translate-y-1">
+                <FileText className="w-5 h-5" />
+                <span>View Certificate</span>
+                <ExternalLink className="w-4 h-4 ml-1 opacity-70" />
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column (Certificate Visual) */}
+          <div className="lg:w-[450px] shrink-0 bg-[#0A1A44] rounded-[1.5rem] p-6 relative overflow-hidden flex items-center justify-center min-h-[400px]">
+            {/* Background patterns for the dark blue area */}
+            <div className="absolute inset-0 opacity-10">
+               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+                  <circle cx="100" cy="0" r="50" fill="none" stroke="white" strokeWidth="0.5"/>
+                  <circle cx="100" cy="0" r="80" fill="none" stroke="white" strokeWidth="0.5"/>
+                  <circle cx="100" cy="0" r="110" fill="none" stroke="white" strokeWidth="0.5"/>
+                  <circle cx="100" cy="0" r="140" fill="none" stroke="white" strokeWidth="0.5"/>
+               </svg>
+            </div>
+
+            {/* The Certificate Paper */}
+            <div className="bg-white w-[90%] h-[95%] rounded-lg p-6 shadow-2xl relative z-10 flex flex-col items-center text-center transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+               {/* Border inner */}
+               <div className="absolute inset-2 border border-[#E7E0D2] rounded-md pointer-events-none" />
+               <div className="absolute inset-3 border border-accent/20 rounded-sm pointer-events-none" />
+               
+               <div className="flex w-full justify-between items-start mb-6">
+                 <Award className="w-8 h-8 text-accent" />
+                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">{training.organization.split("(")[1]?.replace(")","") || "BTCL"}</span>
+               </div>
+
+               <div className="space-y-4 w-full">
+                 <div className="text-[10px] font-bold text-accent tracking-widest uppercase flex items-center justify-center space-x-2">
+                   <div className="w-6 h-px bg-accent/30" />
+                   <span>Official Certificate</span>
+                   <div className="w-6 h-px bg-accent/30" />
+                 </div>
+                 <h4 className="text-base font-extrabold text-primary uppercase">Certificate of Completion</h4>
+                 <div className="text-[9px] text-muted font-medium mt-4">This is to certify that</div>
+                 <div className="text-sm font-bold text-accent border-b border-[#E7E0D2] pb-1 mx-4">{profileData.name}</div>
+                 <div className="text-[9px] text-muted font-medium">has successfully completed</div>
+                 <div className="text-xs font-bold text-primary">{training.title}</div>
+                 <div className="text-[9px] text-muted font-medium">at</div>
+                 <div className="text-[9px] font-bold text-accent">{training.organization}</div>
+               </div>
+
+               <div className="mt-auto flex w-full justify-between items-end pt-6">
+                 <div className="flex flex-col items-center">
+                    <Award className="w-6 h-6 text-accent mb-1" />
+                 </div>
+                 <div className="flex flex-col items-center">
+                    <div className="w-16 border-b border-primary/20 mb-1" />
+                    <span className="text-[6px] text-muted uppercase font-bold">Date of Issue</span>
+                 </div>
+                 <div className="flex flex-col items-center">
+                    <div className="w-16 border-b border-primary/20 mb-1 flex items-center justify-center">
+                       <span className="font-signature text-primary text-lg leading-none -mt-3 italic">Signature</span>
+                    </div>
+                    <span className="text-[6px] text-muted uppercase font-bold">Authorized Signature</span>
+                 </div>
+               </div>
+            </div>
+          </div>
+
+        </motion.div>
+      </div>
     </section>
   );
 };
-

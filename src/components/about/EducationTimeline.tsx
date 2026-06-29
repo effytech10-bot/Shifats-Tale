@@ -70,30 +70,61 @@ export const EducationTimeline: React.FC<EducationTimelineProps> = ({ education 
                   className={`flex flex-col md:flex-row items-center w-full ${isEven ? "md:justify-start" : "md:justify-end"} relative group`}
                 >
                   {/* Timeline Dot (Desktop & Mobile) */}
-                  <div className="absolute left-4 md:left-1/2 w-8 h-8 rounded-full bg-white border-4 border-accent -ml-3.5 md:-ml-4 z-20 shadow-md group-hover:scale-125 group-hover:border-primary transition-transform duration-300 flex items-center justify-center">
+                  <div className={`absolute left-4 md:left-1/2 w-8 h-8 rounded-full bg-white border-4 ${isEven ? "border-primary" : "border-accent"} -ml-3.5 md:-ml-4 z-20 shadow-md group-hover:scale-125 transition-transform duration-300 flex items-center justify-center`}>
                     <div className="w-2 h-2 rounded-full bg-primary" />
                   </div>
 
                   {/* Content Card */}
-                  <div className={`w-full md:w-[45%] pl-14 md:pl-0 ${isEven ? "md:pr-14 md:text-right" : "md:pl-14 md:text-left"}`}>
-                    <div className="bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-[1.5rem] border border-white shadow-[0_10px_40px_-10px_rgba(1,14,98,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(1,14,98,0.15)] transition-all duration-300 hover:-translate-y-2 group-hover:border-accent/40 relative">
+                  <div className={`w-full md:w-[45%] pl-14 md:pl-0 ${isEven ? "md:pr-14" : "md:pl-14"}`}>
+                    <div className={`bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-[1.5rem] border border-white shadow-[0_10px_40px_-10px_rgba(1,14,98,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(1,14,98,0.15)] transition-all duration-300 hover:-translate-y-2 group-hover:border-accent/40 relative ${isEven ? "text-left md:text-right" : "text-left"}`}>
                       
+                      {/* Inner wrapper for watermark clipping */}
+                      <div className="absolute inset-0 rounded-[1.5rem] overflow-hidden pointer-events-none">
+                        {/* Background Watermark Icon */}
+                        <div className={`absolute top-1/2 -translate-y-1/2 ${isEven ? "left-4 sm:left-8" : "right-4 sm:right-8"} opacity-20 pointer-events-none`}>
+                          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-[#E7E0D2] flex items-center justify-center p-6 border-dashed">
+                            <GraduationCap className="w-full h-full text-[#E7E0D2]" strokeWidth={1} />
+                          </div>
+                        </div>
+                      </div>
+
                       {/* Year Badge */}
-                      <div className={`absolute top-0 -translate-y-1/2 ${isEven ? "md:right-8" : "md:left-8"} px-4 py-1.5 rounded-full bg-primary text-accent text-sm font-extrabold shadow-lg`}>
+                      <div className={`absolute top-0 -translate-y-1/2 px-5 py-1.5 rounded-full bg-primary text-accent text-sm font-extrabold shadow-[3px_3px_0_#FBB503] z-10 ${isEven ? "left-6 md:left-auto md:right-8" : "left-6 sm:left-8"}`}>
                         {item.year}
                       </div>
 
-                      <div className="space-y-2 pt-2">
-                        <h4 className="font-extrabold text-xl sm:text-2xl text-primary font-display leading-tight">
+                      <div className="space-y-3 pt-2 relative z-10">
+                        <h4 className="font-extrabold text-2xl sm:text-3xl text-primary font-display leading-tight">
                           {item.degree}
                         </h4>
                         <p className="text-sm sm:text-base text-muted font-bold">
                           {item.institution}
                         </p>
+                        
+                        {/* Custom Yellow Divider */}
+                        <div className={`flex items-center gap-1.5 pt-1 ${isEven ? "justify-start md:justify-end" : "justify-start"}`}>
+                          {isEven ? (
+                            <>
+                              <div className="w-1.5 h-1.5 rounded-full bg-accent hidden md:block" />
+                              <div className="w-12 h-1 rounded-full bg-accent hidden md:block" />
+                              <div className="w-12 h-1 rounded-full bg-accent block md:hidden" />
+                              <div className="w-1.5 h-1.5 rounded-full bg-accent block md:hidden" />
+                            </>
+                          ) : (
+                            <>
+                              <div className="w-12 h-1 rounded-full bg-accent" />
+                              <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            </>
+                          )}
+                        </div>
+
+                        {/* Restored GPA Info */}
                         {item.gpa && (
-                          <div className={`inline-flex items-center space-x-2 bg-accent/10 px-3 py-1 rounded-lg mt-3 ${isEven ? "md:justify-end" : ""}`}>
-                            <span className="text-xs font-bold text-muted uppercase">GPA / Class</span>
-                            <span className="text-sm font-extrabold text-primary">{item.gpa}</span>
+                          <div className={`pt-2 ${isEven ? "md:flex md:justify-end" : ""}`}>
+                            <div className="inline-flex items-center space-x-2 bg-white px-4 py-2 rounded-lg border border-[#E7E0D2] shadow-sm">
+                              <span className="text-[11px] font-bold text-muted uppercase tracking-wider">GPA / Class</span>
+                              <span className="text-sm font-extrabold text-primary">{item.gpa}</span>
+                            </div>
                           </div>
                         )}
                       </div>

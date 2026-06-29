@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, MapPin, Send, Mail } from "lucide-react";
+import { Phone, MapPin, Mail } from "lucide-react";
 import { FacebookIcon, YoutubeIcon } from "@/components/ui/Icons";
 import { siteInfo } from "@/data/site";
+import { MessageCircleHeart } from "lucide-react"; // for whatsapp chat icon
 
 export default function Footer() {
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -22,64 +23,73 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-primary border-t border-primary-dark/50 text-slate-300 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="brand-container grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer className="relative bg-[#FFF9EE] border-t-4 border-[#071A68] pt-20 overflow-hidden z-10">
+      {/* Small gold line just below the navy border */}
+      <div className="absolute top-0 left-0 w-full h-[3px] bg-[#F4B400]"></div>
+      
+      {/* Soft gradient blobs for modern feel (very subtle) */}
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#F4B400] opacity-[0.03] blur-[120px] rounded-full pointer-events-none z-[-1]" />
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#071A68] opacity-[0.02] blur-[120px] rounded-full pointer-events-none z-[-1]" />
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 pb-16 px-4 sm:px-6 lg:px-8">
         
-        {/* About Section */}
-        <div className="space-y-4 col-span-1 md:col-span-1.5">
+        {/* Brand & About Section (col-span-4) */}
+        <div className="md:col-span-4 space-y-6 lg:pr-8">
           <div className="flex items-center space-x-2">
-            <div className="inline-block relative h-11 w-44 sm:h-12 sm:w-48">
+            <div className="inline-block relative h-12 w-48 sm:h-14 sm:w-56">
               <Image
                 src="/images/logo_transparent.png"
                 alt="Shifat's Tales Logo"
                 fill
-                className="object-contain"
+                className="object-contain object-left"
               />
             </div>
           </div>
-          <p className="text-sm leading-relaxed text-slate-400">
-            {siteInfo.shortDescription}
+          <p className="text-[15px] leading-relaxed text-[#475569] font-medium">
+            A premium personal coaching ecosystem for Physics and Higher Mathematics. Empowering SSC, HSC & Admission aspirants to achieve top ranks.
           </p>
           <div className="flex items-center space-x-3 pt-2">
             <a
               href={siteInfo.facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2.5 rounded-xl bg-primary-dark border border-primary-dark/80 text-slate-300 hover:text-accent hover:border-accent/40 transition-all duration-200"
+              className="flex items-center justify-center w-11 h-11 rounded-full bg-white border border-[#E8DDBF] text-[#071A68] hover:text-[#F4B400] hover:border-[#F4B400] hover:bg-[#FFF4D6] hover:shadow-sm transition-all duration-300"
               aria-label="Facebook Page"
             >
-              <FacebookIcon className="h-4.5 w-4.5" />
+              <FacebookIcon className="h-5 w-5" />
             </a>
             <a
               href={siteInfo.youtubeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2.5 rounded-xl bg-primary-dark border border-primary-dark/80 text-slate-300 hover:text-accent hover:border-accent/40 transition-all duration-200"
+              className="flex items-center justify-center w-11 h-11 rounded-full bg-white border border-[#E8DDBF] text-[#071A68] hover:text-[#F4B400] hover:border-[#F4B400] hover:bg-[#FFF4D6] hover:shadow-sm transition-all duration-300"
               aria-label="YouTube Channel"
             >
-              <YoutubeIcon className="h-4.5 w-4.5" />
+              <YoutubeIcon className="h-5 w-5" />
             </a>
           </div>
         </div>
 
-        {/* Quick Links */}
-        <div>
-          <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-5">Quick Links</h3>
-          <ul className="space-y-3">
+        {/* Quick Links (col-span-2) */}
+        <div className="md:col-span-3 lg:col-span-2 lg:pl-4">
+          <h3 className="text-lg font-bold text-[#071A68] mb-1">Quick Links</h3>
+          <div className="w-8 h-[3px] bg-[#F4B400] rounded-full mb-6"></div>
+          <ul className="space-y-3.5">
             {[
-              { label: "Home Program", href: "#home" },
-              { label: "Offered Courses", href: "#courses" },
-              { label: "Meet Shifat Sir", href: "#teacher" },
+              { label: "Home", href: "#home" },
+              { label: "Programs", href: "#courses" },
+              { label: "Courses", href: "#courses" },
               { label: "Success Results", href: "#results" },
               { label: "Free Video Lectures", href: "#youtube-classes" },
-              { label: "Student Login", href: "#login", isPortal: true },
-              { label: "Admin Login", href: "#admin-login", isPortal: true },
+              { label: "Meet Shifat Sir", href: "#teacher" },
+              { label: "Student Login", href: "/login", isPortal: true },
+              { label: "Admin Login", href: "/login", isPortal: true },
             ].map((link) => (
               <li key={link.label}>
                 {link.isPortal ? (
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-300 hover:text-accent transition-colors duration-200 font-semibold"
+                    className="text-[15px] text-[#475569] hover:text-[#F4B400] transition-colors duration-200 font-medium"
                   >
                     {link.label}
                   </Link>
@@ -87,7 +97,7 @@ export default function Footer() {
                   <a
                     href={link.href}
                     onClick={(e) => handleLinkClick(e, link.href)}
-                    className="text-sm text-slate-300 hover:text-accent transition-colors duration-200"
+                    className="text-[15px] text-[#475569] hover:text-[#F4B400] transition-colors duration-200 font-medium"
                   >
                     {link.label}
                   </a>
@@ -97,33 +107,40 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact info */}
-        <div>
-          <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-5">Contact Details</h3>
-          <ul className="space-y-4">
-            <li className="flex items-start space-x-3 text-sm">
-              <Phone className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-              <div>
-                <span className="block text-slate-200 font-bold">Call/WhatsApp</span>
-                <a href={`tel:${siteInfo.phone.replace(/[\s-]/g, "")}`} className="hover:text-accent text-slate-300 transition-colors font-semibold">
+        {/* Contact info (col-span-3) */}
+        <div className="md:col-span-5 lg:col-span-3 lg:pl-4 border-l-0 md:border-l border-[#E8DDBF] md:pl-8">
+          <h3 className="text-lg font-bold text-[#071A68] mb-1">Contact Info</h3>
+          <div className="w-8 h-[3px] bg-[#F4B400] rounded-full mb-6"></div>
+          <ul className="space-y-6">
+            <li className="flex items-start space-x-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FFFCF7] border border-[#E8DDBF] shrink-0">
+                <Phone className="h-4.5 w-4.5 text-[#071A68]" strokeWidth={2.5} />
+              </div>
+              <div className="pt-0.5">
+                <span className="block text-[#071A68] font-bold text-[15px]">Call / WhatsApp</span>
+                <a href={`tel:${siteInfo.phone.replace(/[\s-]/g, "")}`} className="hover:text-[#F4B400] text-[#475569] text-sm transition-colors mt-0.5 block font-medium">
                   {siteInfo.phone}
                 </a>
               </div>
             </li>
-            <li className="flex items-start space-x-3 text-sm">
-              <Mail className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-              <div>
-                <span className="block text-slate-200 font-bold">Email</span>
-                <a href={`mailto:${siteInfo.email}`} className="hover:text-accent text-slate-300 transition-colors font-mono">
+            <li className="flex items-start space-x-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FFFCF7] border border-[#E8DDBF] shrink-0">
+                <Mail className="h-4.5 w-4.5 text-[#071A68]" strokeWidth={2.5} />
+              </div>
+              <div className="pt-0.5">
+                <span className="block text-[#071A68] font-bold text-[15px]">Email</span>
+                <a href={`mailto:${siteInfo.email}`} className="hover:text-[#F4B400] text-[#475569] text-sm transition-colors mt-0.5 block font-medium">
                   {siteInfo.email}
                 </a>
               </div>
             </li>
-            <li className="flex items-start space-x-3 text-sm">
-              <MapPin className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-              <div>
-                <span className="block text-slate-200 font-bold">Location</span>
-                <span className="text-slate-400 text-xs leading-relaxed block mt-0.5">
+            <li className="flex items-start space-x-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FFFCF7] border border-[#E8DDBF] shrink-0">
+                <MapPin className="h-4.5 w-4.5 text-[#071A68]" strokeWidth={2.5} />
+              </div>
+              <div className="pt-0.5">
+                <span className="block text-[#071A68] font-bold text-[15px]">Location</span>
+                <span className="text-[#475569] text-sm leading-relaxed block mt-1 font-medium">
                   {siteInfo.address}
                 </span>
               </div>
@@ -131,29 +148,35 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Direct WhatsApp Callout */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold text-white tracking-wider uppercase">Direct Admission Care</h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            We do not offer automatic online enrollment or payments. To join our programs, please connect directly with Shifat Sir or visit our venue.
-          </p>
-          <a
-            href={`https://wa.me/${siteInfo.whatsapp}?text=Hello%20Sir%2C%20I%20would%20like%20to%20know%20more%20about%20the%20admissions.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center space-x-2 w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-colors duration-200"
-          >
-            <Send className="h-4 w-4" />
-            <span>Chat on WhatsApp</span>
-          </a>
+        {/* Notice & Direct Admission (col-span-3) */}
+        <div className="md:col-span-12 lg:col-span-3 lg:pl-6 flex flex-col justify-center">
+          <div className="space-y-6">
+            <p className="text-[15px] text-[#475569] leading-relaxed font-medium">
+              We do not offer automatic online enrollment or payments. To join our programs, please connect directly with Shifat Sir or visit our venue.
+            </p>
+            <a
+              href={`https://wa.me/${siteInfo.whatsapp}?text=Hello%20Sir%2C%20I%20would%20like%20to%20know%20more%20about%20the%20admissions.`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center space-x-2.5 w-full py-3.5 px-6 rounded-xl bg-[#071A68] text-white font-extrabold text-[15px] hover:bg-[#0B237F] hover:shadow-[0_4px_20px_rgba(7,26,104,0.2)] transition-all duration-300 group"
+            >
+              <MessageCircleHeart className="h-5 w-5 text-[#20B86A] group-hover:scale-110 transition-transform duration-300" strokeWidth={2.5} />
+              <span>Chat on WhatsApp</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      <div className="brand-container mt-16 pt-8 border-t border-primary-dark/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-        <p>© {new Date().getFullYear()} Shifat's Tales — Academic & Admission Care. All rights reserved.</p>
-        <p className="flex items-center gap-1">
-          Designed with ❤️ for students in Bangladesh
-        </p>
+      {/* Bottom Copyright Strip */}
+      <div className="w-full bg-[#F8F0DE] border-t border-[#E8DDBF]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[14px] text-[#718096] font-medium">
+            <p>© {new Date().getFullYear()} Shifat's Tales. All rights reserved.</p>
+            <p className="flex items-center gap-1">
+              Designed with <span className="text-[#F4B400] text-lg">💛</span> for students in Bangladesh
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   );

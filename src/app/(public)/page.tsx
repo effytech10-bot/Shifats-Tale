@@ -14,6 +14,7 @@ import TrustStats from "@/components/home/TrustStats";
 import CoursesSection from "@/components/home/CoursesSection";
 import WhyChooseSection from "@/components/home/WhyChooseSection";
 import TeacherSection from "@/components/home/TeacherSection";
+import TopOfTheMonthSection from "@/components/home/TopOfTheMonthSection";
 import ResultsSection from "@/components/home/ResultsSection";
 import YouTubeClassesSection from "@/components/home/YouTubeClassesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -93,6 +94,7 @@ export default function Home() {
       <CoursesSection />
       <WhyChooseSection />
       <TeacherSection isTeacherFlying={isFlying} />
+      <TopOfTheMonthSection />
       <ResultsSection />
       <YouTubeClassesSection />
       <TestimonialsSection />

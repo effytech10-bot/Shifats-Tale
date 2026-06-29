@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { User, Play, GraduationCap, Users, MapPin, Feather } from "lucide-react";
-import { motion, Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { ProfileInfo, SocialLink } from "@/data/about";
 
 interface AboutHeroProps {
@@ -53,7 +53,7 @@ const renderStatIcon = (iconName: string, className: string = "w-5 h-5") => {
 
 const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
 const containerVariants: Variants = {

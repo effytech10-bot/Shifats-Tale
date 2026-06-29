@@ -53,7 +53,7 @@ const renderStatIcon = (iconName: string, className: string = "w-5 h-5") => {
 
 const fadeUpVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
 const containerVariants = {
@@ -196,19 +196,19 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ profile }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="absolute bottom-10 -left-6 sm:-left-12 lg:-left-24 xl:-left-28 bg-primary text-white p-6 sm:p-8 max-w-[280px] sm:max-w-[320px] shadow-2xl z-20"
+              className="absolute bottom-10 left-0 sm:-left-12 lg:-left-24 xl:-left-28 bg-primary text-white p-5 sm:p-8 w-[260px] sm:w-[320px] max-w-full shadow-2xl z-20"
               style={{
                 clipPath: "polygon(0 0, 100% 0, 100% 85%, 0 100%)",
                 borderRadius: "24px"
               }}
             >
-              <div className="text-accent font-serif text-[60px] leading-none absolute top-4 left-6 opacity-90 h-10">
+              <div className="text-accent font-serif text-[50px] sm:text-[60px] leading-none absolute top-3 sm:top-4 left-5 sm:left-6 opacity-90 h-10">
                 &ldquo;
               </div>
-              <p className="relative z-10 text-[13px] sm:text-sm font-medium leading-relaxed mt-6 pb-2">
+              <p className="relative z-10 text-xs sm:text-sm font-medium leading-relaxed mt-5 sm:mt-6 pb-1 sm:pb-2">
                 {profile.quote}
               </p>
-              <p className="mt-2 font-display text-accent text-xl sm:text-2xl pb-4" style={{ fontFamily: "cursive" }}>
+              <p className="mt-2 font-display text-accent text-lg sm:text-2xl pb-3 sm:pb-4" style={{ fontFamily: "cursive" }}>
                 Shifat
               </p>
             </motion.div>
@@ -218,12 +218,12 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ profile }) => {
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 1, type: "spring" }}
-              className="absolute -bottom-4 lg:bottom-4 -right-2 sm:-right-6 lg:-right-8 w-28 h-28 sm:w-36 sm:h-36 bg-white rounded-full shadow-xl z-20 flex flex-col items-center justify-center text-center p-4 border border-[#E7E0D2]/30"
+              className="absolute -bottom-4 lg:bottom-4 right-0 sm:-right-6 lg:-right-8 w-24 h-24 sm:w-36 sm:h-36 bg-white rounded-full shadow-xl z-20 flex flex-col items-center justify-center text-center p-3 sm:p-4 border border-[#E7E0D2]/30"
             >
-              <div className="w-10 h-10 rounded-full border border-accent flex items-center justify-center mb-2">
-                <Feather className="w-4 h-4 text-accent" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-accent flex items-center justify-center mb-1 sm:mb-2">
+                <Feather className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
               </div>
-              <p className="text-[8px] sm:text-[9px] font-extrabold text-primary uppercase tracking-widest leading-tight">
+              <p className="text-[7px] sm:text-[9px] font-extrabold text-primary uppercase tracking-widest leading-tight">
                 Guiding Minds<br />Inspiring Hearts
               </p>
             </motion.div>

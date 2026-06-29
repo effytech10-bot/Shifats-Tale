@@ -4,6 +4,7 @@ import {
   profileData,
   metricsData,
   educationData,
+  researchExperienceData,
   researchThesisData,
   publicationsData,
   skillCategoriesData,
@@ -14,10 +15,10 @@ import {
 import { AboutHero } from "@/components/about/AboutHero";
 import { AboutMetrics } from "@/components/about/AboutMetrics";
 import { EducationTimeline } from "@/components/about/EducationTimeline";
-import { ResearchSkillsSection } from "@/components/about/ResearchSkillsSection";
+import { ResearchExperienceSection } from "@/components/about/ResearchExperienceSection";
+import { PublicationsSection } from "@/components/about/PublicationsSection";
 import { ProjectsGrid } from "@/components/about/ProjectsGrid";
 import { IndustrialTrainingBanner } from "@/components/about/IndustrialTrainingBanner";
-import { Info } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Md. Zia Uddin Azad Sifat | Academic & Professional Portfolio | Shifat's Tales",
@@ -39,28 +40,18 @@ export default function AboutPage() {
       {/* 3. Education Timeline */}
       <EducationTimeline education={educationData} />
 
-      {/* 4 & 5. Research Experience & Technical Skills Section */}
-      <ResearchSkillsSection
-        thesis={researchThesisData}
-        publications={publicationsData}
-        skillCategories={skillCategoriesData}
-      />
+      {/* New Section: Research Experience */}
+      <ResearchExperienceSection researchData={researchExperienceData} />
 
-      {/* 6. Projects Grid */}
-      <ProjectsGrid projects={projectsData} />
+      {/* New Section: Research Publications */}
+      <PublicationsSection publications={publicationsData} />
 
       {/* 7. Industrial Training Banner */}
       <IndustrialTrainingBanner training={trainingData} />
 
-      {/* Dynamic Data Notice Footer Bar */}
-      <div className="py-8 bg-bg-soft relative z-10 border-t border-[#E7E0D2]/50 mt-10">
-        <div className="brand-container flex items-center justify-center space-x-2 text-xs font-semibold text-muted/80">
-          <Info className="h-4 w-4 text-accent shrink-0" />
-          <span>
-            All information is dynamic and managed from the admin panel. Content will be automatically updated from the database.
-          </span>
-        </div>
-      </div>
+      {/* 6. Projects Grid */}
+      <ProjectsGrid projects={projectsData} />
+
     </div>
   );
 }

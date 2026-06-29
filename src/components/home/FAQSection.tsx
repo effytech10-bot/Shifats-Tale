@@ -23,41 +23,8 @@ export default function FAQSection() {
   };
 
   return (
-    <section id="faq" className="brand-section-wrapper bg-bg-soft relative">
-      <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="max-w-4xl mx-auto brand-container">
-        {/* Section Header */}
-        <div className="text-center mb-16 space-y-4">
-          <motion.h2
-            variants={headerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-xs font-bold text-accent tracking-widest uppercase"
-          >
-            FAQ
-          </motion.h2>
-          <motion.p
-            variants={headerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
-          >
-            Have Questions? We Have Answers.
-          </motion.p>
-          <motion.p
-            variants={headerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-text text-sm sm:text-base"
-          >
-            Find responses to frequent inquiries about offline timings, performance checks, and lesson backup recording archives.
-          </motion.p>
-        </div>
-
+    <div id="faq" className="w-full">
+      <div className="max-w-4xl mx-auto w-full relative z-10">
         {/* FAQs Stack */}
         <div className="space-y-4">
           {faqs.map((faq, idx) => {
@@ -112,6 +79,6 @@ export default function FAQSection() {
           })}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

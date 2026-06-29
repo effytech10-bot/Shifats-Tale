@@ -28,7 +28,7 @@ export const studentResults: StudentResult[] = [
     course: "Engineering Admission Care",
     examType: "Engineering",
     year: "2024",
-    image: "/images/shifat_sir.png", // Example path or default avatar
+    image: "/images/s1.jpeg", // Example path or default avatar
     note: "Consistent performance in weekly quizzes and mocks helped me achieve this rank."
   },
   {
@@ -40,7 +40,7 @@ export const studentResults: StudentResult[] = [
     course: "Varsity Admission Care",
     examType: "University",
     year: "2024",
-    image: "/images/shifat_sir.png",
+    image: "/images/s2.jpeg",
     note: "Sir's math shortcuts and textbook summaries saved critical time during exams."
   },
   {
@@ -52,7 +52,7 @@ export const studentResults: StudentResult[] = [
     course: "Medical Physics Core",
     examType: "Medical",
     year: "2024",
-    image: "/images/shifat_sir.png",
+    image: "/images/s3.jpeg",
     note: "Even as a medical candidate, the physics concepts taught by Sir were invaluable."
   },
   {
@@ -64,7 +64,7 @@ export const studentResults: StudentResult[] = [
     course: "HSC Academic Care",
     examType: "Board",
     year: "2024",
-    image: "/images/shifat_sir.png",
+    image: "/images/s4.jpeg",
     note: "Perfect board preparation through chapter-wise quizzes and written evaluations."
   },
   {
@@ -76,7 +76,7 @@ export const studentResults: StudentResult[] = [
     course: "Engineering Admission Care",
     examType: "Engineering",
     year: "2024",
-    image: "/images/shifat_sir.png",
+    image: "/images/s5.jpeg",
     note: "Weekly mock tests exactly matched the actual exam pattern, building my confidence."
   },
   {
@@ -88,7 +88,7 @@ export const studentResults: StudentResult[] = [
     course: "HSC Academic Care",
     examType: "Board",
     year: "2024",
-    image: "/images/shifat_sir.png",
+    image: "/images/s1.jpeg",
     note: "Mastered Higher Mathematics theorems and calculus concepts with absolute clarity."
   }
 ];

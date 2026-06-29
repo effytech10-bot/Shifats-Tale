@@ -10,41 +10,8 @@ export default function LocationSection() {
   const directionUrl = siteInfo.googleMapDirectionUrl;
 
   return (
-    <section id="location" className="brand-section-wrapper bg-bg relative">
-      <div className="absolute top-1/3 left-0 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="brand-container">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <motion.h2
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-xs font-bold text-accent tracking-widest uppercase"
-          >
-            Location
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
-          >
-            Visit Our Offline Facility
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-text text-sm sm:text-base"
-          >
-            Classes are conducted in a clean, fully air-conditioned and high-tech facility near the {siteInfo.nearbyLandmark} area.
-          </motion.p>
-        </div>
-
+    <div id="location" className="w-full">
+      <div className="w-full relative z-10">
         {/* Location Box grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Details Column */}
@@ -125,6 +92,6 @@ export default function LocationSection() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

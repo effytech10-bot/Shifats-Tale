@@ -18,9 +18,6 @@ import ResultsSection from "@/components/home/ResultsSection";
 import YouTubeClassesSection from "@/components/home/YouTubeClassesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import GallerySection from "@/components/home/GallerySection";
-import FAQSection from "@/components/home/FAQSection";
-import LocationSection from "@/components/home/LocationSection";
-import ContactSection from "@/components/home/ContactSection";
 
 export default function Home() {
   const [flyingState, setFlyingState] = useState<{
@@ -99,10 +96,7 @@ export default function Home() {
       <ResultsSection />
       <YouTubeClassesSection />
       <TestimonialsSection />
-      <LocationSection />
       <GallerySection />
-      <FAQSection />
-      <ContactSection />
 
       {/* Flying 3D Teacher Portrait Animation Overlay */}
       <AnimatePresence>

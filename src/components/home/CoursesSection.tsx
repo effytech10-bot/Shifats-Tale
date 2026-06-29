@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { courses } from "@/data/courses";
 import { ChevronLeft, ChevronRight, Eye, X, Send } from "lucide-react";
 import { motion, useReducedMotion, AnimatePresence, useInView } from "framer-motion";
@@ -299,6 +300,13 @@ export default function CoursesSection() {
             </button>
           </div>
         )}
+
+        <div className="flex justify-center mt-10">
+          <Link href="/courses" className="primary-btn inline-flex items-center space-x-2 text-sm px-8 py-3.5 shadow-md hover:scale-[1.02] active:scale-95 transition-transform">
+            <Eye className="w-4 h-4" />
+            <span>View All Courses</span>
+          </Link>
+        </div>
 
       </div>
 

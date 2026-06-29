@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { studentResults } from "@/data/results";
-import { GraduationCap, School, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { GraduationCap, School, ChevronLeft, ChevronRight, Star, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 // Category filter type removed
@@ -171,24 +172,24 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
         </div>
 
         {/* Student Photo - Boldly Highlighted with glowing borders & shadow */}
-        <div className="relative pt-3 pb-1">
+        <div className="relative pt-4 pb-3">
           {/* Animated pulsing outer halo glow */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-accent via-[#010E62] to-accent rounded-full blur-md opacity-45 group-hover/card:opacity-85 transition-opacity duration-300 -m-1.5 animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-accent via-[#010E62] to-accent rounded-2xl blur-md opacity-45 group-hover/card:opacity-85 transition-opacity duration-300 -m-1.5 animate-pulse" />
           
-          {/* Outer Ring */}
-          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-accent via-[#010E62] to-accent shadow-xl group-hover/card:scale-105 transition-transform duration-300">
-            {/* Inner Ring holding the image */}
-            <div className="w-full h-full rounded-full overflow-hidden border-4 border-white bg-[#F8F7F2]">
+          {/* Outer Border Frame */}
+          <div className="relative w-[130px] h-[180px] sm:w-[160px] sm:h-[220px] rounded-2xl p-1 bg-gradient-to-tr from-accent via-[#010E62] to-accent shadow-xl group-hover/card:scale-105 transition-transform duration-300 mx-auto">
+            {/* Inner Image Container */}
+            <div className="w-full h-full rounded-[14px] overflow-hidden border-[3px] border-white bg-[#F8F7F2]">
               <img
-                src="/images/student.png"
+                src={result.image}
                 alt={result.name}
                 className="w-full h-full object-cover"
               />
             </div>
             
             {/* Achievement Badge Overlay */}
-            <div className="absolute -bottom-1 -right-1 bg-accent text-primary p-2 rounded-full border-2 border-white shadow-md group-hover/card:scale-110 transition-transform duration-300">
-              <Star className="h-4 w-4 fill-primary text-primary stroke-[2]" />
+            <div className="absolute -bottom-3 -right-3 bg-accent text-primary p-2.5 rounded-full border-[3px] border-white shadow-md group-hover/card:scale-110 transition-transform duration-300 z-10">
+              <Star className="h-5 w-5 fill-primary text-primary stroke-[2]" />
             </div>
           </div>
         </div>
@@ -345,7 +346,7 @@ export default function ResultsSection() {
               onMouseLeave={() => setIsHovered(false)}
               onFocus={() => setIsHovered(true)}
               onBlur={() => setIsHovered(false)}
-              className="relative w-full h-[490px] sm:h-[550px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing"
+              className="relative w-full h-[580px] sm:h-[650px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing"
               style={{ perspective: "1400px", transformStyle: "preserve-3d" }}
             >
               {/* Soft radial glow behind the active card */}
@@ -373,7 +374,7 @@ export default function ResultsSection() {
                 return (
                   <motion.div
                     key={result.id}
-                    className="absolute left-1/2 top-1/2 w-[280px] sm:w-[360px] h-[420px] sm:h-[480px]"
+                    className="absolute left-1/2 top-1/2 w-[280px] sm:w-[360px] h-[520px] sm:h-[580px]"
                     style={{
                       zIndex: cardMotion.zIndex,
                       transformStyle: offset === 0 ? "flat" : "preserve-3d",
@@ -452,6 +453,17 @@ export default function ResultsSection() {
               <span className="text-[10px] font-bold text-muted uppercase tracking-widest block select-none">
                 Drag cards or click dots to slide
               </span>
+            </div>
+
+            {/* View All Results Button */}
+            <div className="mt-16 text-center w-full flex justify-center z-20 relative">
+              <Link
+                href="/results"
+                className="inline-flex items-center justify-center space-x-2 px-8 py-3.5 bg-primary text-white rounded-xl font-bold hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1"
+              >
+                <span>View All Success Stories</span>
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
 
           </div>

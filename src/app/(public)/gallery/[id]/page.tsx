@@ -257,5 +257,6 @@ export default function AlbumDetailsPage() {
         )}
       </AnimatePresence>
     </div>
+    </div>
   );
 }

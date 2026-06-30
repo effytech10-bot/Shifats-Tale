@@ -6,15 +6,18 @@ import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { albumsData, GalleryAlbum, AlbumImage } from "@/data/albums";
 import { Calendar, X, ChevronLeft, ChevronRight, ZoomIn, ArrowLeft } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import InnerPageHero from "@/components/layout/InnerPageHero";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 export default function AlbumDetailsPage() {
   const params = useParams();
   const id = params.id as string;
   
   const [album, setAlbum] = useState<GalleryAlbum | null>(null);
-  const [selectedItem, setSelectedItem] = useState<AlbumImage | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     const found = albumsData.find((a) => a.id === id);
@@ -22,44 +25,6 @@ export default function AlbumDetailsPage() {
       setAlbum(found);
     }
   }, [id]);
-
-  // Lightbox navigation
-  const handleLightboxNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!selectedItem || !album) return;
-    const currentIndex = album.images.findIndex(i => i.id === selectedItem.id);
-    const nextIndex = (currentIndex + 1) % album.images.length;
-    setSelectedItem(album.images[nextIndex]);
-  };
-
-  const handleLightboxPrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!selectedItem || !album) return;
-    const currentIndex = album.images.findIndex(i => i.id === selectedItem.id);
-    const prevIndex = (currentIndex - 1 + album.images.length) % album.images.length;
-    setSelectedItem(album.images[prevIndex]);
-  };
-
-  // Keyboard navigation for lightbox
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!selectedItem || !album) return;
-      if (e.key === "ArrowRight") {
-        const currentIndex = album.images.findIndex(i => i.id === selectedItem.id);
-        const nextIndex = (currentIndex + 1) % album.images.length;
-        setSelectedItem(album.images[nextIndex]);
-      } else if (e.key === "ArrowLeft") {
-        const currentIndex = album.images.findIndex(i => i.id === selectedItem.id);
-        const prevIndex = (currentIndex - 1 + album.images.length) % album.images.length;
-        setSelectedItem(album.images[prevIndex]);
-      } else if (e.key === "Escape") {
-        setSelectedItem(null);
-      }
-    };
-    
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedItem, album]);
 
   if (!album) {
     return (
@@ -148,7 +113,10 @@ export default function AlbumDetailsPage() {
               transition={{ delay: index * 0.05 }}
               key={img.id}
               className="break-inside-avoid relative group rounded-2xl overflow-hidden bg-slate-100 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 border border-white"
-              onClick={() => setSelectedItem(img)}
+              onClick={() => {
+                setLightboxIndex(index);
+                setLightboxOpen(true);
+              }}
             >
               <Image
                 src={img.url}
@@ -177,85 +145,19 @@ export default function AlbumDetailsPage() {
         </div>
       </div>
 
-      {/* Lightbox / Modal */}
-      <AnimatePresence>
-        {selectedItem && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#010E62]/95 backdrop-blur-xl p-4 sm:p-6"
-            onClick={() => setSelectedItem(null)}
-          >
-            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50">
-              <button
-                onClick={() => setSelectedItem(null)}
-                className="p-3 bg-white/10 hover:bg-red-500/80 rounded-full text-white transition-colors backdrop-blur-md border border-white/20 shadow-lg"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* Navigation Arrows */}
-            {album.images.length > 1 && (
-              <>
-                <button
-                  onClick={handleLightboxPrev}
-                  className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 p-4 bg-white/10 hover:bg-[#FBB503] hover:text-[#010E62] rounded-full text-white transition-all backdrop-blur-md border border-white/20 z-50 hidden sm:flex shadow-lg"
-                >
-                  <ChevronLeft className="w-8 h-8" strokeWidth={3} />
-                </button>
-                <button
-                  onClick={handleLightboxNext}
-                  className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 p-4 bg-white/10 hover:bg-[#FBB503] hover:text-[#010E62] rounded-full text-white transition-all backdrop-blur-md border border-white/20 z-50 hidden sm:flex shadow-lg"
-                >
-                  <ChevronRight className="w-8 h-8" strokeWidth={3} />
-                </button>
-              </>
-            )}
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-5xl max-h-[85vh] rounded-3xl overflow-hidden flex flex-col items-center justify-center bg-black/50 shadow-2xl border border-white/10"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="relative w-full h-[75vh] flex items-center justify-center">
-                <Image
-                  src={selectedItem.url}
-                  alt={selectedItem.alt}
-                  fill
-                  className="object-contain"
-                  unoptimized
-                />
-              </div>
-              <div className="w-full bg-white/10 backdrop-blur-md p-4 text-center border-t border-white/10">
-                <p className="text-white font-medium">{selectedItem.alt}</p>
-                <p className="text-white/60 text-sm mt-1">
-                  {album.images.findIndex(i => i.id === selectedItem.id) + 1} / {album.images.length}
-                </p>
-              </div>
-            </motion.div>
-            
-            {/* Mobile Navigation Controls */}
-            {album.images.length > 1 && (
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 sm:hidden bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20">
-                <button onClick={handleLightboxPrev} className="text-white p-2">
-                  <ChevronLeft className="w-6 h-6" strokeWidth={2.5} />
-                </button>
-                <div className="text-white text-sm font-bold">
-                  {album.images.findIndex(i => i.id === selectedItem.id) + 1} / {album.images.length}
-                </div>
-                <button onClick={handleLightboxNext} className="text-white p-2">
-                  <ChevronRight className="w-6 h-6" strokeWidth={2.5} />
-                </button>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Lightbox */}
+      <Lightbox
+        open={lightboxOpen}
+        close={() => setLightboxOpen(false)}
+        index={lightboxIndex}
+        slides={album.images.map((img) => ({
+          src: img.url,
+          alt: img.alt,
+        }))}
+        styles={{
+          container: { backgroundColor: "rgba(0, 0, 0, 0.95)" },
+        }}
+      />
     </div>
     </div>
   );

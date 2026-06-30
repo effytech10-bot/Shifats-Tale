@@ -24,7 +24,7 @@ export default function ContactFAQAdmin({ initialSectionData }: { initialSection
   const [isSaving, setIsSaving] = useState(false);
 
   const handleAddFaq = () => {
-    setFaqs([...faqs, { id: uuidv4(), question: "", answer: "" }]);
+    setFaqs([...faqs, { id: generateId(), question: "", answer: "" }]);
   };
 
   const handleRemoveFaq = (id: string) => {

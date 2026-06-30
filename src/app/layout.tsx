@@ -36,6 +36,8 @@ export const metadata: Metadata = {
   }
 };
 
+import { Toaster } from 'react-hot-toast';
+
 export default function RootLayout({
   children,
   // Let's keep the parameter standard
@@ -51,6 +53,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg-soft font-sans" suppressHydrationWarning>
         {children}
+        <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
       </body>
     </html>
   );

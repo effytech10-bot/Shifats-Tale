@@ -17,17 +17,22 @@ export function TeacherShell({
   userEmail,
 }: TeacherShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [adminMode, setAdminMode] = useState<"coaching" | "website">("coaching");
 
   return (
     <div className="authenticated-shell flex h-screen w-screen bg-bg-soft text-text overflow-hidden">
       {/* Desktop sidebar */}
-      <TeacherSidebar className="hidden lg:flex lg:w-64 lg:shrink-0" />
+      <TeacherSidebar 
+        className="hidden lg:flex lg:w-64 lg:shrink-0" 
+        adminMode={adminMode} 
+      />
 
       {/* Mobile sidebar drawer */}
       <MobileDashboardNav
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         role="TEACHER"
+        adminMode={adminMode}
       />
 
       {/* Main viewport area */}
@@ -38,6 +43,8 @@ export function TeacherShell({
           userName={userName}
           userEmail={userEmail}
           onMenuToggle={() => setSidebarOpen(true)}
+          adminMode={adminMode}
+          onAdminModeChange={setAdminMode}
         />
 
         {/* Scrollable Main Content Container */}

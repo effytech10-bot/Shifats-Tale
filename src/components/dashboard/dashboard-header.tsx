@@ -11,6 +11,8 @@ interface DashboardHeaderProps {
   onMenuToggle: () => void;
   userName?: string;
   userEmail?: string;
+  adminMode?: "coaching" | "website";
+  onAdminModeChange?: (mode: "coaching" | "website") => void;
 }
 
 export function DashboardHeader({
@@ -18,6 +20,8 @@ export function DashboardHeader({
   onMenuToggle,
   userName = "User",
   userEmail = "user@example.com",
+  adminMode = "coaching",
+  onAdminModeChange,
 }: DashboardHeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -119,6 +123,39 @@ export function DashboardHeader({
 
       {/* Right: Quick Action Controls, Notification, and User Avatar Dropdown */}
       <div className="flex items-center gap-4">
+        {/* Toggle Website Admin vs Coaching Mode (TEACHER ONLY) */}
+        {role === "TEACHER" && (
+          <div className="hidden md:flex items-center gap-1 rounded-xl border border-border/50 bg-bg p-1 shadow-sm">
+            <button
+              type="button"
+              onClick={() => {
+                onAdminModeChange?.("coaching");
+                router.push("/teacher");
+              }}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                adminMode === "coaching"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted hover:text-primary hover:bg-bg/50"
+              }`}
+            >
+              Coaching Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onAdminModeChange?.("website");
+                router.push("/teacher/website");
+              }}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                adminMode === "website"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted hover:text-primary hover:bg-bg/50"
+              }`}
+            >
+              Website Admin
+            </button>
+          </div>
+        )}
         {/* Notification Bell */}
         <button
           onClick={() => router.push(role === "STUDENT" ? "/student/notifications" : "/teacher/notifications")}

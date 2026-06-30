@@ -8,7 +8,7 @@ import { courses } from "@/data/courses";
 import { siteInfo } from "@/data/site";
 import InnerPageHero from "@/components/layout/InnerPageHero";
 
-export default function CoursesClient() {
+export default function CoursesClient({ heroData }: { heroData?: any }) {
   const whatsappNumber = siteInfo.whatsapp;
   const [filter, setFilter] = useState("all");
 
@@ -39,19 +39,19 @@ export default function CoursesClient() {
         
         {/* Header */}
         <InnerPageHero
-          eyebrow="BATCHES & PROGRAMS"
+          eyebrow={heroData?.eyebrow || "BATCHES & PROGRAMS"}
           title={
             <>
-              <span className="block text-white">Explore Our Batches at</span>
-              <span className="block text-accent mt-1">Shifat&apos;s Tales</span>
+              <span className="block text-white">{heroData?.title || "Explore Our Batches at"}</span>
+              <span className="block text-accent mt-1">{heroData?.subtitle || "Shifat's Tales"}</span>
             </>
           }
-          description="Explore our curriculum programs designed to guide students towards absolute clarity in board and admission exams."
+          description={heroData?.description || "Explore our curriculum programs designed to guide students towards absolute clarity in board and admission exams."}
           breadcrumbs={[
             { label: "Home", href: "/" },
             { label: "Courses" },
           ]}
-          imageSrc="/images/flyer_hsc26_hsc27.jpg"
+          imageSrc={heroData?.mediaUrl || "/images/flyer_hsc26_hsc27.jpg"}
           imageAlt="Courses Cover"
         />
 

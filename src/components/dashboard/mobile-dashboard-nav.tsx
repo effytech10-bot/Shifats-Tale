@@ -11,6 +11,7 @@ interface MobileDashboardNavProps {
   onClose: () => void;
   role: "STUDENT" | "TEACHER";
   activeBatches?: any[];
+  adminMode?: "coaching" | "website";
 }
 
 export function MobileDashboardNav({
@@ -18,6 +19,7 @@ export function MobileDashboardNav({
   onClose,
   role,
   activeBatches = [],
+  adminMode = "coaching",
 }: MobileDashboardNavProps) {
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -72,7 +74,7 @@ export function MobileDashboardNav({
           {role === "STUDENT" ? (
             <StudentSidebar onLinkClick={onClose} className="h-full border-r-0" activeBatches={activeBatches} />
           ) : (
-            <TeacherSidebar onLinkClick={onClose} className="h-full border-r-0" />
+            <TeacherSidebar onLinkClick={onClose} className="h-full border-r-0" adminMode={adminMode} />
           )}
         </div>
       </div>

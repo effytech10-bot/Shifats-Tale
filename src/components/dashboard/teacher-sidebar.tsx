@@ -17,21 +17,27 @@ import {
   ShieldAlert,
   GraduationCap,
   Megaphone,
-  User
+  User,
+  Globe,
+  Image as ImageIcon,
+  MessageSquare,
+  ChevronDown
 } from "lucide-react";
 
 interface SidebarProps {
   className?: string;
   onLinkClick?: () => void;
+  adminMode?: "coaching" | "website";
 }
 
 interface NavItem {
   label: string;
-  href: string;
+  href?: string;
   icon: React.ComponentType<{ className?: string }>;
+  subItems?: { label: string; href: string }[];
 }
 
-const teacherNavItems: NavItem[] = [
+export const teacherNavItems: NavItem[] = [
   { label: "Overview", href: "/teacher", icon: LayoutDashboard },
   { label: "Manage Students", href: "/teacher/students", icon: Users },
   { label: "Manage Batches", href: "/teacher/batches", icon: BookOpen },
@@ -44,9 +50,68 @@ const teacherNavItems: NavItem[] = [
   { label: "Security Audit Logs", href: "/teacher/audit-logs", icon: ShieldAlert },
 ];
 
-export function TeacherSidebar({ className, onLinkClick }: SidebarProps) {
+export const websiteAdminNavItems: NavItem[] = [
+  { label: "Website Overview", href: "/teacher/website", icon: Globe },
+  { 
+    label: "Home Page", 
+    icon: LayoutDashboard,
+    subItems: [
+      { label: "Hero", href: "/teacher/website/home/hero" },
+      { label: "Hero Stats", href: "/teacher/website/home/stats" },
+      { label: "Offered Batches", href: "/teacher/website/home/batches" },
+      { label: "Why Learn Section", href: "/teacher/website/home/why-learn" },
+      { label: "Meet Teacher Section", href: "/teacher/website/home/teacher" },
+      { label: "Celebrating Excellence", href: "/teacher/website/home/excellence" },
+      { label: "Our Student Success Stories", href: "/teacher/website/home/success" },
+      { label: "Concept Breakdown Theater", href: "/teacher/website/home/youtube" },
+      { label: "What Parents & Students Say", href: "/teacher/website/home/testimonials" },
+      { label: "Captured Moments", href: "/teacher/website/home/gallery" },
+    ]
+  },
+  { 
+    label: "About Page", 
+    icon: UserCheck,
+    subItems: [
+      { label: "About Hero", href: "/teacher/website/about/hero" },
+      { label: "Summary Metrics Strip", href: "/teacher/website/about/metrics" },
+      { label: "Education Timeline", href: "/teacher/website/about/education" },
+      { label: "Research Experience", href: "/teacher/website/about/research-exp" },
+      { label: "Research Publications", href: "/teacher/website/about/publications" },
+      { label: "Industrial Training Banner", href: "/teacher/website/about/training" },
+      { label: "Projects Grid", href: "/teacher/website/about/projects" },
+      { label: "Technical Skills", href: "/teacher/website/about/skills" },
+      { label: "Extra Curricular Activities", href: "/teacher/website/about/eca" },
+    ]
+  },
+  { 
+    label: "Courses Page", 
+    icon: BookOpen,
+    subItems: [
+      { label: "Hero Section", href: "/teacher/website/courses/hero" },
+      { label: "Card System", href: "/teacher/website/courses/cards" },
+    ]
+  },
+  { 
+    label: "Other Pages", 
+    icon: ImageIcon,
+    subItems: [
+      { label: "Gallery Page", href: "/teacher/website/gallery" },
+      { label: "Projects Page", href: "/teacher/website/projects" },
+      { label: "Results Page", href: "/teacher/website/results" },
+      { label: "Contact Page", href: "/teacher/website/contact" },
+    ]
+  },
+  { label: "Global Footer", href: "/teacher/website/footer", icon: MessageSquare },
+];
+
+export function TeacherSidebar({ className, onLinkClick, adminMode = "coaching" }: SidebarProps) {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
+
+  const toggleMenu = (label: string) => {
+    setExpandedMenus(prev => ({ ...prev, [label]: !prev[label] }));
+  };
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
@@ -118,16 +183,67 @@ export function TeacherSidebar({ className, onLinkClick }: SidebarProps) {
 
       {/* Nav links */}
       <nav className="flex-grow p-4 space-y-1 overflow-y-auto">
-        {teacherNavItems.map((item) => {
+        {(adminMode === "website" ? websiteAdminNavItems : teacherNavItems).map((item) => {
           const Icon = item.icon;
+          const hasSubItems = item.subItems && item.subItems.length > 0;
+
+          if (hasSubItems) {
+            const isExpanded = expandedMenus[item.label];
+            // Check if any sub-item is active to highlight the parent slightly
+            const isChildActive = item.subItems?.some(sub => pathname === sub.href);
+
+            return (
+              <div key={item.label} className="space-y-1">
+                <button
+                  onClick={() => toggleMenu(item.label)}
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 group",
+                    isChildActive 
+                      ? "text-white bg-[#102A66]/50" 
+                      : "text-[#DCE5F5] hover:text-white hover:bg-[#102A66]"
+                  )}
+                >
+                  <div className="flex items-center gap-3.5">
+                    <Icon className={cn("h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-105", isChildActive ? "text-accent" : "text-[#9FB0D0] group-hover:text-white")} />
+                    <span>{item.label}</span>
+                  </div>
+                  <ChevronDown className={cn("h-4 w-4 transition-transform duration-200", isExpanded ? "rotate-180" : "")} />
+                </button>
+                
+                {isExpanded && (
+                  <div className="pl-12 space-y-1 pb-2">
+                    {item.subItems!.map((sub) => {
+                       const isSubActive = pathname === sub.href;
+                       return (
+                         <Link
+                           key={sub.href}
+                           href={sub.href}
+                           onClick={onLinkClick}
+                           className={cn(
+                             "block px-4 py-2 text-xs font-bold rounded-xl transition-all duration-200",
+                             isSubActive 
+                              ? "bg-accent text-primary-dark shadow-sm" 
+                              : "text-[#9FB0D0] hover:text-white hover:bg-[#102A66]"
+                           )}
+                         >
+                           {sub.label}
+                         </Link>
+                       );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
+
           const isActive = item.href === "/teacher"
             ? pathname === "/teacher"
-            : pathname === item.href || pathname.startsWith(item.href + "/");
+            : (item.href && (pathname === item.href || pathname.startsWith(item.href + "/")));
 
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={item.href || item.label}
+              href={item.href || "#"}
               onClick={onLinkClick}
               className={cn(
                 "flex items-center gap-3.5 px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 group relative",

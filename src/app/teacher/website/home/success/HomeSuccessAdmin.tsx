@@ -29,8 +29,6 @@ export default function HomeSuccessAdmin({
   };
 
   const handleSave = async () => {
-    if (!sectionId) return;
-
     try {
       setIsSaving(true);
       await updatePageSection("HOME", "HOME_STUDENT_SUCCESS", {

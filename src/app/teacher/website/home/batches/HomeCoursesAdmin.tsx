@@ -29,8 +29,6 @@ export default function HomeCoursesAdmin({
   };
 
   const handleSave = async () => {
-    if (!sectionId) return;
-
     try {
       setIsSaving(true);
       await updatePageSection("HOME", "HOME_FEATURED_COURSES", {

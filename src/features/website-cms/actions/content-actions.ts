@@ -75,19 +75,45 @@ export async function updatePageSection(
     throw new Error("Page not found");
   }
 
-  const { error } = await supabase
+  const { data: existingSection } = await supabase
     .from("site_page_sections")
-    .update({
-      eyebrow: payload.eyebrow || null,
-      title: payload.title || null,
-      subtitle: payload.subtitle || null,
-      description: payload.description || null,
-      status: payload.status,
-      content: payload.content,
-      updated_by: profile.id,
-    })
+    .select("id")
     .eq("page_id", page.id)
-    .eq("section_key", sectionKey);
+    .eq("section_key", sectionKey)
+    .maybeSingle();
+
+  let error;
+
+  if (existingSection) {
+    const res = await supabase
+      .from("site_page_sections")
+      .update({
+        eyebrow: payload.eyebrow || null,
+        title: payload.title || null,
+        subtitle: payload.subtitle || null,
+        description: payload.description || null,
+        status: payload.status,
+        content: payload.content,
+        updated_by: profile.id,
+      })
+      .eq("id", existingSection.id);
+    error = res.error;
+  } else {
+    const res = await supabase
+      .from("site_page_sections")
+      .insert({
+        page_id: page.id,
+        section_key: sectionKey,
+        eyebrow: payload.eyebrow || null,
+        title: payload.title || null,
+        subtitle: payload.subtitle || null,
+        description: payload.description || null,
+        status: payload.status,
+        content: payload.content,
+        updated_by: profile.id,
+      });
+    error = res.error;
+  }
 
   if (error) {
     console.error("Failed to update page section:", error);

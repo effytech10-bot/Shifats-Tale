@@ -21,7 +21,7 @@ export default async function HomePage() {
   // Fallback to all courses if none are selected (for initial state before admin selects any)
   const displayCourses = featuredCourses.length > 0 ? featuredCourses : allCourses.slice(0, 5);
 
-  const allStudents = await getSectionItems("RESULTS_STUDENT_CARDS");
+  const allStudents = await getSectionItems("RESULTS_STUDENTS");
   const homeSuccessSection = await getPageSection("HOME", "HOME_STUDENT_SUCCESS");
   
   const selectedStudentIds: string[] = homeSuccessSection?.content?.selectedStudentIds || [];

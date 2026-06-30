@@ -11,7 +11,7 @@ export default async function HomeSuccessPage() {
   await requireTeacher();
 
   // Fetch all available students from the Results page
-  const allStudents = await getSectionItems("RESULTS_STUDENT_CARDS");
+  const allStudents = await getSectionItems("RESULTS_STUDENTS");
 
   // Fetch the current featured success settings for the Home page
   const section = await getPageSection("HOME", "HOME_STUDENT_SUCCESS");

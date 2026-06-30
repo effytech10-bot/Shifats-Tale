@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const heroData = await getPageSection("CONTACT", "CONTACT_HERO");
+  const contactInfo = await getPageSection("CONTACT", "CONTACT_INFO");
+  const contactFaq = await getPageSection("CONTACT", "CONTACT_FAQ");
 
   return (
     <div className="min-h-screen bg-[#FFF9F2] pt-24 pb-20 relative overflow-hidden">
@@ -52,14 +54,14 @@ export default async function ContactPage() {
             ========================================================================= */}
         <div className="space-y-16">
           <ContactSection />
-          <LocationSection />
+          <LocationSection infoData={contactInfo} />
         </div>
 
         {/* =========================================================================
             SECTION 3: FAQ
             ========================================================================= */}
         <div>
-          <FAQSection />
+          <FAQSection faqData={contactFaq} />
         </div>
 
       </div>

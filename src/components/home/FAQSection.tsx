@@ -1,12 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { faqs } from "@/data/faq";
 import { Plus, Minus, Headset } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
-export default function FAQSection() {
-  const [openId, setOpenId] = useState<string | null>("f2"); // Start with second one open based on mockup for demo, or null
+export default function FAQSection({ faqData }: { faqData?: any }) {
+  const dynamicFaqs = faqData?.content?.faqs || [];
+  // Use static faqs fallback only if you imported them, else just [] or default fallback
+  const displayFaqs = dynamicFaqs.length > 0 ? dynamicFaqs : [
+    { id: "faq-1", question: "Where is the coaching center located?", answer: "Our offline facility is located at Sekandar & M.P Yusuf Building (3rd Floor), next to Rangunia College, Rangunia, Chattogram." },
+    { id: "faq-2", question: "How can I join the coaching?", answer: "To enroll, please contact Shifat Sir directly on WhatsApp or over the phone." },
+    { id: "faq-3", question: "Are there any online classes available?", answer: "Currently, our primary focus is strictly offline to ensure maximum engagement and focus." }
+  ];
+
+  const [openId, setOpenId] = useState<string | null>(displayFaqs[1]?.id || null); // Start with second one open based on mockup for demo, or null
   const shouldReduceMotion = useReducedMotion();
 
   const toggleFAQ = (id: string) => {
@@ -18,7 +25,7 @@ export default function FAQSection() {
       <div className="max-w-4xl mx-auto w-full relative z-10">
         {/* FAQs Stack */}
         <div className="space-y-6">
-          {faqs.map((faq, idx) => {
+          {displayFaqs.map((faq: any, idx: number) => {
             const isOpen = openId === faq.id;
             const number = String(idx + 1).padStart(2, "0");
 

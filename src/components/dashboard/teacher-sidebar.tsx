@@ -113,7 +113,8 @@ export const websiteAdminNavItems: NavItem[] = [
     icon: MessageSquare,
     subItems: [
       { label: "Hero Section", href: "/teacher/website/contact/hero" },
-      // Other sections like FAQ will be added here
+      { label: "Contact Info & Map", href: "/teacher/website/contact/info" },
+      { label: "FAQ Section", href: "/teacher/website/contact/faq" },
     ]
   },
   { label: "Global Footer", href: "/teacher/website/footer", icon: Settings },

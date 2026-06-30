@@ -5,9 +5,10 @@ import { MapPin, Compass, Train } from "lucide-react";
 import { motion } from "framer-motion";
 import { siteInfo } from "@/data/site";
 
-export default function LocationSection() {
-  const mapUrl = siteInfo.googleMapEmbedUrl;
-  const directionUrl = siteInfo.googleMapDirectionUrl;
+export default function LocationSection({ infoData }: { infoData?: any }) {
+  const content = infoData?.content || {};
+  const mapUrl = content.mapEmbedUrl || siteInfo.googleMapEmbedUrl;
+  const directionUrl = content.mapDirectionUrl || siteInfo.googleMapDirectionUrl;
 
   return (
     <div id="location" className="w-full">
@@ -25,7 +26,7 @@ export default function LocationSection() {
                 <div>
                   <h4 className="font-extrabold text-primary text-base sm:text-lg">Physical Venue</h4>
                   <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
-                    {siteInfo.address}
+                    {content.address || siteInfo.address}
                   </p>
                 </div>
               </div>
@@ -38,7 +39,7 @@ export default function LocationSection() {
                 <div>
                   <h4 className="font-extrabold text-primary text-base sm:text-lg">How to reach</h4>
                   <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
-                    Conveniently located {siteInfo.nearbyLandmark} in Rangunia. Easily accessible from all parts of the area by local transport (CNG/bus).
+                    {content.transitInfo || `Conveniently located ${siteInfo.nearbyLandmark} in Rangunia. Easily accessible from all parts of the area by local transport (CNG/bus).`}
                   </p>
                 </div>
               </div>
@@ -49,9 +50,9 @@ export default function LocationSection() {
                   <Compass className="h-5.5 w-5.5" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-primary text-base sm:text-lg">Security & Amenities</h4>
+                  <h4 className="font-extrabold text-primary text-base sm:text-lg">Security & Facilities</h4>
                   <p className="text-sm text-text mt-1.5 leading-relaxed font-medium">
-                    CCTV monitored secure campus. Filtered drinking water, clean separate washrooms, and high-speed projector visual lecture screens.
+                    {content.securityInfo || "24/7 CCTV surveillance, well-lit classrooms, and a highly secure academic environment for all students."}
                   </p>
                 </div>
               </div>

@@ -7,7 +7,7 @@ export interface AlbumImage {
 export interface GalleryAlbum {
   id: string;
   title: string;
-  category: "Events" | "Classroom" | "Awards" | "Study Material";
+  category: "Events" | "Classroom" | "Awards" | "Study Material" | "Farewell";
   date: string;
   description: string;
   coverImage: string;

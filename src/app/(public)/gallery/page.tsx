@@ -4,17 +4,31 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { albumsData } from "@/data/albums";
-import { Calendar, Image as ImageIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import { Calendar, Image as ImageIcon, Search, Camera } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import InnerPageHero from "@/components/layout/InnerPageHero";
 
 export default function GalleryPage() {
   const [hoveredAlbum, setHoveredAlbum] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
     { label: "Gallery" },
   ];
+
+  const categories = ["All", "Events", "Classroom", "Awards", "Study Material", "Farewell"];
+
+  const filteredAlbums = albumsData.filter((album) => {
+    const matchesCategory = selectedCategory === "All" || album.category === selectedCategory;
+    const searchLower = searchQuery.toLowerCase();
+    const matchesSearch = 
+      album.title.toLowerCase().includes(searchLower) || 
+      album.date.toLowerCase().includes(searchLower) || 
+      album.description.toLowerCase().includes(searchLower);
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-[#FFF9F2] pt-24 pb-20 relative overflow-hidden">
@@ -40,12 +54,66 @@ export default function GalleryPage() {
           imageSrc="/images/gallery-classroom.png"
         />
 
-      <div className="mt-12">
+      <div className="mt-8">
+        
+        {/* Filter Bar */}
+        <div className="mb-12 bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-[#E8DDBF] flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex-1 w-full overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-max px-1">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    selectedCategory === cat 
+                      ? "bg-[#010E62] text-white shadow-md border border-[#010E62]" 
+                      : "bg-[#FFFCF7] text-[#4A5568] border border-[#E8DDBF] hover:bg-[#FBB503]/10 hover:text-[#010E62] hover:border-[#FBB503]"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="relative w-full md:w-72 shrink-0">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#718096]" />
+            <input 
+              type="text" 
+              placeholder="Search by name, date or year..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-11 pr-4 py-2.5 bg-[#FFFCF7] border border-[#E8DDBF] rounded-xl text-sm font-medium text-[#010E62] placeholder:text-[#718096] focus:outline-none focus:ring-2 focus:ring-[#FBB503]/50 focus:border-[#FBB503] transition-all"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
-          {albumsData.map((album) => (
-            <Link href={`/gallery/${album.id}`} key={album.id} className="block group">
-              <div 
-                className="relative cursor-pointer"
+          <AnimatePresence mode="popLayout">
+            {filteredAlbums.length === 0 ? (
+              <motion.div 
+                key="empty"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="col-span-full py-20 text-center flex flex-col items-center"
+              >
+                <Camera className="w-12 h-12 text-[#E8DDBF] mb-4" />
+                <h3 className="text-xl font-bold text-[#010E62]">No albums found</h3>
+                <p className="text-[#4A5568] mt-2">Try adjusting your filters or search query.</p>
+              </motion.div>
+            ) : (
+              filteredAlbums.map((album, index) => (
+            <motion.div
+              key={album.id}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ delay: index * 0.05 }}
+              layout
+            >
+              <Link href={`/gallery/${album.id}`} className="block group">
+                <div 
+                  className="relative cursor-pointer"
                 onMouseEnter={() => setHoveredAlbum(album.id)}
                 onMouseLeave={() => setHoveredAlbum(null)}
               >
@@ -138,7 +206,9 @@ export default function GalleryPage() {
                 </div>
               </div>
             </Link>
-          ))}
+            </motion.div>
+          )))}
+          </AnimatePresence>
         </div>
       </div>
     </div>

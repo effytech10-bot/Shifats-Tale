@@ -20,7 +20,17 @@ import YouTubeClassesSection from "@/components/home/YouTubeClassesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import GallerySection from "@/components/home/GallerySection";
 
-export default function HomeClient({ displayCourses, headerData }: { displayCourses: any[], headerData?: any }) {
+export default function HomeClient({ 
+  displayCourses, 
+  headerData,
+  displayStudents,
+  successHeaderData 
+}: { 
+  displayCourses: any[], 
+  headerData?: any,
+  displayStudents?: any[],
+  successHeaderData?: any
+}) {
   const [flyingState, setFlyingState] = useState<{
     startX: number;
     startY: number;
@@ -95,7 +105,7 @@ export default function HomeClient({ displayCourses, headerData }: { displayCour
       <WhyChooseSection />
       <TeacherSection isTeacherFlying={isFlying} />
       <TopOfTheMonthSection />
-      <ResultsSection />
+      <ResultsSection studentItems={displayStudents} headerData={successHeaderData} />
       <YouTubeClassesSection />
       <TestimonialsSection />
       <GallerySection />

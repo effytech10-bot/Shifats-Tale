@@ -8,6 +8,12 @@ import { updatePageSection } from "@/features/website-cms/actions/content-action
 export default function ContactInfoAdmin({ initialSectionData }: { initialSectionData: any }) {
   const content = initialSectionData?.content || {};
   
+  const [phone, setPhone] = useState(content.phone || "+880 1879-169446");
+  const [whatsapp, setWhatsapp] = useState(content.whatsapp || "8801879169446");
+  const [officeHours, setOfficeHours] = useState(content.officeHours || "Daily 4:00 PM - 9:00 PM");
+  const [facebookUrl, setFacebookUrl] = useState(content.facebookUrl || "https://facebook.com");
+  const [youtubeUrl, setYoutubeUrl] = useState(content.youtubeUrl || "https://youtube.com");
+  
   const [address, setAddress] = useState(content.address || "Sekandar & M.P Yusuf Building, 3rd Floor, next to Rangunia College, Rangunia, Chattogram, Bangladesh");
   const [transitInfo, setTransitInfo] = useState(content.transitInfo || "Conveniently located next to Rangunia College in Rangunia. Easily accessible from all parts of the area by local transport (CNG/bus).");
   const [securityInfo, setSecurityInfo] = useState(content.securityInfo || "24/7 CCTV surveillance, well-lit classrooms, and a highly secure academic environment for all students.");
@@ -22,6 +28,11 @@ export default function ContactInfoAdmin({ initialSectionData }: { initialSectio
       await updatePageSection("CONTACT", "CONTACT_INFO", {
         status: "PUBLISHED",
         content: {
+          phone,
+          whatsapp,
+          officeHours,
+          facebookUrl,
+          youtubeUrl,
           address,
           transitInfo,
           securityInfo,
@@ -52,6 +63,56 @@ export default function ContactInfoAdmin({ initialSectionData }: { initialSectio
       </div>
 
       <div className="space-y-4">
+        <h3 className="font-bold text-gray-700 mt-2 mb-4 border-b pb-2">Direct Contact Channels</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold mb-1">Phone Number</label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">WhatsApp Number (e.g. 88017...)</label>
+            <input
+              type="text"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Office Hours</label>
+            <input
+              type="text"
+              value={officeHours}
+              onChange={(e) => setOfficeHours(e.target.value)}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Facebook URL</label>
+            <input
+              type="text"
+              value={facebookUrl}
+              onChange={(e) => setFacebookUrl(e.target.value)}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">YouTube URL</label>
+            <input
+              type="text"
+              value={youtubeUrl}
+              onChange={(e) => setYoutubeUrl(e.target.value)}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+            />
+          </div>
+        </div>
+
+        <h3 className="font-bold text-gray-700 mt-8 mb-4 border-b pb-2">Location Information</h3>
         <div>
           <label className="block text-sm font-semibold mb-1">Physical Venue Address</label>
           <textarea

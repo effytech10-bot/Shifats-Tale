@@ -10,6 +10,7 @@ import {
   skillCategoriesData,
   projectsData,
   trainingData,
+  ecaData,
 } from "@/data/about";
 
 import { AboutHero } from "@/components/about/AboutHero";
@@ -19,6 +20,8 @@ import { ResearchExperienceSection } from "@/components/about/ResearchExperience
 import { PublicationsSection } from "@/components/about/PublicationsSection";
 import { ProjectsGrid } from "@/components/about/ProjectsGrid";
 import { IndustrialTrainingBanner } from "@/components/about/IndustrialTrainingBanner";
+import TechnicalSkillsSection from "@/components/about/TechnicalSkillsSection";
+import ECASection from "@/components/about/ECASection";
 
 export const metadata: Metadata = {
   title: "About Md. Zia Uddin Azad Sifat | Academic & Professional Portfolio | Shifat's Tales",
@@ -51,6 +54,12 @@ export default function AboutPage() {
 
       {/* 6. Projects Grid */}
       <ProjectsGrid projects={projectsData} />
+
+      {/* 8. Technical Skills */}
+      <TechnicalSkillsSection skills={skillCategoriesData} />
+
+      {/* 9. Extra Curricular Activities */}
+      <ECASection ecaItems={ecaData} />
 
     </div>
   );

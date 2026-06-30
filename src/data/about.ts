@@ -111,6 +111,27 @@ export interface TrainingItem {
   certificateUrl?: string;
 }
 
+export interface ECAItem {
+  id: string;
+  role: string;
+  organization: string;
+  logoUrl?: string;
+  iconName?: string;
+  tag?: string;
+  colorTheme?: "yellow" | "blue" | "green" | "purple";
+  startDate: string;
+  endDate: string;
+  duration: string;
+  location: string;
+  type: string;
+  attachment?: {
+    imageUrl: string;
+    caption: string;
+    description?: string;
+  };
+  coverImage?: string;
+}
+
 export const profileData: ProfileInfo = {
   name: "Md. Zia Uddin Azad Sifat",
   role: "CEO AT SHIFAT'S TALES",
@@ -541,3 +562,82 @@ export const trainingData: TrainingItem = {
   ],
   certificateUrl: "#",
 };
+
+export const ecaData: ECAItem[] = [
+  {
+    id: "eca1",
+    role: "Lecturer",
+    organization: "Dhaka International University",
+    iconName: "GraduationCap",
+    tag: "HSC FIRST YEAR • BATCH 2026",
+    colorTheme: "yellow",
+    startDate: "Jul 2024",
+    endDate: "May 2025",
+    duration: "11 mos",
+    location: "Dhaka, Bangladesh",
+    type: "Full-time",
+    attachment: {
+      imageUrl: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop",
+      caption: "Receiving the Joining Letter!",
+      description: "A proud milestone and a new beginning."
+    },
+    coverImage: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2086&auto=format&fit=crop"
+  },
+  {
+    id: "eca2",
+    role: "Robotics Secretary",
+    organization: "Andromeda Space & Robotics Research Organization",
+    iconName: "Bot",
+    tag: "HSC SECOND YEAR • BATCH 2027",
+    colorTheme: "blue",
+    startDate: "May 2023",
+    endDate: "Jun 2024",
+    duration: "1 yr 2 mos",
+    location: "Chattogram, Bangladesh",
+    type: "Full-time",
+    attachment: {
+      imageUrl: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop",
+      caption: "Flayer",
+      description: "Designed the official flayer for our annual robotics workshop."
+    },
+    coverImage: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    id: "eca3",
+    role: "President",
+    organization: "Science Club of Model College",
+    iconName: "Activity",
+    tag: "SSC BATCH 2024",
+    colorTheme: "green",
+    startDate: "Jan 2022",
+    endDate: "Dec 2023",
+    duration: "2 yrs",
+    location: "Dhaka, Bangladesh",
+    type: "Part-time",
+    attachment: {
+      imageUrl: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2070&auto=format&fit=crop",
+      caption: "Science Fair Winner",
+      description: "Awarded first prize in the national science fair."
+    },
+    coverImage: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    id: "eca4",
+    role: "Event Coordinator",
+    organization: "Tech Innovators Society",
+    iconName: "Briefcase",
+    tag: "VOLUNTEER • 2025",
+    colorTheme: "purple",
+    startDate: "Mar 2024",
+    endDate: "Present",
+    duration: "Ongoing",
+    location: "Remote",
+    type: "Volunteer",
+    attachment: {
+      imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop",
+      caption: "Hackathon Organizer",
+      description: "Successfully managed a 48-hour online hackathon."
+    },
+    coverImage: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2012&auto=format&fit=crop"
+  }
+];

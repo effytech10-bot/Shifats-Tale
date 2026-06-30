@@ -134,6 +134,7 @@ export default function GalleryPage() {
                       src={album.images[1]?.url || album.coverImage}
                       alt="album peek"
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       className="object-cover opacity-60 grayscale-[50%]"
                     />
                   </motion.div>
@@ -153,6 +154,7 @@ export default function GalleryPage() {
                       src={album.images[2]?.url || album.coverImage}
                       alt="album peek"
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       className="object-cover opacity-80"
                     />
                   </motion.div>
@@ -171,6 +173,7 @@ export default function GalleryPage() {
                       src={album.coverImage}
                       alt={album.title}
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     {/* Dark gradient overlay for text visibility */}

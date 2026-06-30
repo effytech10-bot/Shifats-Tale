@@ -5,17 +5,17 @@ import { requireTeacher } from "@/lib/auth-guards";
 import { cloudinary } from "@/lib/cloudinary";
 
 const ALLOWED_FOLDERS: Record<string, string> = {
-  BRANDING: "shifats-tales/branding",
-  HERO: "shifats-tales/hero",
-  COURSES: "shifats-tales/courses",
-  RESULTS: "shifats-tales/results",
-  MONTHLY_STARS: "shifats-tales/monthly-stars",
-  TESTIMONIALS: "shifats-tales/testimonials",
-  GALLERY: "shifats-tales/gallery",
-  ABOUT: "shifats-tales/about",
-  PROJECTS: "shifats-tales/projects",
-  PUBLICATIONS: "shifats-tales/publications",
-  CONTACT: "shifats-tales/contact",
+  BRANDING: "shifats-tales",
+  HERO: "shifats-tales",
+  COURSES: "shifats-tales",
+  RESULTS: "shifats-tales",
+  MONTHLY_STARS: "shifats-tales",
+  TESTIMONIALS: "shifats-tales",
+  GALLERY: "shifats-tales",
+  ABOUT: "shifats-tales",
+  PROJECTS: "shifats-tales",
+  PUBLICATIONS: "shifats-tales",
+  CONTACT: "shifats-tales",
 };
 
 const ALLOWED_IMAGE_FORMATS = new Set(["jpg", "jpeg", "png", "webp", "avif"]);

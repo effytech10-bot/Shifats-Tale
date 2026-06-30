@@ -96,3 +96,131 @@ export async function updatePageSection(
 
   return { success: true };
 }
+
+/**
+ * Public: Get all items for a specific section.
+ * Automatically resolves media URLs if media_id is present.
+ */
+export async function getSectionItems(sectionKey: string) {
+  const supabase = await createClient();
+
+  // 1. Get the section ID
+  const { data: section, error: sectionError } = await supabase
+    .from("vw_public_site_page_sections")
+    .select("id")
+    .eq("section_key", sectionKey)
+    .maybeSingle();
+
+  if (sectionError || !section) {
+    return [];
+  }
+
+  // 2. Get the items
+  const { data: items, error: itemsError } = await supabase
+    .from("site_section_items")
+    .select(`
+      *,
+      media:media_assets(secure_url)
+    `)
+    .eq("section_id", section.id)
+    .eq("status", "PUBLISHED")
+    .order("sort_order", { ascending: true });
+
+  if (itemsError) {
+    console.error("Error fetching section items:", itemsError);
+    return [];
+  }
+
+  // Map to include mediaUrl directly for easier frontend consumption
+  return items.map((item: any) => ({
+    ...item,
+    mediaUrl: item.media?.secure_url || null,
+  }));
+}
+
+/**
+ * Teacher: Upsert a section item.
+ */
+export async function upsertSectionItem(
+  sectionKey: string,
+  payload: {
+    id?: string;
+    title: string;
+    subtitle?: string;
+    body?: string;
+    media_id?: string | null;
+    metadata?: Record<string, any>;
+    sort_order?: number;
+    status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  }
+) {
+  const { profile } = await requireTeacher();
+  const supabase = await createClient();
+
+  // 1. Get the section ID
+  const { data: section, error: sectionError } = await supabase
+    .from("site_page_sections")
+    .select("id")
+    .eq("section_key", sectionKey)
+    .single();
+
+  if (sectionError || !section) {
+    throw new Error("Section not found");
+  }
+
+  const itemData = {
+    section_id: section.id,
+    title: payload.title,
+    subtitle: payload.subtitle || null,
+    body: payload.body || null,
+    media_id: payload.media_id || null,
+    metadata: payload.metadata || {},
+    sort_order: payload.sort_order || 0,
+    status: payload.status,
+    updated_by: profile.id,
+  };
+
+  if (payload.id) {
+    // Update
+    const { error } = await supabase
+      .from("site_section_items")
+      .update(itemData)
+      .eq("id", payload.id)
+      .eq("section_id", section.id);
+      
+    if (error) throw new Error("Failed to update item");
+  } else {
+    // Insert
+    const { error } = await supabase
+      .from("site_section_items")
+      .insert({
+        ...itemData,
+        created_by: profile.id,
+      });
+      
+    if (error) throw new Error("Failed to create item");
+  }
+
+  return { success: true };
+}
+
+/**
+ * Teacher: Delete a section item.
+ */
+export async function deleteSectionItem(itemId: string) {
+  await requireTeacher();
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("site_section_items")
+    .delete()
+    .eq("id", itemId);
+
+  if (error) {
+    console.error("Failed to delete section item:", error);
+    throw new Error("Failed to delete item");
+  }
+
+  return { success: true };
+}
+

@@ -22,7 +22,8 @@ export function MediaLibrary({ folderKey, onSelect }: MediaLibraryProps) {
     async function loadAssets() {
       try {
         setIsLoading(true);
-        const data = await getMediaAssets(folderKey);
+        // Fetch all media assets globally so users can reuse images across different sections
+        const data = await getMediaAssets();
         if (mounted) {
           setAssets(data || []);
         }
@@ -60,7 +61,7 @@ export function MediaLibrary({ folderKey, onSelect }: MediaLibraryProps) {
   if (assets.length === 0) {
     return (
       <div className="p-12 text-center text-muted border-2 border-dashed border-border/60 rounded-xl bg-gray-50/50">
-        <p className="text-sm">No uploaded images found in this folder.</p>
+        <p className="text-sm">No uploaded images found in the library.</p>
         <p className="text-xs mt-1">Switch to the Upload tab to add new images.</p>
       </div>
     );

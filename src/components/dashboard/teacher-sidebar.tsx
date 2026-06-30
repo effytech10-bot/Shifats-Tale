@@ -92,16 +92,30 @@ export const websiteAdminNavItems: NavItem[] = [
     ]
   },
   { 
-    label: "Other Pages", 
+    label: "Gallery Page", 
     icon: ImageIcon,
     subItems: [
-      { label: "Gallery Page", href: "/teacher/website/gallery" },
-      { label: "Projects Page", href: "/teacher/website/projects" },
-      { label: "Results Page", href: "/teacher/website/results" },
-      { label: "Contact Page", href: "/teacher/website/contact" },
+      { label: "Hero Section", href: "/teacher/website/gallery/hero" },
+      // Other sections like Photo Albums will be added here
     ]
   },
-  { label: "Global Footer", href: "/teacher/website/footer", icon: MessageSquare },
+  { 
+    label: "Results Page", 
+    icon: GraduationCap,
+    subItems: [
+      { label: "Hero Section", href: "/teacher/website/results/hero" },
+      // Other sections like Students List will be added here
+    ]
+  },
+  { 
+    label: "Contact Page", 
+    icon: MessageSquare,
+    subItems: [
+      { label: "Hero Section", href: "/teacher/website/contact/hero" },
+      // Other sections like FAQ will be added here
+    ]
+  },
+  { label: "Global Footer", href: "/teacher/website/footer", icon: Settings },
 ];
 
 export function TeacherSidebar({ className, onLinkClick, adminMode = "coaching" }: SidebarProps) {

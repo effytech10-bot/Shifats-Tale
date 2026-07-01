@@ -9,6 +9,8 @@ import { profileData as defaultProfileData, ProfileInfo, HeroStat, SocialLink } 
 import { MediaSelector } from "@/features/website-cms/components/MediaSelector";
 import { IconPicker } from "@/features/website-cms/components/IconPicker";
 
+const DEFAULT_PLATFORMS = ["Facebook", "Instagram", "Youtube", "Linkedin", "Twitter", "Github"];
+
 export default function AboutHeroAdmin({ initialSectionData }: { initialSectionData: any }) {
   const [profile, setProfile] = useState<ProfileInfo>(initialSectionData?.content || defaultProfileData);
   
@@ -40,11 +42,11 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
     setProfile({ ...profile, heroStats: stats });
   };
 
-  const addSocialLink = () => {
+  const addSocialLink = (platform: string) => {
     const newLink: SocialLink = {
-      platform: "New Platform",
-      url: "#",
-      iconName: "Facebook",
+      platform,
+      url: "",
+      iconName: platform as any,
     };
     setProfile({ ...profile, socialLinks: [...(profile.socialLinks || []), newLink] });
   };
@@ -209,28 +211,39 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
         <div className="flex justify-between items-center border-b pb-2">
           <h3 className="text-lg font-bold text-[#08132E]">Social Links</h3>
-          <button onClick={addSocialLink} className="flex items-center space-x-1 text-sm text-primary font-semibold hover:text-accent">
-            <Plus className="w-4 h-4" /> <span>Add Link</span>
-          </button>
+          {(() => {
+            const currentPlatforms = (profile.socialLinks || []).map(link => link.platform);
+            const availablePlatforms = DEFAULT_PLATFORMS.filter(p => !currentPlatforms.includes(p));
+            if (availablePlatforms.length === 0) return null;
+            return (
+              <select
+                onChange={(e) => {
+                  if (e.target.value) addSocialLink(e.target.value);
+                  e.target.value = "";
+                }}
+                className="text-sm border border-border rounded-lg px-2 py-1 text-primary focus:border-accent"
+                defaultValue=""
+              >
+                <option value="" disabled>+ Add Link</option>
+                {availablePlatforms.map(p => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+            );
+          })()}
         </div>
         <div className="space-y-3">
           {(profile.socialLinks || []).map((link, idx) => (
             <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 bg-gray-50/50 p-3 rounded-xl border border-border">
-              <div className="w-full sm:w-48 shrink-0">
-                <IconPicker
-                  value={link.iconName}
-                  onChange={(iconName) => {
-                    updateSocialLink(idx, 'iconName', iconName);
-                    updateSocialLink(idx, 'platform', iconName); // Sync platform with icon
-                  }}
-                />
+              <div className="w-full sm:w-32 shrink-0 flex items-center space-x-2 px-2 text-primary font-semibold">
+                <span className="text-sm">{link.platform}</span>
               </div>
               <div className="w-full flex-1">
                 <input
                   type="text"
                   value={link.url}
                   onChange={(e) => updateSocialLink(idx, 'url', e.target.value)}
-                  placeholder="Profile URL (e.g. https://facebook.com/...)"
+                  placeholder={`${link.platform} Profile URL...`}
                   className="w-full px-3 py-2 border border-border rounded-lg focus:border-accent text-sm text-blue-600"
                 />
               </div>
@@ -243,6 +256,11 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
               </button>
             </div>
           ))}
+          {(!profile.socialLinks || profile.socialLinks.length === 0) && (
+            <div className="text-center py-4 text-sm text-gray-500">
+              No social links added. Use the "+ Add Link" dropdown to add one.
+            </div>
+          )}
         </div>
       </div>
 

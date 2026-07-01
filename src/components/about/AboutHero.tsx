@@ -6,6 +6,7 @@ import { User, Play, GraduationCap, Users, MapPin, Feather } from "lucide-react"
 import * as LucideIcons from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { profileData as defaultProfileData, ProfileInfo, SocialLink } from "@/data/about";
+import { renderSocialIcon } from "@/components/ui/SocialIcons";
 
 interface AboutHeroProps {
   profileData?: ProfileInfo;
@@ -125,7 +126,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ profileData: profile = def
                       rel="noopener noreferrer"
                       className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center text-primary/70 hover:bg-accent hover:text-primary hover:border-accent transition-all shadow-sm hover:-translate-y-1"
                     >
-                      {renderDynamicIcon(social.iconName, "w-4 h-4 sm:w-5 sm:h-5")}
+                      {renderSocialIcon(social.iconName, "w-4 h-4 sm:w-5 sm:h-5")}
                     </a>
                   ))}
                 </div>

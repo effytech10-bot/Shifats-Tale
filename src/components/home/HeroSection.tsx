@@ -20,10 +20,16 @@ const HeroScene = dynamic(() => import("../three/HeroScene"), {
 interface HeroSectionProps {
   isTeacherFlying?: boolean;
   onImageClick?: (e: React.MouseEvent) => void;
+  heroData?: any;
 }
 
-export default function HeroSection({ isTeacherFlying = false, onImageClick }: HeroSectionProps) {
+export default function HeroSection({ isTeacherFlying = false, onImageClick, heroData }: HeroSectionProps) {
   const siteInfo = useSiteSettings();
+  const content = heroData?.content || {};
+  
+  const tagline = content.tagline || siteInfo.tagline;
+  const headline = content.heroHeadline || siteInfo.heroHeadline;
+  const description = content.heroDescription || siteInfo.heroDescription;
   const scrollToSection = (id: string) => {
     const el = document.querySelector(id);
     if (el) {
@@ -53,7 +59,7 @@ export default function HeroSection({ isTeacherFlying = false, onImageClick }: H
               className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-border text-primary text-xs font-bold tracking-wide shadow-sm"
             >
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span>{siteInfo.tagline}</span>
+              <span>{tagline}</span>
             </motion.div>
 
             <div className="space-y-4">
@@ -63,7 +69,7 @@ export default function HeroSection({ isTeacherFlying = false, onImageClick }: H
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-primary leading-tight"
               >
-                {siteInfo.heroHeadline}
+                {headline}
               </motion.h1>
 
               <motion.p
@@ -72,7 +78,7 @@ export default function HeroSection({ isTeacherFlying = false, onImageClick }: H
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-base sm:text-lg md:text-xl text-text max-w-2xl mx-auto lg:mx-0 leading-relaxed"
               >
-                {siteInfo.heroDescription}
+                {description}
               </motion.p>
             </div>
 

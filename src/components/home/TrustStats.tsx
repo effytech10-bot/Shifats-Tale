@@ -15,8 +15,45 @@ const getIcon = (iconName: string) => {
   }
 };
 
-export default function TrustStats() {
+export default function TrustStats({ heroData }: { heroData?: any }) {
   const shouldReduceMotion = useReducedMotion();
+  
+  const content = heroData?.content || {};
+  
+  const displayStats = [
+    {
+      id: "stat-1",
+      icon: "Users",
+      value: content.studentCount || "10,000+",
+      label: "Students Taught",
+      color: "text-primary",
+      bg: "bg-primary/5",
+    },
+    {
+      id: "stat-2",
+      icon: "Award",
+      value: content.boardSuccess || "100%",
+      label: "Board Success Rate",
+      color: "text-accent",
+      bg: "bg-accent/10",
+    },
+    {
+      id: "stat-3",
+      icon: "GraduationCap",
+      value: content.universitySuccess || "5,000+",
+      label: "University Admits",
+      color: "text-primary-dark",
+      bg: "bg-primary-dark/5",
+    },
+    {
+      id: "stat-4",
+      icon: "CheckCircle",
+      value: content.experience || "10+",
+      label: "Years Experience",
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+    },
+  ];
 
   const containerVariants = {
     hidden: {},
@@ -52,9 +89,9 @@ export default function TrustStats() {
           viewport={{ once: true, margin: "-50px" }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
         >
-          {stats.map((stat, i) => (
+          {displayStats.map((stat, index) => (
             <motion.div
-              key={i}
+              key={stat.id}
               variants={cardVariants}
               className="brand-card rounded-2xl p-5 sm:p-6 flex flex-col items-center text-center space-y-2 relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-accent/30 group bg-white border border-border"
             >
@@ -62,24 +99,20 @@ export default function TrustStats() {
               <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               {/* Icon wrapper */}
-              <div className="bg-bg-soft p-3 rounded-xl border border-border group-hover:scale-105 transition-transform duration-300">
-                {getIcon(stat.iconName)}
+              <div className={`p-4 rounded-2xl ${stat.bg} mb-2 relative group-hover:scale-110 transition-transform duration-300`}>
+                {getIcon(stat.icon)}
               </div>
 
               {/* Number */}
-              <span className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight pt-1">
-                {stat.number}
-              </span>
+              <h3 className={`text-2xl sm:text-3xl font-black ${stat.color} tracking-tight`}>
+                {stat.value}
+              </h3>
 
-              {/* Label */}
-              <span className="text-xs sm:text-sm font-bold text-primary-dark">
-                {stat.label}
-              </span>
-
-              {/* Description */}
-              <span className="text-[11px] sm:text-xs text-muted font-medium">
-                {stat.description}
-              </span>
+              <div className="space-y-1">
+                <p className="font-bold text-sm sm:text-base text-primary/90">
+                  {stat.label}
+                </p>
+              </div>
             </motion.div>
           ))}
         </motion.div>

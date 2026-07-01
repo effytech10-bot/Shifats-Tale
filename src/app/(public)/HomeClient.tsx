@@ -24,12 +24,14 @@ export default function HomeClient({
   displayCourses, 
   headerData,
   displayStudents,
-  successHeaderData 
+  successHeaderData,
+  heroData
 }: { 
   displayCourses: any[], 
   headerData?: any,
   displayStudents?: any[],
-  successHeaderData?: any
+  successHeaderData?: any,
+  heroData?: any
 }) {
   const [flyingState, setFlyingState] = useState<{
     startX: number;
@@ -99,8 +101,8 @@ export default function HomeClient({
 
   return (
     <div className="overflow-x-hidden">
-      <HeroSection isTeacherFlying={isFlying} onImageClick={handleTeacherPhotoClick} />
-      <TrustStats />
+      <HeroSection isTeacherFlying={isFlying} onImageClick={handleTeacherPhotoClick} heroData={heroData} />
+      <TrustStats heroData={heroData} />
       <CoursesSection headerData={headerData} courseItems={displayCourses} />
       <WhyChooseSection />
       <TeacherSection isTeacherFlying={isFlying} />

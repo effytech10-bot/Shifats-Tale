@@ -83,14 +83,14 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsProps
               alt={project.title} 
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
             
             <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 flex flex-col justify-end">
               <div className="flex items-center space-x-2 bg-accent/90 text-primary font-black text-xs uppercase tracking-widest px-3 py-1.5 rounded w-fit mb-4">
                 {getIcon(project.iconName, "w-4 h-4")}
                 <span>{project.category}</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white font-display leading-tight max-w-4xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white !text-white font-display leading-tight max-w-4xl drop-shadow-md">
                 {project.title}
               </h1>
             </div>

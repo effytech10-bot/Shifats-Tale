@@ -31,21 +31,23 @@
   --font-display: var(--font-outfit), sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: var(--color-bg-soft);
-  color: var(--color-text);
-  font-family: var(--font-inter), var(--font-sans);
-  overflow-x: hidden;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-outfit), var(--font-display);
-  color: var(--color-primary);
-  font-weight: 800;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: var(--color-bg-soft);
+    color: var(--color-text);
+    font-family: var(--font-inter), var(--font-sans);
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-outfit), var(--font-display);
+    color: var(--color-primary);
+    font-weight: 800;
+  }
 }
 
 /* Custom scrollbar to match the premium warm theme */

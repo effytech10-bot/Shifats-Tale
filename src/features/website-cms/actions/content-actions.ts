@@ -65,13 +65,25 @@ export async function updatePageSection(
   const supabase = await createClient();
 
   // First find the page ID
-  const { data: page, error: pageError } = await supabase
+  let { data: page, error: pageError } = await supabase
     .from("site_pages")
     .select("id")
     .eq("page_key", pageKey)
     .single();
 
-  if (pageError || !page) {
+  if (pageError && pageError.code === "PGRST116") {
+    // If not found, create the page automatically
+    const { data: newPage, error: insertError } = await supabase
+      .from("site_pages")
+      .insert({ page_key: pageKey, title: pageKey, status: "PUBLISHED", is_active: true } as any)
+      .select("id")
+      .single();
+      
+    if (insertError) {
+      throw new Error("Failed to auto-create page: " + insertError.message);
+    }
+    page = newPage;
+  } else if (pageError || !page) {
     throw new Error("Page not found");
   }
 

@@ -108,6 +108,7 @@ export default function YouTubeClassesSection() {
                         src={currentVideo.thumbnailUrl}
                         alt={currentVideo.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 800px"
                         className="object-cover transition-transform duration-700 group-hover:scale-103 opacity-80"
                         priority
                       />

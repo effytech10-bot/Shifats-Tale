@@ -76,7 +76,7 @@ export default function HeroScene() {
       <div className="absolute inset-0 bg-gradient-to-tr from-primary/3 to-accent/5 blur-[120px] rounded-full pointer-events-none" />
       
       <Canvas
-        shadows
+        shadows={{ type: THREE.PCFShadowMap }}
         camera={{ position: [0, 0, 5], fov: 45 }}
         className="w-full h-full bg-transparent"
         gl={{ alpha: true, antialias: true }}

@@ -178,13 +178,19 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
           {/* Outer Border Frame */}
           <div className="relative w-[130px] h-[180px] sm:w-[160px] sm:h-[220px] rounded-2xl p-1 bg-gradient-to-tr from-accent via-[#010E62] to-accent shadow-xl group-hover/card:scale-105 transition-transform duration-300 mx-auto">
             {/* Inner Image Container */}
-            <div className="w-full h-full rounded-[14px] overflow-hidden border-[3px] border-white bg-[#F8F7F2]">
-              <img
-                src={result.image}
-                alt={result.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
+              <div className="w-full h-full rounded-[14px] overflow-hidden border-[3px] border-white bg-[#F8F7F2] flex items-center justify-center">
+                {result.image && result.image !== "/placeholder.jpg" ? (
+                  <img
+                    src={result.image}
+                    alt={result.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-[#010E62] opacity-30">
+                    <GraduationCap className="w-12 h-12" />
+                  </div>
+                )}
+              </div>
             
             {/* Achievement Badge Overlay */}
             <div className="absolute -bottom-3 -right-3 bg-accent text-primary p-2.5 rounded-full border-[3px] border-white shadow-md group-hover/card:scale-110 transition-transform duration-300 z-10">

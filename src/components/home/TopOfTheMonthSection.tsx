@@ -136,12 +136,18 @@ export default function TopOfTheMonthSection({ topStudentsData: dynamicData }: {
                         {/* Glow ring behind */}
                         <div className="absolute inset-0 bg-[#FBB503] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
                         
-                        <div className="relative w-full h-full rounded-full overflow-hidden border-[6px] border-white shadow-[0_0_0_2px_rgba(251,181,3,0.3)] bg-[#FFFCF2]">
-                          <img
-                            src={student.image}
-                            alt={student.name}
-                            className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700"
-                          />
+                        <div className="relative w-full h-full rounded-full overflow-hidden border-[6px] border-white shadow-[0_0_0_2px_rgba(251,181,3,0.3)] bg-[#FFFCF2] flex items-center justify-center">
+                            {student.image ? (
+                              <img
+                                src={student.image}
+                                alt={student.name}
+                                className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700"
+                              />
+                            ) : (
+                              <div className="text-4xl text-[#FBB503] opacity-30">
+                                <Trophy className="w-16 h-16" />
+                              </div>
+                            )}
                         </div>
                         
                         {/* Floating Badge */}

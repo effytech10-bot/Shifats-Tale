@@ -68,6 +68,7 @@ export default function GallerySection() {
                         src={album.images[1]?.url || album.coverImage}
                         alt="album peek"
                         fill
+                        sizes="(max-width: 768px) 50vw, 30vw"
                         className="object-cover opacity-60 grayscale-[50%]"
                       />
                     </motion.div>
@@ -87,6 +88,7 @@ export default function GallerySection() {
                         src={album.images[2]?.url || album.coverImage}
                         alt="album peek"
                         fill
+                        sizes="(max-width: 768px) 50vw, 30vw"
                         className="object-cover opacity-80"
                       />
                     </motion.div>
@@ -105,6 +107,7 @@ export default function GallerySection() {
                         src={album.coverImage}
                         alt={album.title}
                         fill
+                        sizes="(max-width: 768px) 50vw, 30vw"
                         className="object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#010E62]/90 via-[#010E62]/10 to-transparent opacity-80" />

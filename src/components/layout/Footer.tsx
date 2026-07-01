@@ -42,6 +42,7 @@ export default function Footer() {
                 src="/images/logo_transparent.png"
                 alt="Shifat's Tales Logo"
                 fill
+                sizes="(max-width: 768px) 192px, 224px"
                 className="object-contain object-left"
               />
             </div>

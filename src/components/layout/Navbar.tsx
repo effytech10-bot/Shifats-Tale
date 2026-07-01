@@ -158,6 +158,7 @@ export default function Navbar() {
                 src="/images/logo_transparent.png"
                 alt="Shifat's Tales Logo"
                 fill
+                sizes="(max-width: 768px) 176px, 208px"
                 className="object-contain object-left"
                 priority
               />
@@ -300,6 +301,7 @@ export default function Navbar() {
                 src="/images/logo_transparent.png"
                 alt="Shifat's Tales Logo"
                 fill
+                sizes="160px"
                 className="object-contain object-left"
               />
             </Link>

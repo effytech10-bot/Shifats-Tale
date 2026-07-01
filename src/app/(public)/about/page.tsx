@@ -37,6 +37,7 @@ export default async function AboutPage() {
   const aboutPublicationsSection = await getPageSection("ABOUT", "ABOUT_PUBLICATIONS");
   const aboutTrainingSection = await getPageSection("ABOUT", "ABOUT_TRAINING");
   const aboutProjectsSection = await getPageSection("ABOUT", "ABOUT_PROJECTS");
+  const aboutSkillsSection = await getPageSection("ABOUT", "ABOUT_SKILLS");
 
   return (
     <div className="relative pt-20 pb-0 bg-bg-soft text-text flex flex-col min-h-screen selection:bg-accent selection:text-primary overflow-x-hidden">
@@ -65,7 +66,7 @@ export default async function AboutPage() {
       <ProjectsGrid projects={aboutProjectsSection?.content?.projects || projectsData} />
 
       {/* 8. Technical Skills */}
-      <TechnicalSkillsSection skills={skillCategoriesData} />
+      <TechnicalSkillsSection skills={aboutSkillsSection?.content?.skills || skillCategoriesData} />
 
       {/* 9. Extra Curricular Activities */}
       <ECASection ecaItems={ecaData} />

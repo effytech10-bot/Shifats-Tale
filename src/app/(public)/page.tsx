@@ -11,6 +11,7 @@ export default async function HomePage() {
   const homeHeroSection = await getPageSection("HOME", "HOME_HERO");
   const homeStatsSection = await getPageSection("HOME", "HOME_STATS");
   const homeWhyChooseSection = await getPageSection("HOME", "HOME_WHY_CHOOSE");
+  const homeTeacherSection = await getPageSection("HOME", "HOME_TEACHER");
   const allCourses = await getSectionItems("COURSES_CARDS");
   const homeCoursesSection = await getPageSection("HOME", "HOME_FEATURED_COURSES");
   
@@ -41,6 +42,7 @@ export default async function HomePage() {
     heroData={homeHeroSection}
     statsData={homeStatsSection}
     whyChooseData={homeWhyChooseSection}
+    teacherData={homeTeacherSection}
     displayCourses={displayCourses} 
     headerData={homeCoursesSection} 
     displayStudents={displayStudents}

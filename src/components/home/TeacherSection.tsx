@@ -19,10 +19,21 @@ const HeroScene = dynamic(() => import("../three/HeroScene"), {
 
 interface TeacherSectionProps {
   isTeacherFlying?: boolean;
+  teacherData?: any;
 }
 
-export default function TeacherSection({ isTeacherFlying = false }: TeacherSectionProps) {
-  const whatsappLink = `https://wa.me/${siteInfo.whatsapp}?text=Hello%20${encodeURIComponent(siteInfo.teacherName.split(" ").pop()!)}%20Sir%2C%20I%20would%20like%20to%20discuss%2520admissions%20for%20myself%20/%20my%20child.`;
+export default function TeacherSection({ isTeacherFlying = false, teacherData }: TeacherSectionProps) {
+  const content = teacherData?.content || {};
+  
+  const teacherName = content.teacherName || siteInfo.teacherName || "Md. Zia Uddin Azad Sifat";
+  const teacherSpecialty = content.teacherSpecialty || siteInfo.teacherSpecialty || "Instructor & CEO";
+  const teacherBio = content.teacherBio || siteInfo.teacherBio;
+  const teacherTitle = content.teacherTitle || "Instructor & CEO";
+  const teacherSubtitle = content.teacherSubtitle || "EEE, CUET";
+  const teacherImage = content.teacherImage || "/images/sir_photo_clean.png";
+  const methods = content.teachingMethods || teachingMethods;
+
+  const whatsappLink = `https://wa.me/${siteInfo.whatsapp}?text=Hello%20${encodeURIComponent(teacherName.split(" ").pop()!)}%20Sir%2C%20I%20would%20like%20to%20discuss%2520admissions%20for%20myself%20/%20my%20child.`;
   const shouldReduceMotion = useReducedMotion();
 
   const headerVariants = {
@@ -81,8 +92,8 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
               <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#FFF8E6] via-[#FFF8E6]/85 to-transparent z-10 pointer-events-none" />
 
               <Image
-                src="/images/sir_photo_clean.png"
-                alt={siteInfo.teacherName}
+                src={teacherImage}
+                alt={teacherName}
                 fill
                 sizes="(max-width: 768px) 280px, 340px"
                 className="object-contain object-bottom filter drop-shadow-[0_16px_32px_rgba(1,14,98,0.22)] z-10"
@@ -93,13 +104,13 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
             {/* Compact Designation Tag under portrait */}
             <div className="mt-6 z-20 text-center w-full max-w-[280px] sm:max-w-[340px] bg-white border border-border p-3.5 rounded-xl shadow-sm hover:border-accent/30 hover:shadow-md transition-all duration-300">
               <span className="block text-accent font-extrabold text-[10px] sm:text-xs uppercase tracking-widest">
-                Instructor & CEO
+                {teacherTitle}
               </span>
               <h4 className="font-extrabold text-base sm:text-lg text-primary mt-1">
-                {siteInfo.teacherName}
+                {teacherName}
               </h4>
               <span className="block text-xs text-muted font-bold mt-0.5">
-                EEE, CUET
+                {teacherSubtitle}
               </span>
             </div>
           </div>
@@ -123,7 +134,7 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
                 viewport={{ once: true }}
                 className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight"
               >
-                {siteInfo.teacherName}
+                {teacherName}
               </motion.h3>
               <motion.p
                 variants={headerVariants}
@@ -133,7 +144,7 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
                 className="text-primary-dark text-sm font-semibold flex items-center gap-1.5"
               >
                 <GraduationCap className="h-4.5 w-4.5 text-accent animate-bounce" style={{ animationDuration: "3s" }} />
-                <span>{siteInfo.teacherSpecialty}</span>
+                <span>{teacherSpecialty}</span>
               </motion.p>
             </div>
 
@@ -145,7 +156,7 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-text text-sm sm:text-base leading-relaxed"
             >
-              {siteInfo.teacherBio}
+              {teacherBio}
             </motion.p>
 
             {/* Teaching Method Cards */}
@@ -160,7 +171,7 @@ export default function TeacherSection({ isTeacherFlying = false }: TeacherSecti
                 viewport={{ once: true, margin: "-50px" }}
                 className="grid grid-cols-1 sm:grid-cols-2 gap-4"
               >
-                {teachingMethods.map((method, i) => (
+                {methods.map((method: any, i: number) => (
                   <motion.div
                     key={i}
                     variants={gridItemVariants}

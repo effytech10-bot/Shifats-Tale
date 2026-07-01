@@ -24,6 +24,7 @@ export default function HomeClient({
   heroData,
   statsData,
   whyChooseData,
+  teacherData,
   displayCourses, 
   headerData,
   displayStudents,
@@ -35,7 +36,8 @@ export default function HomeClient({
   displayStudents?: any[],
   successHeaderData?: any,
   statsData?: any,
-  whyChooseData?: any
+  whyChooseData?: any,
+  teacherData?: any
 }) {
   const [flyingState, setFlyingState] = useState<{
     startX: number;
@@ -109,7 +111,7 @@ export default function HomeClient({
       <TrustStats statsData={statsData} />
       <CoursesSection headerData={headerData} courseItems={displayCourses} />
       <WhyChooseSection whyChooseData={whyChooseData} />
-      <TeacherSection isTeacherFlying={isFlying} />
+      <TeacherSection isTeacherFlying={isFlying} teacherData={teacherData} />
       <TopOfTheMonthSection />
       <ResultsSection studentItems={displayStudents} headerData={successHeaderData} />
       <YouTubeClassesSection />

@@ -11,6 +11,12 @@ import { MediaSelector } from "@/features/website-cms/components/MediaSelector";
 export default function ExcellenceAdmin({ initialSectionData }: { initialSectionData: any }) {
   const content = initialSectionData?.content || {};
   const [months, setMonths] = useState<any[]>(content.months || defaultTopStudents);
+  const [headerData, setHeaderData] = useState(content.header || {
+    badge: "Top of the Month",
+    titleNormal: "Celebrating",
+    titleHighlighted: "Excellence",
+    description: "Recognizing the outstanding achievements and hard work of our top-performing students every month."
+  });
   
   const [isSaving, setIsSaving] = useState(false);
   const [activeMonthIndex, setActiveMonthIndex] = useState<number>(0);
@@ -105,7 +111,7 @@ export default function ExcellenceAdmin({ initialSectionData }: { initialSection
       setIsSaving(true);
       await updatePageSection("HOME", "HOME_TOP_STUDENTS", {
         status: "PUBLISHED",
-        content: { months }
+        content: { months, header: headerData }
       });
       toast.success("Excellence section saved successfully");
     } catch (error: any) {
@@ -155,6 +161,52 @@ export default function ExcellenceAdmin({ initialSectionData }: { initialSection
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
           <span>Save Changes</span>
         </button>
+      </div>
+
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
+        <h3 className="text-lg font-bold text-[#08132E] border-b pb-2">Section Header</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-semibold mb-1 text-gray-700">Badge Text</label>
+            <input
+              type="text"
+              value={headerData.badge}
+              onChange={(e) => setHeaderData({ ...headerData, badge: e.target.value })}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+              placeholder="e.g. Top of the Month"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1 text-gray-700">Title (Normal Text)</label>
+            <input
+              type="text"
+              value={headerData.titleNormal}
+              onChange={(e) => setHeaderData({ ...headerData, titleNormal: e.target.value })}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+              placeholder="e.g. Celebrating"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1 text-gray-700">Title (Highlighted Text)</label>
+            <input
+              type="text"
+              value={headerData.titleHighlighted}
+              onChange={(e) => setHeaderData({ ...headerData, titleHighlighted: e.target.value })}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+              placeholder="e.g. Excellence"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold mb-1 text-gray-700">Description</label>
+            <textarea
+              value={headerData.description}
+              onChange={(e) => setHeaderData({ ...headerData, description: e.target.value })}
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+              rows={2}
+              placeholder="Description text below the title"
+            />
+          </div>
+        </div>
       </div>
 
       {activeMonth ? (

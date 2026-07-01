@@ -13,6 +13,13 @@ export default function TopOfTheMonthSection({ topStudentsData: dynamicData }: {
     ? dynamicData.content.months
     : topStudentsData;
 
+  const headerData = dynamicData?.content?.header || {
+    badge: "Top of the Month",
+    titleNormal: "Celebrating",
+    titleHighlighted: "Excellence",
+    description: "Recognizing the outstanding achievements and hard work of our top-performing students every month."
+  };
+
   const currentMonth = displayData[currentIndex] || displayData[0];
 
   const variants = {
@@ -58,7 +65,7 @@ export default function TopOfTheMonthSection({ topStudentsData: dynamicData }: {
             className="inline-flex items-center justify-center space-x-2 bg-white border border-[#FBB503]/30 rounded-full px-5 py-2 shadow-sm mb-6"
           >
             <Crown className="w-5 h-5 text-[#FBB503]" />
-            <span className="text-sm font-extrabold text-[#010E62] uppercase tracking-wider">Top of the Month</span>
+            <span className="text-sm font-extrabold text-[#010E62] uppercase tracking-wider">{headerData.badge}</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -67,7 +74,7 @@ export default function TopOfTheMonthSection({ topStudentsData: dynamicData }: {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#010E62] tracking-tight mb-6"
           >
-            Celebrating <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#010E62] to-[#FBB503]">Excellence</span>
+            {headerData.titleNormal} <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#010E62] to-[#FBB503]">{headerData.titleHighlighted}</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -76,7 +83,7 @@ export default function TopOfTheMonthSection({ topStudentsData: dynamicData }: {
             transition={{ delay: 0.2 }}
             className="text-lg text-[#4A5568] font-medium"
           >
-            Recognizing the outstanding achievements and hard work of our top-performing students every month.
+            {headerData.description}
           </motion.p>
           
           <motion.div

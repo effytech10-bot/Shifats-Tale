@@ -337,14 +337,28 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
       </div>
 
       {editingProjectImageIndex !== null && (
-        <MediaSelector
-          folderKey="about"
-          onSelect={(url) => {
-            updateProject(editingProjectImageIndex, 'imageUrl', url);
-            setEditingProjectImageIndex(null);
-          }}
-          onClose={() => setEditingProjectImageIndex(null)}
-        />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="font-bold text-primary">Select Image</h3>
+              <button 
+                onClick={() => setEditingProjectImageIndex(null)}
+                className="text-gray-500 hover:text-red-500"
+              >
+                Close
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto">
+              <MediaSelector
+                folderKey="about"
+                onSelect={(url) => {
+                  updateProject(editingProjectImageIndex, 'imageUrl', url);
+                  setEditingProjectImageIndex(null);
+                }}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

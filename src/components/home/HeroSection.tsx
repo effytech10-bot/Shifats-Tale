@@ -123,12 +123,13 @@ export default function HeroSection({ heroData, isTeacherFlying = false, onImage
               className="pt-2 border-t border-border/80 max-w-xl mx-auto lg:mx-0"
             >
               <p className="text-xs sm:text-sm text-muted font-bold tracking-wide flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
-                {features.map((feature: string, idx: number) => (
-                  <React.Fragment key={idx}>
-                    <span>{feature}</span>
-                    {idx < features.length - 1 && <span className="text-border">•</span>}
-                  </React.Fragment>
-                ))}
+                <span>Offline classes</span>
+                <span className="text-border">•</span>
+                <span>Weekly exams</span>
+                <span className="text-border">•</span>
+                <span>Personal guidance</span>
+                <span className="text-border">•</span>
+                <span>Lecture sheets</span>
               </p>
             </motion.div>
           </div>

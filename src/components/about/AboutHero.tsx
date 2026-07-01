@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { User, Play, GraduationCap, Users, MapPin, Feather } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { profileData as defaultProfileData, ProfileInfo, SocialLink } from "@/data/about";
 
@@ -10,45 +11,10 @@ interface AboutHeroProps {
   profileData?: ProfileInfo;
 }
 
-const FacebookIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-);
-
-const InstagramIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-);
-
-const YoutubeIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 7.1C2.1 8.4 2 10.2 2 12s.1 3.6.5 4.9a4 4 0 0 0 2.8 2.8c1.3.4 4 .5 6.7.5s5.4-.1 6.7-.5a4 4 0 0 0 2.8-2.8c.4-1.3.5-3.1.5-4.9s-.1-3.6-.5-4.9a4 4 0 0 0-2.8-2.8C17.4 4 14.7 3.9 12 3.9s-5.4.1-6.7.5a4 4 0 0 0-2.8 2.8z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
-);
-
-const LinkedinIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-);
-
-const TwitterIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-);
-
-const renderSocialIcon = (iconName: SocialLink["iconName"], className: string = "w-4 h-4") => {
-  switch (iconName) {
-    case "Facebook": return <FacebookIcon className={className} />;
-    case "Instagram": return <InstagramIcon className={className} />;
-    case "Youtube": return <YoutubeIcon className={className} />;
-    case "Linkedin": return <LinkedinIcon className={className} />;
-    case "Twitter": return <TwitterIcon className={className} />;
-    default: return null;
-  }
-};
-
-const renderStatIcon = (iconName: string, className: string = "w-5 h-5") => {
-  switch (iconName) {
-    case "GraduationCap": return <GraduationCap className={className} />;
-    case "Users": return <Users className={className} />;
-    case "Youtube": return <YoutubeIcon className={className} />;
-    case "MapPin": return <MapPin className={className} />;
-    default: return <User className={className} />;
-  }
+const renderDynamicIcon = (iconName: string, className: string = "w-5 h-5") => {
+  const IconComponent = (LucideIcons as any)[iconName];
+  if (!IconComponent) return <LucideIcons.HelpCircle className={className} />;
+  return <IconComponent className={className} />;
 };
 
 const fadeUpVariants: Variants = {
@@ -134,7 +100,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ profileData: profile = def
                 {(profile.heroStats || []).map((stat, idx) => (
                   <div key={idx} className="bg-white rounded-2xl p-4 shadow-sm border border-[#E7E0D2]/60 flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300 min-h-[120px]">
                     <div className="text-primary/60 mb-2">
-                      {renderStatIcon(stat.iconName, "w-5 h-5")}
+                      {renderDynamicIcon(stat.iconName, "w-5 h-5")}
                     </div>
                     <div>
                       <p className="text-[9px] font-bold text-primary/50 uppercase tracking-widest mb-1">{stat.label}</p>
@@ -159,7 +125,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ profileData: profile = def
                       rel="noopener noreferrer"
                       className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-[#E7E0D2] flex items-center justify-center text-primary/70 hover:bg-accent hover:text-primary hover:border-accent transition-all shadow-sm hover:-translate-y-1"
                     >
-                      {renderSocialIcon(social.iconName, "w-4 h-4 sm:w-5 sm:h-5")}
+                      {renderDynamicIcon(social.iconName, "w-4 h-4 sm:w-5 sm:h-5")}
                     </a>
                   ))}
                 </div>

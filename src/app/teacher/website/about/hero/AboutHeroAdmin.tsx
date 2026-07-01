@@ -7,6 +7,7 @@ import Image from "next/image";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
 import { profileData as defaultProfileData, ProfileInfo, HeroStat, SocialLink } from "@/data/about";
 import { MediaSelector } from "@/features/website-cms/components/MediaSelector";
+import { IconPicker } from "@/features/website-cms/components/IconPicker";
 
 export default function AboutHeroAdmin({ initialSectionData }: { initialSectionData: any }) {
   const [profile, setProfile] = useState<ProfileInfo>(initialSectionData?.content || defaultProfileData);
@@ -193,17 +194,11 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold mb-1 text-gray-500">Icon Name</label>
-                  <select
+                  <label className="block text-xs font-semibold mb-1 text-gray-500">Icon</label>
+                  <IconPicker
                     value={stat.iconName}
-                    onChange={(e) => updateHeroStat(idx, 'iconName', e.target.value as any)}
-                    className="w-full px-3 py-1.5 border border-border rounded-lg focus:border-accent text-sm"
-                  >
-                    <option value="GraduationCap">Graduation Cap</option>
-                    <option value="Users">Users</option>
-                    <option value="Youtube">Youtube</option>
-                    <option value="MapPin">Map Pin</option>
-                  </select>
+                    onChange={(iconName) => updateHeroStat(idx, 'iconName', iconName)}
+                  />
                 </div>
               </div>
             </div>
@@ -222,20 +217,13 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
           {(profile.socialLinks || []).map((link, idx) => (
             <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 bg-gray-50/50 p-3 rounded-xl border border-border">
               <div className="w-full sm:w-48 shrink-0">
-                <select
+                <IconPicker
                   value={link.iconName}
-                  onChange={(e) => {
-                    updateSocialLink(idx, 'iconName', e.target.value as any);
-                    updateSocialLink(idx, 'platform', e.target.value); // Sync platform with icon
+                  onChange={(iconName) => {
+                    updateSocialLink(idx, 'iconName', iconName);
+                    updateSocialLink(idx, 'platform', iconName); // Sync platform with icon
                   }}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:border-accent text-sm font-semibold"
-                >
-                  <option value="Facebook">Facebook</option>
-                  <option value="Instagram">Instagram</option>
-                  <option value="Youtube">YouTube</option>
-                  <option value="Linkedin">LinkedIn</option>
-                  <option value="Twitter">Twitter</option>
-                </select>
+                />
               </div>
               <div className="w-full flex-1">
                 <input

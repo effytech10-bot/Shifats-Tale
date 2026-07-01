@@ -16,12 +16,17 @@ interface ProjectsGridProps {
 const ITEMS_PER_PAGE = 6;
 
 export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, header }) => {
-  const displayHeader = header || {
-    badge: "Project Portfolio",
-    title1: "Projects",
-    title2: "",
-    description: "A showcase of my engineering projects spanning sustainable energy, power systems, electronics, embedded systems, and design automation."
+  const defaultHeader = {
+    badge: "Real-world Applications",
+    title1: "Featured",
+    title2: "Projects",
+    description: "A showcase of my academic and personal projects demonstrating theoretical knowledge applied to real-world challenges."
   };
+  
+  const displayBadge = header?.badge || defaultHeader.badge;
+  const displayTitle1 = header?.title1 || defaultHeader.title1;
+  const displayTitle2 = header?.title2 !== undefined ? header.title2 : defaultHeader.title2;
+  const displayDesc = header?.description || defaultHeader.description;
 
   const [filter, setFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,14 +118,14 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, header }) 
         >
           <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
             <LucideIcons.Layout className="h-4 w-4 text-accent" />
-            <span className="text-xs font-bold text-primary uppercase tracking-widest">{displayHeader.badge}</span>
+            <span className="text-xs font-bold text-primary uppercase tracking-widest">{displayBadge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
-            {displayHeader.title1}{" "}
-            {displayHeader.title2 && <span className="text-accent">{displayHeader.title2}</span>}
+            {displayTitle1}{" "}
+            {displayTitle2 && <span className="text-accent">{displayTitle2}</span>}
           </h2>
           <p className="text-primary/70 font-medium text-lg leading-relaxed max-w-2xl mx-auto">
-            {displayHeader.description}
+            {displayDesc}
           </p>
         </motion.div>
 

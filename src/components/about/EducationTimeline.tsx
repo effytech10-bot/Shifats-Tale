@@ -11,12 +11,17 @@ interface EducationTimelineProps {
 }
 
 export const EducationTimeline: React.FC<EducationTimelineProps> = ({ education, header }) => {
-  const displayHeader = header || {
+  const defaultHeader = {
     badge: "Academic Journey",
     title1: "Education &",
     title2: "Qualifications",
     description: "My academic background and formal education that shaped my engineering foundation."
   };
+  
+  const displayBadge = header?.badge || defaultHeader.badge;
+  const displayTitle1 = header?.title1 || defaultHeader.title1;
+  const displayTitle2 = header?.title2 !== undefined ? header.title2 : defaultHeader.title2;
+  const displayDesc = header?.description || defaultHeader.description;
 
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -46,14 +51,14 @@ export const EducationTimeline: React.FC<EducationTimelineProps> = ({ education,
         >
           <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
             <GraduationCap className="h-4 w-4 text-accent" />
-            <span className="text-xs font-bold text-primary uppercase tracking-widest">{displayHeader.badge}</span>
+            <span className="text-xs font-bold text-primary uppercase tracking-widest">{displayBadge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
-            {displayHeader.title1} {displayHeader.title2 && <span className="text-accent">{displayHeader.title2}</span>}
+            {displayTitle1} {displayTitle2 && <span className="text-accent">{displayTitle2}</span>}
           </h2>
-          {displayHeader.description && (
+          {displayDesc && (
             <p className="text-gray-500 text-sm max-w-xl text-center mt-2">
-              {displayHeader.description}
+              {displayDesc}
             </p>
           )}
         </motion.div>

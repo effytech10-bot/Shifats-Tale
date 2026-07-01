@@ -12,12 +12,17 @@ interface IndustrialTrainingBannerProps {
 }
 
 export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> = ({ training, header }) => {
-  const displayHeader = header || {
+  const defaultHeader = {
     badge: "Industry Experience",
     title1: "Industrial",
     title2: "Training",
     description: "My practical experience in the telecommunications and power sector."
   };
+  
+  const displayBadge = header?.badge || defaultHeader.badge;
+  const displayTitle1 = header?.title1 || defaultHeader.title1;
+  const displayTitle2 = header?.title2 !== undefined ? header.title2 : defaultHeader.title2;
+  const displayDesc = header?.description || defaultHeader.description;
 
   if (!training) return null;
 
@@ -69,14 +74,14 @@ export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> =
         >
           <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
             <LucideIcons.Radio className="h-4 w-4 text-accent" />
-            <span className="text-xs font-bold text-primary uppercase tracking-widest">{displayHeader.badge}</span>
+            <span className="text-xs font-bold text-primary uppercase tracking-widest">{displayBadge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
-            {displayHeader.title1}{" "}
-            {displayHeader.title2 && <span className="text-accent">{displayHeader.title2}</span>}
+            {displayTitle1}{" "}
+            {displayTitle2 && <span className="text-accent">{displayTitle2}</span>}
           </h2>
           <p className="text-primary/70 font-medium text-lg leading-relaxed max-w-2xl mx-auto">
-            {displayHeader.description}
+            {displayDesc}
           </p>
         </motion.div>
 

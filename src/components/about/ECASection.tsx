@@ -12,12 +12,17 @@ interface ECASectionProps {
 }
 
 export default function ECASection({ ecaItems, header }: ECASectionProps) {
-  const displayHeader = header || {
+  const defaultHeader = {
     badge: "Beyond Academics",
     title1: "Extracurricular",
     title2: "Activities",
     description: "Leadership, organizational involvement, and professional roles outside the core academic curriculum."
   };
+  
+  const displayBadge = header?.badge || defaultHeader.badge;
+  const displayTitle1 = header?.title1 || defaultHeader.title1;
+  const displayTitle2 = header?.title2 !== undefined ? header.title2 : defaultHeader.title2;
+  const displayDesc = header?.description || defaultHeader.description;
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
@@ -90,7 +95,7 @@ export default function ECASection({ ecaItems, header }: ECASectionProps) {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white shadow-sm border border-[#E8DDBF]/50 text-[#010E62] text-[13px] font-bold tracking-wider uppercase mb-5"
           >
             <Activity className="w-4 h-4 text-[#FBB503]" />
-            {displayHeader.badge}
+            {displayBadge}
           </motion.div>
           
           <motion.h2 
@@ -100,7 +105,7 @@ export default function ECASection({ ecaItems, header }: ECASectionProps) {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-[56px] font-extrabold text-[#010E62] mb-6 tracking-tight leading-tight"
           >
-            {displayHeader.title1} {displayHeader.title2 && <span className="text-[#FBB503]">{displayHeader.title2}</span>}
+            {displayTitle1} {displayTitle2 && <span className="text-[#FBB503]">{displayTitle2}</span>}
           </motion.h2>
           
           <motion.p 
@@ -110,7 +115,7 @@ export default function ECASection({ ecaItems, header }: ECASectionProps) {
             transition={{ delay: 0.2 }}
             className="text-[17px] text-[#4A5568] leading-relaxed font-medium"
           >
-            {displayHeader.description}
+            {displayDesc}
           </motion.p>
         </div>
 

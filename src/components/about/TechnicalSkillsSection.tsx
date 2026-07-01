@@ -58,12 +58,17 @@ const getCategoryIcon = (title: string, className: string = "") => {
 };
 
 export default function TechnicalSkillsSection({ skills, header }: TechnicalSkillsSectionProps) {
-  const displayHeader = header || {
+  const defaultHeader = {
     badge: "Core Competencies",
     title1: "Technical",
     title2: "Expertise",
     description: "A comprehensive overview of my proficiency in programming languages, engineering software, and data analysis tools."
   };
+  
+  const displayBadge = header?.badge || defaultHeader.badge;
+  const displayTitle1 = header?.title1 || defaultHeader.title1;
+  const displayTitle2 = header?.title2 !== undefined ? header.title2 : defaultHeader.title2;
+  const displayDesc = header?.description || defaultHeader.description;
 
   return (
     <section className="py-24 bg-[#FFFCF6] relative overflow-hidden font-sans">
@@ -80,7 +85,7 @@ export default function TechnicalSkillsSection({ skills, header }: TechnicalSkil
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#E8DDBF]/50 shadow-sm text-[#010E62] text-xs sm:text-sm font-bold tracking-wider uppercase mb-6"
           >
             <Cpu className="w-4 h-4 text-[#FBB503]" />
-            {displayHeader.badge}
+            {displayBadge}
           </motion.div>
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
@@ -89,7 +94,7 @@ export default function TechnicalSkillsSection({ skills, header }: TechnicalSkil
             transition={{ delay: 0.1 }}
             className="text-3xl md:text-5xl lg:text-[52px] font-extrabold text-[#010E62] mb-6 leading-tight tracking-tight"
           >
-            {displayHeader.title1} {displayHeader.title2 && <span className="text-[#FBB503]">{displayHeader.title2}</span>}
+            {displayTitle1} {displayTitle2 && <span className="text-[#FBB503]">{displayTitle2}</span>}
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -98,7 +103,7 @@ export default function TechnicalSkillsSection({ skills, header }: TechnicalSkil
             transition={{ delay: 0.2 }}
             className="text-[#4A5568] text-[17px] font-medium max-w-2xl mx-auto"
           >
-            {displayHeader.description}
+            {displayDesc}
           </motion.p>
         </div>
 

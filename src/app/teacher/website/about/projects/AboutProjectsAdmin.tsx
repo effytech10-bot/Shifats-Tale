@@ -121,6 +121,17 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
         </button>
       </div>
 
+      <SectionHeaderEditor 
+        header={header} 
+        onChange={setHeader} 
+        defaultHeader={{
+          badge: "Real-world Applications",
+          title1: "Featured",
+          title2: "Projects",
+          description: "A showcase of my academic and personal projects demonstrating theoretical knowledge applied to real-world challenges."
+        }} 
+      />
+
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
         <div className="flex justify-between items-center border-b pb-2">
           <h3 className="text-base font-bold text-[#08132E]">Projects List</h3>
@@ -128,17 +139,6 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
             <Plus className="w-4 h-4" /> <span>Add Project</span>
           </button>
         </div>
-
-        <SectionHeaderEditor 
-          header={header} 
-          onChange={setHeader} 
-          defaultHeader={{
-            badge: "Real-world Applications",
-            title1: "Featured",
-            title2: "Projects",
-            description: "A showcase of my academic and personal projects demonstrating theoretical knowledge applied to real-world challenges."
-          }} 
-        />
 
         <div className="space-y-6">
           {projectsList.map((item, idx) => (

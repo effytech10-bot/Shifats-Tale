@@ -27,13 +27,15 @@ export default function HomeClient({
   teacherData,
   topStudentsData,
   youtubeData,
+  galleryData,
+  displayAlbums,
   displayCourses, 
   headerData,
   displayStudents,
   successHeaderData 
 }: { 
   heroData?: any,
-  displayCourses: any[], 
+  displayCourses?: any[], 
   headerData?: any,
   displayStudents?: any[],
   successHeaderData?: any,
@@ -41,7 +43,9 @@ export default function HomeClient({
   whyChooseData?: any,
   teacherData?: any,
   topStudentsData?: any,
-  youtubeData?: any
+  youtubeData?: any,
+  galleryData?: any,
+  displayAlbums?: any[]
 }) {
   const [flyingState, setFlyingState] = useState<{
     startX: number;
@@ -120,7 +124,9 @@ export default function HomeClient({
       <ResultsSection studentItems={displayStudents} headerData={successHeaderData} />
       <YouTubeClassesSection youtubeData={youtubeData} />
       <TestimonialsSection />
-      <GallerySection />
+
+      {/* Dynamic Captured Moments Section */}
+      <GallerySection headerData={galleryData} albums={displayAlbums} />
 
       {/* Flying 3D Teacher Portrait Animation Overlay */}
       <AnimatePresence>

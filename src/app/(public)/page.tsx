@@ -14,6 +14,8 @@ export default async function HomePage() {
   const homeTeacherSection = await getPageSection("HOME", "HOME_TEACHER");
   const homeTopStudentsSection = await getPageSection("HOME", "HOME_TOP_STUDENTS");
   const homeYoutubeSection = await getPageSection("HOME", "HOME_YOUTUBE_CLASSES");
+  const homeGallerySection = await getPageSection("HOME", "HOME_GALLERY");
+  
   const allCourses = await getSectionItems("COURSES_CARDS");
   const homeCoursesSection = await getPageSection("HOME", "HOME_FEATURED_COURSES");
   
@@ -40,6 +42,18 @@ export default async function HomePage() {
   // Fallback to all students if none are selected
   const displayStudents = featuredStudents.length > 0 ? featuredStudents : allStudents.slice(0, 5);
 
+  const albumsSection = await getPageSection("GALLERY", "GALLERY_ALBUMS");
+  // @ts-ignore
+  const { albumsData } = await import("@/data/albums");
+  const allAlbums = albumsSection?.content?.albums || albumsData;
+  const selectedAlbumIds: string[] = homeGallerySection?.content?.selectedAlbumIds || [];
+  
+  const featuredAlbums = selectedAlbumIds
+    .map(id => allAlbums.find((a: any) => a.id === id))
+    .filter(Boolean);
+    
+  const displayAlbums = featuredAlbums.length > 0 ? featuredAlbums : allAlbums.slice(0, 4);
+
   return <HomeClient 
     heroData={homeHeroSection}
     statsData={homeStatsSection}
@@ -47,6 +61,8 @@ export default async function HomePage() {
     teacherData={homeTeacherSection}
     topStudentsData={homeTopStudentsSection}
     youtubeData={homeYoutubeSection}
+    galleryData={homeGallerySection}
+    displayAlbums={displayAlbums}
     displayCourses={displayCourses} 
     headerData={homeCoursesSection} 
     displayStudents={displayStudents}

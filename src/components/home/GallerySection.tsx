@@ -7,11 +7,20 @@ import { albumsData } from "@/data/albums";
 import { Camera, Calendar, Image as ImageIcon, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function GallerySection() {
+export default function GallerySection({ headerData, albums = [] }: { headerData?: any, albums?: any[] }) {
   const [hoveredAlbum, setHoveredAlbum] = useState<string | null>(null);
 
-  // Show only top 4 albums for the home page preview
-  const previewAlbums = albumsData.slice(0, 4);
+  // Show dynamic albums or fallback to imported albumsData if none provided
+  const displayAlbums = albums.length > 0 ? albums : albumsData.slice(0, 4);
+
+  const eyebrowText = headerData?.eyebrow || "Our Gallery";
+  const titleText = headerData?.title || "Captured Moments";
+  const descriptionText = headerData?.description || "Explore our curated albums of events, interactive classroom sessions, and premium study materials.";
+
+  // Extract primary title word and highlight word
+  const titleParts = titleText.split(" ");
+  const firstWord = titleParts[0];
+  const restWords = titleParts.slice(1).join(" ");
 
   return (
     <section className="py-20 md:py-28 bg-[#FFFCF7] relative overflow-hidden">
@@ -25,19 +34,19 @@ export default function GallerySection() {
         <div className="text-center mb-16 md:mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FBB503]/10 border border-[#FBB503]/20 text-[#010E62] text-xs font-bold uppercase tracking-wider mb-4">
             <Camera className="w-3.5 h-3.5" />
-            <span>Our Gallery</span>
+            <span>{eyebrowText}</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-[#010E62] tracking-tight mb-4">
-            Captured <span className="text-[#FBB503]">Moments</span>
+            {firstWord} {restWords && <span className="text-[#FBB503]">{restWords}</span>}
           </h2>
           <p className="text-[#4A5568] max-w-2xl mx-auto text-lg leading-relaxed">
-            Explore our curated albums of events, interactive classroom sessions, and premium study materials.
+            {descriptionText}
           </p>
         </div>
 
         {/* Albums Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {previewAlbums.map((album, index) => (
+          {displayAlbums.map((album, index) => (
             <motion.div 
               key={album.id}
               initial={{ opacity: 0, y: 20 }}

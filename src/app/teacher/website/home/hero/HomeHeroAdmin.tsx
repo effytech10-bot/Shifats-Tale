@@ -190,7 +190,7 @@ export default function HomeHeroAdmin({ initialSectionData }: { initialSectionDa
             </div>
             <div className="p-4">
               <MediaSelector 
-                folderKey="HOME" 
+                folderKey="HERO" 
                 onSelect={(id: string, url: string | undefined) => {
                   if (url) {
                     setTeacherImage(url);

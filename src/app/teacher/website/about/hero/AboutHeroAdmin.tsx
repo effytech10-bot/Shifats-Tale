@@ -127,24 +127,6 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1 text-gray-700">Role</label>
-              <input
-                type="text"
-                value={profile.role}
-                onChange={(e) => updateProfile('role', e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1 text-gray-700">Organization</label>
-              <input
-                type="text"
-                value={profile.organization}
-                onChange={(e) => updateProfile('organization', e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
-              />
-            </div>
-            <div>
               <label className="block text-sm font-semibold mb-1 text-gray-700">Subtitle</label>
               <input
                 type="text"
@@ -169,34 +151,6 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
                 value={profile.quote || ""}
                 onChange={(e) => updateProfile('quote', e.target.value)}
                 className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent italic"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-1 text-gray-700">Email</label>
-              <input
-                type="email"
-                value={profile.email}
-                onChange={(e) => updateProfile('email', e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1 text-gray-700">Phone</label>
-              <input
-                type="text"
-                value={profile.phone}
-                onChange={(e) => updateProfile('phone', e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <label className="block text-sm font-semibold mb-1 text-gray-700">Location</label>
-              <input
-                type="text"
-                value={profile.location}
-                onChange={(e) => updateProfile('location', e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
               />
             </div>
           </div>

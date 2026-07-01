@@ -123,36 +123,7 @@ export default function ExcellenceAdmin({ initialSectionData }: { initialSection
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex space-x-4 items-center">
-          <select 
-            value={activeMonthIndex} 
-            onChange={(e) => setActiveMonthIndex(Number(e.target.value))}
-            className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent font-semibold text-[#08132E]"
-          >
-            {months.map((m, idx) => (
-              <option key={idx} value={idx}>{m.monthName}</option>
-            ))}
-          </select>
-          <button 
-            onClick={addMonth}
-            className="flex items-center space-x-1 text-sm text-primary hover:text-accent font-semibold"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Month</span>
-          </button>
-          
-          {months.length > 1 && (
-            <button 
-              onClick={() => removeMonth(activeMonthIndex)}
-              className="flex items-center space-x-1 text-sm text-red-500 hover:text-red-600 font-semibold ml-4"
-            >
-              <Trash2 className="w-4 h-4" />
-              <span>Delete Month</span>
-            </button>
-          )}
-        </div>
-
+      <div className="flex justify-end mb-4">
         <button 
           onClick={handleSave} 
           disabled={isSaving}
@@ -209,10 +180,43 @@ export default function ExcellenceAdmin({ initialSectionData }: { initialSection
         </div>
       </div>
 
-      {activeMonth ? (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-8">
-          <div>
-            <label className="block text-sm font-semibold mb-1">Month Name Display</label>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
+        <div className="flex justify-between items-center border-b pb-4">
+          <h3 className="text-lg font-bold text-[#08132E]">Months Data</h3>
+          <div className="flex space-x-4 items-center">
+            <select 
+              value={activeMonthIndex} 
+              onChange={(e) => setActiveMonthIndex(Number(e.target.value))}
+              className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent font-semibold text-[#08132E]"
+            >
+              {months.map((m, idx) => (
+                <option key={idx} value={idx}>{m.monthName}</option>
+              ))}
+            </select>
+            <button 
+              onClick={addMonth}
+              className="flex items-center space-x-1 text-sm text-primary hover:text-accent font-semibold"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Month</span>
+            </button>
+            
+            {months.length > 1 && (
+              <button 
+                onClick={() => removeMonth(activeMonthIndex)}
+                className="flex items-center space-x-1 text-sm text-red-500 hover:text-red-600 font-semibold ml-4"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Delete Month</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {activeMonth ? (
+          <div className="space-y-8">
+            <div>
+              <label className="block text-sm font-semibold mb-1">Month Name Display</label>
             <input
               type="text"
               value={activeMonth.monthName}
@@ -325,18 +329,19 @@ export default function ExcellenceAdmin({ initialSectionData }: { initialSection
               ))}
             </div>
             
-            {activeMonth.students.length === 0 && (
-              <div className="p-8 text-center text-gray-500 border-2 border-dashed border-border rounded-xl">
-                No students added for this month yet.
-              </div>
-            )}
+              {activeMonth.students.length === 0 && (
+                <div className="p-8 text-center text-gray-500 border-2 border-dashed border-border rounded-xl">
+                  No students added for this month yet.
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="p-8 text-center text-gray-500 bg-white border border-border rounded-xl">
-          No months available. Click "Add Month" to get started.
-        </div>
-      )}
+        ) : (
+          <div className="p-8 text-center text-gray-500 border border-border rounded-xl bg-gray-50">
+            No months available. Click "Add Month" to get started.
+          </div>
+        )}
+      </div>
 
       {/* Media Selector Modal */}
       {isMediaModalOpen && (

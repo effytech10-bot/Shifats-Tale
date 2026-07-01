@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Check, Loader2, Plus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { revalidatePath } from "next/cache";
 
 export default function GlobalFooterAdmin({ initialSettings }: { initialSettings: any }) {
   const [footerDescription, setFooterDescription] = useState(initialSettings?.footerDescription || "");

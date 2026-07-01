@@ -38,6 +38,7 @@ export default async function AboutPage() {
   const aboutTrainingSection = await getPageSection("ABOUT", "ABOUT_TRAINING");
   const aboutProjectsSection = await getPageSection("ABOUT", "ABOUT_PROJECTS");
   const aboutSkillsSection = await getPageSection("ABOUT", "ABOUT_SKILLS");
+  const aboutEcaSection = await getPageSection("ABOUT", "ABOUT_ECA");
 
   return (
     <div className="relative pt-20 pb-0 bg-bg-soft text-text flex flex-col min-h-screen selection:bg-accent selection:text-primary overflow-x-hidden">
@@ -69,7 +70,7 @@ export default async function AboutPage() {
       <TechnicalSkillsSection skills={aboutSkillsSection?.content?.skills || skillCategoriesData} />
 
       {/* 9. Extra Curricular Activities */}
-      <ECASection ecaItems={ecaData} />
+      <ECASection ecaItems={aboutEcaSection?.content?.ecaList || ecaData} />
 
     </div>
   );

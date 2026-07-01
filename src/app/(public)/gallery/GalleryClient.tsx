@@ -104,7 +104,7 @@ export default function GalleryClient({ heroData, albumsData: dynamicAlbums }: {
                 <p className="text-[#4A5568] mt-2">Try adjusting your filters or search query.</p>
               </motion.div>
             ) : (
-              filteredAlbums.map((album, index) => (
+              filteredAlbums.map((album: any, index: number) => (
             <motion.div
               key={album.id}
               initial={{ opacity: 0, scale: 0.95, y: 20 }}

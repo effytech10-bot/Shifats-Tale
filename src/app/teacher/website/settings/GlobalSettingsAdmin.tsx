@@ -33,19 +33,6 @@ export default function GlobalSettingsAdmin({ initialSettings }: { initialSettin
 
   return (
     <div className="space-y-6">
-      {/* Save Header */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-border flex justify-between items-center sticky top-24 z-10">
-        <p className="text-sm text-gray-500">Save changes to reflect globally across the website.</p>
-        <button 
-          onClick={handleSave} 
-          disabled={isSaving}
-          className="primary-btn flex items-center space-x-2 text-sm px-6 py-2"
-        >
-          {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          <span>Save All Settings</span>
-        </button>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Basic Info */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-border space-y-4">
@@ -114,6 +101,19 @@ export default function GlobalSettingsAdmin({ initialSettings }: { initialSettin
             <input type="text" name="teacherExperience" value={formData.teacherExperience || ""} onChange={handleChange} className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent" />
           </div>
         </div>
+      </div>
+
+      {/* Save Footer */}
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-border flex justify-between items-center mt-6">
+        <p className="text-sm text-gray-500">Save changes to reflect globally across the website.</p>
+        <button 
+          onClick={handleSave} 
+          disabled={isSaving}
+          className="primary-btn flex items-center space-x-2 text-sm px-6 py-2"
+        >
+          {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          <span>Save All Settings</span>
+        </button>
       </div>
     </div>
   );

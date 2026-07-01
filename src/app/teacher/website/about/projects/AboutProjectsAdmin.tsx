@@ -6,12 +6,14 @@ import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
 import { projectsData as defaultData, ProjectItem } from "@/data/about";
 import { IconPicker } from "@/features/website-cms/components/IconPicker";
+import { MediaSelector } from "@/features/website-cms/components/MediaSelector";
 
 export default function AboutProjectsAdmin({ initialSectionData }: { initialSectionData: any }) {
   const [projectsList, setProjectsList] = useState<ProjectItem[]>(
     initialSectionData?.content?.projects || defaultData
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [editingProjectImageIndex, setEditingProjectImageIndex] = useState<number | null>(null);
 
   const addProject = () => {
     const newProject: ProjectItem = {
@@ -181,14 +183,30 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-semibold mb-1 text-gray-500">Image URL</label>
-                    <input
-                      type="text"
-                      value={item.imageUrl}
-                      onChange={(e) => updateProject(idx, 'imageUrl', e.target.value)}
-                      className="w-full px-3 py-2 border border-border rounded-lg focus:border-accent text-sm"
-                      placeholder="https://images.unsplash.com/..."
-                    />
+                    <label className="block text-xs font-semibold mb-2 text-gray-500">Project Cover Image</label>
+                    <div className="flex items-center gap-4">
+                      {item.imageUrl ? (
+                        <div className="w-20 h-20 rounded-lg overflow-hidden border border-border shrink-0">
+                          <img src={item.imageUrl} alt="Project cover" className="w-full h-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-20 h-20 rounded-lg border border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shrink-0">
+                          <ImageIcon className="w-6 h-6 text-gray-300" />
+                        </div>
+                      )}
+                      <div className="flex-1 space-y-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditingProjectImageIndex(idx)}
+                          className="px-4 py-1.5 text-xs font-semibold text-primary hover:text-accent border border-primary/20 bg-white rounded-md transition-colors"
+                        >
+                          {item.imageUrl ? "Change Image" : "Select Image"}
+                        </button>
+                        <p className="text-[10px] text-gray-400">
+                          Recommended ratio is 16:9 (e.g. 800x450px). Use the Media Selector to upload or choose an existing image.
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="md:col-span-2">
@@ -317,6 +335,17 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
           )}
         </div>
       </div>
+
+      {editingProjectImageIndex !== null && (
+        <MediaSelector
+          folderKey="about"
+          onSelect={(url) => {
+            updateProject(editingProjectImageIndex, 'imageUrl', url);
+            setEditingProjectImageIndex(null);
+          }}
+          onClose={() => setEditingProjectImageIndex(null)}
+        />
+      )}
     </div>
   );
 }

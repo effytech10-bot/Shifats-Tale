@@ -12,10 +12,10 @@ interface IconPickerProps {
 
 // Popular icons to show in the picker
 const POPULAR_ICONS = [
-  "Facebook", "Instagram", "Youtube", "Linkedin", "Twitter", "Github", "Globe",
+  "Globe", "Activity", "PieChart", "TrendingUp", "Search", "PenTool", "Camera",
   "GraduationCap", "Users", "MapPin", "User", "Mail", "Phone", "BookOpen", "Award",
   "Play", "Monitor", "Briefcase", "Star", "Heart", "ThumbsUp", "Coffee", "Check",
-  "ArrowRight", "ChevronRight", "Link", "Camera", "Music", "Video", "MessageCircle",
+  "ArrowRight", "ChevronRight", "Link", "Image", "Music", "Video", "MessageCircle",
   "Target", "Zap", "Layers", "Layout", "Code", "Database", "Server", "Cloud"
 ];
 

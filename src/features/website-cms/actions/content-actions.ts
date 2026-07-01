@@ -75,7 +75,7 @@ export async function updatePageSection(
     // If not found, create the page automatically
     const { data: newPage, error: insertError } = await supabase
       .from("site_pages")
-      .insert({ page_key: pageKey, title: pageKey, status: "PUBLISHED", is_active: true } as any)
+      .insert({ page_key: pageKey, title: pageKey, status: "PUBLISHED" } as any)
       .select("id")
       .single();
       

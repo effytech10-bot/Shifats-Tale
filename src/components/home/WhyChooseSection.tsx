@@ -6,11 +6,27 @@ import { benefits, BenefitItem } from "@/data/site";
 import { GraduationCap, Target, Users, ShieldCheck } from "lucide-react";
 import { MethodologyIntro } from "./methodology/MethodologyIntro";
 import { MethodologyCard } from "./methodology/MethodologyCard";
+import { getIconComponent } from "./stats-icons";
 
 export default function WhyChooseSection({ whyChooseData }: { whyChooseData?: any }) {
   const shouldReduceMotion = useReducedMotion();
   
-  const displayBenefits: BenefitItem[] = whyChooseData?.content?.benefits || benefits;
+  const content = whyChooseData?.content || {};
+  const displayBenefits: BenefitItem[] = content.benefits || benefits;
+  const introData = {
+    eyebrow: content.eyebrow,
+    heading: content.heading,
+    highlightedText: content.highlightedText,
+    description: content.description,
+  };
+  
+  const defaultTrustItems = [
+    { label: "Concept First", iconName: "GraduationCap" },
+    { label: "Accountability Always", iconName: "Target" },
+    { label: "Student Success", iconName: "Users" },
+    { label: "Trust & Transparency", iconName: "ShieldCheck" }
+  ];
+  const trustItems = content.trustItems || defaultTrustItems;
 
   // Sort / Map items to match exact Target Reference composition
   // Top row large items: Small Batch Environment, Weekly Exams
@@ -80,7 +96,7 @@ export default function WhyChooseSection({ whyChooseData }: { whyChooseData?: an
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch w-full">
             {/* Intro Content Block */}
             <motion.div variants={itemVariants} className="lg:col-span-4">
-              <MethodologyIntro />
+              <MethodologyIntro {...introData} />
             </motion.div>
 
             {/* Top Row Large Card 1 */}
@@ -113,28 +129,17 @@ export default function WhyChooseSection({ whyChooseData }: { whyChooseData?: an
         {/* Floating Pill-shaped Methodology Trust Bar */}
         <div className="flex justify-center pt-6">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-0 bg-white/80 border border-[#E7E0D2] rounded-3xl sm:rounded-full px-6 py-4 sm:py-3.5 shadow-lg backdrop-blur-md max-w-4xl w-full">
-            <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm font-extrabold text-primary w-full sm:w-1/4">
-              <GraduationCap className="h-4.5 w-4.5 text-[#FBB503]" />
-              <span>Concept First</span>
-            </div>
-            <div className="hidden sm:block h-5 w-[1.5px] bg-[#E7E0D2]" />
-
-            <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm font-extrabold text-primary w-full sm:w-1/4">
-              <Target className="h-4.5 w-4.5 text-[#FBB503]" />
-              <span>Accountability Always</span>
-            </div>
-            <div className="hidden sm:block h-5 w-[1.5px] bg-[#E7E0D2]" />
-
-            <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm font-extrabold text-primary w-full sm:w-1/4">
-              <Users className="h-4.5 w-4.5 text-[#FBB503]" />
-              <span>Student Success</span>
-            </div>
-            <div className="hidden sm:block h-5 w-[1.5px] bg-[#E7E0D2]" />
-
-            <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm font-extrabold text-primary w-full sm:w-1/4">
-              <ShieldCheck className="h-4.5 w-4.5 text-[#FBB503]" />
-              <span>Trust & Transparency</span>
-            </div>
+            {trustItems.map((item: any, idx: number) => (
+              <React.Fragment key={idx}>
+                <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm font-extrabold text-primary w-full sm:w-1/4">
+                  {getIconComponent(item.iconName, "h-4.5 w-4.5 text-[#FBB503]")}
+                  <span>{item.label}</span>
+                </div>
+                {idx < trustItems.length - 1 && (
+                  <div className="hidden sm:block h-5 w-[1.5px] bg-[#E7E0D2]" />
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>

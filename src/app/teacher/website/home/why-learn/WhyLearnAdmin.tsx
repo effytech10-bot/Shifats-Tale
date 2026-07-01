@@ -9,8 +9,34 @@ import { availableStatsIcons, getIconComponent } from "@/components/home/stats-i
 
 export default function WhyLearnAdmin({ initialSectionData }: { initialSectionData: any }) {
   const content = initialSectionData?.content || {};
+  
+  const [introData, setIntroData] = useState({
+    eyebrow: content.eyebrow || "OUR METHODOLOGY",
+    heading: content.heading || "Why Learn with",
+    highlightedText: content.highlightedText || "Shifat Sir?",
+    description: content.description || "We go beyond standard classroom setups. Our ecosystem focuses on core conceptual depth, solving techniques, and keeping students highly accountable."
+  });
+
+  const defaultTrustItems = [
+    { label: "Concept First", iconName: "GraduationCap" },
+    { label: "Accountability Always", iconName: "Target" },
+    { label: "Student Success", iconName: "Users" },
+    { label: "Trust & Transparency", iconName: "ShieldCheck" }
+  ];
+
+  const [trustItems, setTrustItems] = useState<any[]>(content.trustItems || defaultTrustItems);
   const [benefits, setBenefits] = useState<any[]>(content.benefits || defaultBenefits);
   const [isSaving, setIsSaving] = useState(false);
+
+  const handleIntroChange = (field: string, value: string) => {
+    setIntroData({ ...introData, [field]: value });
+  };
+
+  const handleTrustItemChange = (index: number, field: string, value: string) => {
+    const updated = [...trustItems];
+    updated[index] = { ...updated[index], [field]: value };
+    setTrustItems(updated);
+  };
 
   const handleBenefitChange = (index: number, field: string, value: string) => {
     const updatedBenefits = [...benefits];
@@ -48,7 +74,11 @@ export default function WhyLearnAdmin({ initialSectionData }: { initialSectionDa
       setIsSaving(true);
       await updatePageSection("HOME", "HOME_WHY_CHOOSE", {
         status: "PUBLISHED",
-        content: { benefits }
+        content: { 
+          ...introData,
+          trustItems,
+          benefits 
+        }
       });
       toast.success("Why learn section updated successfully");
     } catch (error: any) {
@@ -75,9 +105,95 @@ export default function WhyLearnAdmin({ initialSectionData }: { initialSectionDa
         </button>
       </div>
 
-      <div className="space-y-6">
-        {benefits.map((benefit, idx) => (
-          <div key={idx} className="p-4 border border-border rounded-xl bg-gray-50/50 relative">
+      <div className="space-y-8">
+        {/* Intro Section */}
+        <div className="bg-gray-50/50 p-6 rounded-xl border border-border">
+          <h3 className="font-bold text-gray-700 mb-4">Header Introduction</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold mb-1">Eyebrow (Small text)</label>
+              <input
+                type="text"
+                value={introData.eyebrow}
+                onChange={(e) => handleIntroChange("eyebrow", e.target.value)}
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold mb-1">Heading</label>
+              <input
+                type="text"
+                value={introData.heading}
+                onChange={(e) => handleIntroChange("heading", e.target.value)}
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold mb-1">Highlighted Text</label>
+              <input
+                type="text"
+                value={introData.highlightedText}
+                onChange={(e) => handleIntroChange("highlightedText", e.target.value)}
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold mb-1">Description</label>
+              <textarea
+                value={introData.description}
+                onChange={(e) => handleIntroChange("description", e.target.value)}
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent min-h-[80px]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Trust Bar Section */}
+        <div className="bg-gray-50/50 p-6 rounded-xl border border-border">
+          <h3 className="font-bold text-gray-700 mb-4">Methodology Trust Bar (Horizontal Bar)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {trustItems.map((item, idx) => (
+              <div key={idx} className="p-4 border border-border rounded-lg bg-white shadow-sm">
+                <div className="font-semibold text-sm text-gray-500 mb-3">Item #{idx + 1}</div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold mb-1">Label</label>
+                    <input
+                      type="text"
+                      value={item.label}
+                      onChange={(e) => handleTrustItemChange(idx, "label", e.target.value)}
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1">Icon</label>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 rounded-lg bg-gray-100 border border-border flex items-center justify-center text-primary flex-shrink-0">
+                        {getIconComponent(item.iconName, "w-4 h-4")}
+                      </div>
+                      <select
+                        value={item.iconName}
+                        onChange={(e) => handleTrustItemChange(idx, "iconName", e.target.value)}
+                        className="flex-1 px-3 py-1.5 border border-border rounded-lg focus:outline-none focus:border-accent text-sm"
+                      >
+                        {availableStatsIcons.map((icon) => (
+                          <option key={icon} value={icon}>{icon}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Benefits Cards Section */}
+        <div>
+          <h3 className="font-bold text-gray-700 mb-4">Methodology Cards</h3>
+          <div className="space-y-6">
+            {benefits.map((benefit, idx) => (
+              <div key={idx} className="p-4 border border-border rounded-xl bg-gray-50/50 relative">
             <div className="absolute top-4 right-4 flex space-x-2">
               <button
                 onClick={() => moveBenefit(idx, "up")}
@@ -145,6 +261,8 @@ export default function WhyLearnAdmin({ initialSectionData }: { initialSectionDa
             </div>
           </div>
         ))}
+      </div>
+      </div>
       </div>
 
       <button

@@ -4,9 +4,19 @@ import React, { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { educationData as defaultEducationData, EducationItem } from "@/data/about";
+import { educationData as defaultEducationData, EducationItem, SectionHeader } from "@/data/about";
+import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
 
 export default function AboutEducationAdmin({ initialSectionData }: { initialSectionData: any }) {
+  const [header, setHeader] = useState<SectionHeader>(
+    initialSectionData?.content?.header || {
+      badge: "Academic Journey",
+      title1: "Education &",
+      title2: "Qualifications",
+      description: "My academic background and formal education that shaped my engineering foundation."
+    }
+  );
+  
   const [educationList, setEducationList] = useState<EducationItem[]>(
     initialSectionData?.content?.education || defaultEducationData
   );
@@ -39,7 +49,7 @@ export default function AboutEducationAdmin({ initialSectionData }: { initialSec
       setIsSaving(true);
       await updatePageSection("ABOUT", "ABOUT_EDUCATION", {
         status: "PUBLISHED",
-        content: { education: educationList },
+        content: { header, education: educationList },
       });
       toast.success("Education Timeline saved successfully");
     } catch (error: any) {
@@ -64,6 +74,17 @@ export default function AboutEducationAdmin({ initialSectionData }: { initialSec
           {isSaving ? "Saving..." : "Save Changes"}
         </button>
       </div>
+
+      <SectionHeaderEditor 
+        header={header} 
+        onChange={setHeader} 
+        defaultHeader={{
+          badge: "Academic Journey",
+          title1: "Education &",
+          title2: "Qualifications",
+          description: "My academic background and formal education that shaped my engineering foundation."
+        }} 
+      />
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
         <div className="flex justify-between items-center border-b pb-2">

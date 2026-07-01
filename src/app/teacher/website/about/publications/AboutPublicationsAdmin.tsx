@@ -4,9 +4,19 @@ import React, { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { publicationsData as defaultData, PublicationItem } from "@/data/about";
+import { publicationsData as defaultData, PublicationItem, SectionHeader } from "@/data/about";
+import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
 
 export default function AboutPublicationsAdmin({ initialSectionData }: { initialSectionData: any }) {
+  const [header, setHeader] = useState<SectionHeader>(
+    initialSectionData?.content?.header || {
+      badge: "Publications",
+      title1: "Research",
+      title2: "Publications",
+      description: "My published research work, conference papers, and journal articles."
+    }
+  );
+  
   const [publicationsList, setPublicationsList] = useState<PublicationItem[]>(
     initialSectionData?.content?.publications || defaultData
   );
@@ -44,7 +54,7 @@ export default function AboutPublicationsAdmin({ initialSectionData }: { initial
       setIsSaving(true);
       await updatePageSection("ABOUT", "ABOUT_PUBLICATIONS", {
         status: "PUBLISHED",
-        content: { publications: publicationsList },
+        content: { header, publications: publicationsList },
       });
       toast.success("Research Publications saved successfully");
     } catch (error: any) {
@@ -69,6 +79,17 @@ export default function AboutPublicationsAdmin({ initialSectionData }: { initial
           {isSaving ? "Saving..." : "Save Changes"}
         </button>
       </div>
+
+      <SectionHeaderEditor 
+        header={header} 
+        onChange={setHeader} 
+        defaultHeader={{
+          badge: "Publications",
+          title1: "Research",
+          title2: "Publications",
+          description: "My published research work, conference papers, and journal articles."
+        }} 
+      />
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
         <div className="flex justify-between items-center border-b pb-2">

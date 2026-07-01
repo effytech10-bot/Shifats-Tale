@@ -2,14 +2,15 @@
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { EducationItem } from "@/data/about";
+import { EducationItem, SectionHeader } from "@/data/about";
 import { GraduationCap } from "lucide-react";
 
 interface EducationTimelineProps {
   education: EducationItem[];
+  header?: SectionHeader;
 }
 
-export const EducationTimeline: React.FC<EducationTimelineProps> = ({ education }) => {
+export const EducationTimeline: React.FC<EducationTimelineProps> = ({ education, header }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   const { scrollYProgress } = useScroll({
@@ -38,11 +39,16 @@ export const EducationTimeline: React.FC<EducationTimelineProps> = ({ education 
         >
           <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
             <GraduationCap className="h-4 w-4 text-accent" />
-            <span className="text-xs font-bold text-primary uppercase tracking-widest">Academic Journey</span>
+            <span className="text-xs font-bold text-primary uppercase tracking-widest">{header?.badge || "Academic Journey"}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
-            Education
+            {header?.title1 || "Education"} {header?.title2 && <span className="text-accent">{header.title2}</span>}
           </h2>
+          {header?.description && (
+            <p className="text-gray-500 text-sm max-w-xl text-center mt-2">
+              {header.description}
+            </p>
+          )}
         </motion.div>
 
         {/* Timeline Container */}

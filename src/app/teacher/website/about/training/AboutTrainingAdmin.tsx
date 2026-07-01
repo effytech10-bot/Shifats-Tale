@@ -4,10 +4,20 @@ import React, { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { trainingData as defaultData, TrainingItem } from "@/data/about";
+import { trainingData as defaultData, TrainingItem, SectionHeader } from "@/data/about";
 import { IconPicker } from "@/features/website-cms/components/IconPicker";
+import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
 
 export default function AboutTrainingAdmin({ initialSectionData }: { initialSectionData: any }) {
+  const [header, setHeader] = useState<SectionHeader>(
+    initialSectionData?.content?.header || {
+      badge: "Industry Experience",
+      title1: "Industrial",
+      title2: "Training",
+      description: "My practical experience in the telecommunications and power sector."
+    }
+  );
+  
   const [training, setTraining] = useState<TrainingItem>(
     initialSectionData?.content?.training || defaultData
   );
@@ -38,7 +48,7 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
       setIsSaving(true);
       await updatePageSection("ABOUT", "ABOUT_TRAINING", {
         status: "PUBLISHED",
-        content: { training },
+        content: { header, training },
       });
       toast.success("Industrial Training saved successfully");
     } catch (error: any) {
@@ -53,7 +63,7 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-border shadow-sm">
         <div>
           <h2 className="text-lg font-bold text-primary">Industrial Training Banner</h2>
-          <p className="text-sm text-gray-500">Manage your industrial training and certificate details.</p>
+          <p className="text-sm text-gray-500 mt-1">Update your industrial training experience and features.</p>
         </div>
         <button
           onClick={handleSave}
@@ -63,6 +73,17 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
           {isSaving ? "Saving..." : "Save Changes"}
         </button>
       </div>
+
+      <SectionHeaderEditor 
+        header={header} 
+        onChange={setHeader} 
+        defaultHeader={{
+          badge: "Industry Experience",
+          title1: "Industrial",
+          title2: "Training",
+          description: "My practical experience in the telecommunications and power sector."
+        }} 
+      />
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
         <h3 className="text-base font-bold text-[#08132E] border-b pb-2">Training Details</h3>

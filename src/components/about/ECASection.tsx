@@ -3,14 +3,15 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ECAItem } from "@/data/about";
+import { ECAItem, SectionHeader } from "@/data/about";
 import { Calendar, MapPin, ChevronRight, Activity, GraduationCap, Bot, ChevronLeft, Briefcase } from "lucide-react";
 
 interface ECASectionProps {
   ecaItems: ECAItem[];
+  header?: SectionHeader;
 }
 
-export default function ECASection({ ecaItems }: ECASectionProps) {
+export default function ECASection({ ecaItems, header }: ECASectionProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
   const totalPages = Math.max(1, Math.ceil(ecaItems.length / itemsPerPage));
@@ -82,7 +83,7 @@ export default function ECASection({ ecaItems }: ECASectionProps) {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white shadow-sm border border-[#E8DDBF]/50 text-[#010E62] text-[13px] font-bold tracking-wider uppercase mb-5"
           >
             <Activity className="w-4 h-4 text-[#FBB503]" />
-            Beyond Academics
+            {header?.badge || "Beyond Academics"}
           </motion.div>
           
           <motion.h2 
@@ -92,7 +93,7 @@ export default function ECASection({ ecaItems }: ECASectionProps) {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-[56px] font-extrabold text-[#010E62] mb-6 tracking-tight leading-tight"
           >
-            Extracurricular <span className="text-[#FBB503]">Activities</span>
+            {header?.title1 || "Extracurricular"} {header?.title2 ? <span className="text-[#FBB503]">{header.title2}</span> : ""}
           </motion.h2>
           
           <motion.p 
@@ -100,9 +101,9 @@ export default function ECASection({ ecaItems }: ECASectionProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-[#4A5568] text-[17px] font-medium max-w-2xl mx-auto"
+            className="text-[17px] text-[#4A5568] leading-relaxed font-medium"
           >
-            Leadership, organizational involvement, and professional roles outside the core academic curriculum.
+            {header?.description || "Leadership roles, volunteer work, and community involvement."}
           </motion.p>
         </div>
 

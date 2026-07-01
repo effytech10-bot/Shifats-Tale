@@ -4,11 +4,21 @@ import React, { useState } from "react";
 import { Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { ecaData as defaultData, ECAItem } from "@/data/about";
+import { ecaData as defaultData, ECAItem, SectionHeader } from "@/data/about";
 import { IconPicker } from "@/features/website-cms/components/IconPicker";
 import { MediaSelector } from "@/features/website-cms/components/MediaSelector";
+import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
 
 export default function AboutECAAdmin({ initialSectionData }: { initialSectionData: any }) {
+  const [header, setHeader] = useState<SectionHeader>(
+    initialSectionData?.content?.header || {
+      badge: "Beyond Academics",
+      title1: "Extra Curricular",
+      title2: "Activities",
+      description: "Leadership roles, volunteer work, and community involvement."
+    }
+  );
+  
   const [ecaList, setEcaList] = useState<ECAItem[]>(
     initialSectionData?.content?.ecaList || defaultData
   );
@@ -60,7 +70,7 @@ export default function AboutECAAdmin({ initialSectionData }: { initialSectionDa
   const handleSave = async () => {
     setIsSaving(true);
     const savePromise = updatePageSection("ABOUT", "ABOUT_ECA", {
-      content: { ecaList },
+      content: { header, ecaList },
       status: "PUBLISHED"
     });
 
@@ -92,6 +102,17 @@ export default function AboutECAAdmin({ initialSectionData }: { initialSectionDa
           Add ECA
         </button>
       </div>
+
+      <SectionHeaderEditor 
+        header={header} 
+        onChange={setHeader} 
+        defaultHeader={{
+          badge: "Beyond Academics",
+          title1: "Extra Curricular",
+          title2: "Activities",
+          description: "Leadership roles, volunteer work, and community involvement."
+        }} 
+      />
 
       <div className="space-y-6">
         {ecaList.map((eca, index) => (

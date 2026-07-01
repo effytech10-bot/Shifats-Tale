@@ -4,11 +4,21 @@ import React, { useState } from "react";
 import { Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { projectsData as defaultData, ProjectItem } from "@/data/about";
+import { projectsData as defaultData, ProjectItem, SectionHeader } from "@/data/about";
 import { IconPicker } from "@/features/website-cms/components/IconPicker";
 import { MediaSelector } from "@/features/website-cms/components/MediaSelector";
+import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
 
 export default function AboutProjectsAdmin({ initialSectionData }: { initialSectionData: any }) {
+  const [header, setHeader] = useState<SectionHeader>(
+    initialSectionData?.content?.header || {
+      badge: "Real-world Applications",
+      title1: "Featured",
+      title2: "Projects",
+      description: "A showcase of my academic and personal projects demonstrating theoretical knowledge applied to real-world challenges."
+    }
+  );
+
   const [projectsList, setProjectsList] = useState<ProjectItem[]>(
     initialSectionData?.content?.projects || defaultData
   );
@@ -85,9 +95,9 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
       setIsSaving(true);
       await updatePageSection("ABOUT", "ABOUT_PROJECTS", {
         status: "PUBLISHED",
-        content: { projects: projectsList },
+        content: { header, projects: projectsList },
       });
-      toast.success("Projects Grid saved successfully");
+      toast.success("Projects saved successfully");
     } catch (error: any) {
       toast.error(error.message || "Failed to save projects");
     } finally {
@@ -119,7 +129,18 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
           </button>
         </div>
 
-        <div className="space-y-8">
+        <SectionHeaderEditor 
+          header={header} 
+          onChange={setHeader} 
+          defaultHeader={{
+            badge: "Real-world Applications",
+            title1: "Featured",
+            title2: "Projects",
+            description: "A showcase of my academic and personal projects demonstrating theoretical knowledge applied to real-world challenges."
+          }} 
+        />
+
+        <div className="space-y-6">
           {projectsList.map((item, idx) => (
             <div key={item.id} className="border border-border p-6 rounded-xl flex flex-col sm:flex-row items-start gap-4 bg-gray-50/50">
               <div className="cursor-grab active:cursor-grabbing text-gray-400 mt-2 shrink-0 hidden sm:block">

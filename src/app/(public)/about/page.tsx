@@ -52,25 +52,46 @@ export default async function AboutPage() {
       <AboutMetrics metrics={aboutMetricsSection?.content?.metrics || metricsData} />
 
       {/* 3. Education Timeline */}
-      <EducationTimeline education={aboutEducationSection?.content?.education || educationData} />
+      <EducationTimeline 
+        education={aboutEducationSection?.content?.education || educationData} 
+        header={aboutEducationSection?.content?.header}
+      />
 
       {/* New Section: Research Experience */}
-      <ResearchExperienceSection researchData={aboutResearchSection?.content?.researchData || researchExperienceData} />
+      <ResearchExperienceSection 
+        researchData={aboutResearchSection?.content?.researchData || researchExperienceData} 
+        header={aboutResearchSection?.content?.header}
+      />
 
       {/* New Section: Research Publications */}
-      <PublicationsSection publications={aboutPublicationsSection?.content?.publications || publicationsData} />
+      <PublicationsSection 
+        publications={aboutPublicationsSection?.content?.publications || publicationsData} 
+        header={aboutPublicationsSection?.content?.header}
+      />
 
       {/* 7. Industrial Training Banner */}
-      <IndustrialTrainingBanner training={aboutTrainingSection?.content?.training || trainingData} />
+      <IndustrialTrainingBanner 
+        training={aboutTrainingSection?.content?.training || trainingData} 
+        header={aboutTrainingSection?.content?.header}
+      />
 
       {/* 6. Projects Grid */}
-      <ProjectsGrid projects={aboutProjectsSection?.content?.projects || projectsData} />
+      <ProjectsGrid 
+        projects={aboutProjectsSection?.content?.projects || projectsData} 
+        header={aboutProjectsSection?.content?.header}
+      />
 
       {/* 8. Technical Skills */}
-      <TechnicalSkillsSection skills={aboutSkillsSection?.content?.skills || skillCategoriesData} />
+      <TechnicalSkillsSection 
+        skills={aboutSkillsSection?.content?.skills || skillCategoriesData} 
+        header={aboutSkillsSection?.content?.header}
+      />
 
       {/* 9. Extra Curricular Activities */}
-      <ECASection ecaItems={aboutEcaSection?.content?.ecaList || ecaData} />
+      <ECASection 
+        ecaItems={aboutEcaSection?.content?.ecaList || ecaData} 
+        header={aboutEcaSection?.content?.header}
+      />
 
     </div>
   );

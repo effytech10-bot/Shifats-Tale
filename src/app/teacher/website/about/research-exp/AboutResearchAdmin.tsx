@@ -4,10 +4,20 @@ import React, { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { researchExperienceData as defaultData, ResearchExperienceItem } from "@/data/about";
+import { researchExperienceData as defaultData, ResearchExperienceItem, SectionHeader } from "@/data/about";
 import { IconPicker } from "@/features/website-cms/components/IconPicker";
+import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
 
 export default function AboutResearchAdmin({ initialSectionData }: { initialSectionData: any }) {
+  const [header, setHeader] = useState<SectionHeader>(
+    initialSectionData?.content?.header || {
+      badge: "Research & Innovation",
+      title1: "Research",
+      title2: "Experience",
+      description: "My contributions to academic research, focusing on power electronics and renewable energy."
+    }
+  );
+  
   const [researchList, setResearchList] = useState<ResearchExperienceItem[]>(
     initialSectionData?.content?.researchData || defaultData
   );
@@ -45,9 +55,9 @@ export default function AboutResearchAdmin({ initialSectionData }: { initialSect
       setIsSaving(true);
       await updatePageSection("ABOUT", "ABOUT_RESEARCH_EXP", {
         status: "PUBLISHED",
-        content: { researchData: researchList },
+        content: { header, researchData: researchList },
       });
-      toast.success("Research Experience saved successfully");
+      toast.success("Research experience saved successfully");
     } catch (error: any) {
       toast.error(error.message || "Failed to save Research Experience");
     } finally {
@@ -70,6 +80,17 @@ export default function AboutResearchAdmin({ initialSectionData }: { initialSect
           {isSaving ? "Saving..." : "Save Changes"}
         </button>
       </div>
+
+      <SectionHeaderEditor 
+        header={header} 
+        onChange={setHeader} 
+        defaultHeader={{
+          badge: "Research & Innovation",
+          title1: "Research",
+          title2: "Experience",
+          description: "My contributions to academic research, focusing on power electronics and renewable energy."
+        }} 
+      />
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
         <div className="flex justify-between items-center border-b pb-2">

@@ -4,9 +4,18 @@ import React, { useState } from "react";
 import { Plus, Trash2, GripVertical, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { updatePageSection } from "@/features/website-cms/actions/content-actions";
-import { skillCategoriesData as defaultData, SkillCategory } from "@/data/about";
+import { skillCategoriesData as defaultData, SkillCategory, SectionHeader } from "@/data/about";
+import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
 
 export default function AboutSkillsAdmin({ initialSectionData }: { initialSectionData: any }) {
+  const [header, setHeader] = useState<SectionHeader>(
+    initialSectionData?.content?.header || {
+      badge: "Core Competencies",
+      title1: "Technical",
+      title2: "Expertise",
+      description: "A comprehensive overview of my proficiency in programming languages, engineering software, and data analysis tools."
+    }
+  );
   const [categories, setCategories] = useState<SkillCategory[]>(
     initialSectionData?.content?.skills || defaultData
   );
@@ -41,7 +50,7 @@ export default function AboutSkillsAdmin({ initialSectionData }: { initialSectio
   const handleSave = async () => {
     setIsSaving(true);
     const savePromise = updatePageSection("ABOUT", "ABOUT_SKILLS", {
-      content: { skills: categories },
+      content: { header, skills: categories },
       status: "PUBLISHED"
     });
 
@@ -76,6 +85,17 @@ export default function AboutSkillsAdmin({ initialSectionData }: { initialSectio
           Add Category
         </button>
       </div>
+
+      <SectionHeaderEditor 
+        header={header} 
+        onChange={setHeader} 
+        defaultHeader={{
+          badge: "Core Competencies",
+          title1: "Technical",
+          title2: "Expertise",
+          description: "A comprehensive overview of my proficiency in programming languages, engineering software, and data analysis tools."
+        }} 
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {categories.map((category, index) => (

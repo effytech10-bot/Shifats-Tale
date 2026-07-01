@@ -2,15 +2,16 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { TrainingItem, profileData } from "@/data/about";
+import { TrainingItem, profileData, SectionHeader } from "@/data/about";
 import * as LucideIcons from "lucide-react";
 import { Award, Calendar, Building, CheckCircle2, FileText, ExternalLink } from "lucide-react";
 
 interface IndustrialTrainingBannerProps {
   training: TrainingItem;
+  header?: SectionHeader;
 }
 
-export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> = ({ training }) => {
+export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> = ({ training, header }) => {
   if (!training) return null;
 
   const renderDynamicIcon = (name: string) => {
@@ -61,13 +62,14 @@ export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> =
         >
           <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
             <LucideIcons.Radio className="h-4 w-4 text-accent" />
-            <span className="text-xs font-bold text-primary uppercase tracking-widest">Industrial Training</span>
+            <span className="text-xs font-bold text-primary uppercase tracking-widest">{header?.badge || "Industry Experience"}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
-            Industrial Training
+            {header?.title1 || "Industrial"}{" "}
+            {header?.title2 ? <span className="text-accent">{header.title2}</span> : "Training"}
           </h2>
           <p className="text-primary/70 font-medium text-lg leading-relaxed max-w-2xl mx-auto">
-            Practical industry exposure and hands-on professional training to bridge academic knowledge with real-world applications.
+            {header?.description || "Practical industry exposure and hands-on professional training to bridge academic knowledge with real-world applications."}
           </p>
         </motion.div>
 

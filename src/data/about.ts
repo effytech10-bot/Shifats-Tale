@@ -34,6 +34,14 @@ export interface ProfileInfo {
   socialLinks?: SocialLink[];
 }
 
+// Type for generic section header across About page
+export interface SectionHeader {
+  badge: string;
+  title1: string;
+  title2: string;
+  description: string;
+}
+
 export interface MetricItem {
   id: string;
   label: string;

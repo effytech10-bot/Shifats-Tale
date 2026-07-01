@@ -74,15 +74,15 @@ export default function AboutMetricsAdmin({ initialSectionData }: { initialSecti
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {metrics.map((metric, idx) => (
-            <div key={metric.id} className="border border-border p-4 rounded-xl flex items-start space-x-3 bg-gray-50/50">
-              <div className="w-16 shrink-0 pt-1">
+            <div key={metric.id} className="border border-border p-4 rounded-xl flex flex-col sm:flex-row items-start gap-4 bg-gray-50/50">
+              <div className="w-full sm:w-48 shrink-0">
                 <label className="block text-xs font-semibold mb-1 text-gray-500">Icon</label>
                 <IconPicker
                   value={metric.iconName}
                   onChange={(iconName) => updateMetric(idx, 'iconName', iconName)}
                 />
               </div>
-              <div className="flex-1 grid grid-cols-1 gap-2">
+              <div className="flex-1 w-full grid grid-cols-1 gap-2">
                 <div>
                   <label className="block text-xs font-semibold mb-1 text-gray-500">Value (e.g. 50+)</label>
                   <input

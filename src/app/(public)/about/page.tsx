@@ -33,6 +33,7 @@ export default async function AboutPage() {
   const aboutHeroSection = await getPageSection("ABOUT", "ABOUT_HERO");
   const aboutMetricsSection = await getPageSection("ABOUT", "ABOUT_METRICS");
   const aboutEducationSection = await getPageSection("ABOUT", "ABOUT_EDUCATION");
+  const aboutResearchSection = await getPageSection("ABOUT", "ABOUT_RESEARCH_EXP");
 
   return (
     <div className="relative pt-20 pb-0 bg-bg-soft text-text flex flex-col min-h-screen selection:bg-accent selection:text-primary overflow-x-hidden">
@@ -49,7 +50,7 @@ export default async function AboutPage() {
       <EducationTimeline education={aboutEducationSection?.content?.education || educationData} />
 
       {/* New Section: Research Experience */}
-      <ResearchExperienceSection researchData={researchExperienceData} />
+      <ResearchExperienceSection researchData={aboutResearchSection?.content?.researchData || researchExperienceData} />
 
       {/* New Section: Research Publications */}
       <PublicationsSection publications={publicationsData} />

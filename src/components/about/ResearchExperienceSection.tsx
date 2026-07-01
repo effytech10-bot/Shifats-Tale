@@ -3,20 +3,17 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResearchExperienceItem } from "@/data/about";
-import { FileText, GraduationCap, Users, FlaskConical, ChevronRight, Target, Activity, BarChart } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { ChevronRight, Target, Activity, BarChart } from "lucide-react";
 
 interface ResearchExperienceSectionProps {
   researchData: ResearchExperienceItem[];
 }
 
-const renderIcon = (iconName: string, className: string = "w-5 h-5") => {
-  switch (iconName) {
-    case "FileText": return <FileText className={className} />;
-    case "GraduationCap": return <GraduationCap className={className} />;
-    case "Users": return <Users className={className} />;
-    case "FlaskConical": return <FlaskConical className={className} />;
-    default: return <FileText className={className} />;
-  }
+const renderDynamicIcon = (iconName: string, className: string = "w-5 h-5") => {
+  const IconComponent = (LucideIcons as any)[iconName];
+  if (!IconComponent) return <LucideIcons.FileText className={className} />;
+  return <IconComponent className={className} />;
 };
 
 export const ResearchExperienceSection: React.FC<ResearchExperienceSectionProps> = ({ researchData }) => {
@@ -38,7 +35,7 @@ export const ResearchExperienceSection: React.FC<ResearchExperienceSectionProps>
           className="flex flex-col items-center justify-center text-center space-y-4"
         >
           <div className="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full border border-[#E7E0D2] shadow-sm">
-            <FlaskConical className="h-4 w-4 text-accent" />
+            <LucideIcons.FlaskConical className="h-4 w-4 text-accent" />
             <span className="text-xs font-bold text-primary uppercase tracking-widest">Research Experience</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight font-display">
@@ -76,7 +73,7 @@ export const ResearchExperienceSection: React.FC<ResearchExperienceSectionProps>
                       <div className={`flex items-center justify-between p-4 sm:p-5 rounded-2xl transition-all duration-300 ${isActive ? "bg-white border border-accent shadow-[0_8px_30px_rgb(0,0,0,0.04)]" : "bg-white/50 border border-transparent hover:bg-white/80 hover:shadow-sm"}`}>
                         <div className="flex items-center space-x-4">
                           <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${isActive ? "bg-[#FBE8CA] text-accent" : "bg-primary/5 text-primary"}`}>
-                            {renderIcon(item.iconName, "w-6 h-6")}
+                            {renderDynamicIcon(item.iconName, "w-6 h-6")}
                           </div>
                           <div>
                             <h4 className={`font-bold text-base sm:text-lg leading-tight mb-1 transition-colors ${isActive ? "text-primary" : "text-primary/80 group-hover:text-primary"}`}>
@@ -133,7 +130,7 @@ export const ResearchExperienceSection: React.FC<ResearchExperienceSectionProps>
                   
                   {/* Floating Icon Badge */}
                   <div className="absolute -bottom-6 left-8 w-16 h-16 sm:w-20 sm:h-20 bg-accent rounded-2xl flex items-center justify-center text-primary shadow-lg border-[4px] border-white z-10">
-                    {renderIcon(activeItem.iconName, "w-8 h-8 sm:w-10 sm:h-10")}
+                    {renderDynamicIcon(activeItem.iconName, "w-8 h-8 sm:w-10 sm:h-10")}
                   </div>
                 </div>
 

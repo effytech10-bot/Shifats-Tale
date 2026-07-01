@@ -5,20 +5,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Trophy, ChevronLeft, ChevronRight, Award, Star } from "lucide-react";
 import { topStudentsData } from "@/data/top-students";
 
-export default function TopOfTheMonthSection() {
+export default function TopOfTheMonthSection({ topStudentsData: dynamicData }: { topStudentsData?: any }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  const currentMonth = topStudentsData[currentIndex];
+  const displayData = dynamicData?.content?.months && dynamicData.content.months.length > 0
+    ? dynamicData.content.months
+    : topStudentsData;
+
+  const currentMonth = displayData[currentIndex] || displayData[0];
 
   const handlePrevious = () => {
     setDirection(-1);
-    setCurrentIndex((prev) => (prev === 0 ? topStudentsData.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? displayData.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
     setDirection(1);
-    setCurrentIndex((prev) => (prev === topStudentsData.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === displayData.length - 1 ? 0 : prev + 1));
   };
 
   const variants = {
@@ -116,9 +120,9 @@ export default function TopOfTheMonthSection() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 px-4 md:px-8">
-                  {currentMonth.students.map((student, idx) => (
+                  {currentMonth?.students?.map((student: any, idx: number) => (
                     <div
-                      key={student.id}
+                      key={student.id || idx}
                       className="group relative bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(251,181,3,0.15)] border border-[#E8DDBF]/50 transition-all duration-500 flex flex-col items-center text-center overflow-hidden"
                     >
                       {/* Premium Card Glow */}

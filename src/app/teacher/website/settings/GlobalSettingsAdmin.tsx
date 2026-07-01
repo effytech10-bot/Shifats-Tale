@@ -101,6 +101,27 @@ export default function GlobalSettingsAdmin({ initialSettings }: { initialSettin
             <input type="text" name="teacherExperience" value={formData.teacherExperience || ""} onChange={handleChange} className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent" />
           </div>
         </div>
+
+        {/* Location & Maps */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-border space-y-4">
+          <h2 className="text-lg font-bold border-b pb-2">Global Location Info (Footer)</h2>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Office Address</label>
+            <input type="text" name="address" value={formData.address || ""} onChange={handleChange} className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Nearby Landmark</label>
+            <input type="text" name="nearbyLandmark" value={formData.nearbyLandmark || ""} onChange={handleChange} className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Google Map Embed URL</label>
+            <input type="url" name="googleMapEmbedUrl" value={formData.googleMapEmbedUrl || ""} onChange={handleChange} className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Google Map Direction URL</label>
+            <input type="url" name="googleMapDirectionUrl" value={formData.googleMapDirectionUrl || ""} onChange={handleChange} className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent" />
+          </div>
+        </div>
       </div>
 
       {/* Save Footer */}

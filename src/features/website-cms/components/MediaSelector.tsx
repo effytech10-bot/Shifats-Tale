@@ -46,7 +46,7 @@ export function MediaSelector({ folderKey, onSelect }: MediaSelectorProps) {
         {activeTab === "upload" ? (
           <MediaUploader 
             folderKey={folderKey} 
-            onUploadSuccess={(mediaId) => onSelect(mediaId)} 
+            onUploadSuccess={(mediaId, secureUrl) => onSelect(mediaId, secureUrl)} 
           />
         ) : (
           <MediaLibrary 

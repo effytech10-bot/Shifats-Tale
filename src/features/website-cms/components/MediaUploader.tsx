@@ -22,7 +22,7 @@ interface CloudinaryUploadResponse {
 
 interface MediaUploaderProps {
   folderKey: AllowedFolder;
-  onUploadSuccess?: (mediaId: string) => void;
+  onUploadSuccess?: (mediaId: string, secureUrl: string) => void;
   onUploadError?: (error: string) => void;
 }
 
@@ -104,7 +104,7 @@ export function MediaUploader({
 
       if (finalizeRes.success) {
         setPreviewUrl(finalizeRes.secureUrl);
-        if (onUploadSuccess) onUploadSuccess(finalizeRes.mediaId);
+        if (onUploadSuccess) onUploadSuccess(finalizeRes.mediaId, finalizeRes.secureUrl);
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Upload failed";

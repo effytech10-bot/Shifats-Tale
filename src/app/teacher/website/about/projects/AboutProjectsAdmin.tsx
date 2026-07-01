@@ -351,8 +351,8 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
             <div className="p-4 overflow-y-auto">
               <MediaSelector
                 folderKey="about"
-                onSelect={(url) => {
-                  updateProject(editingProjectImageIndex, 'imageUrl', url);
+                onSelect={(mediaId, secureUrl) => {
+                  updateProject(editingProjectImageIndex, 'imageUrl', secureUrl || mediaId);
                   setEditingProjectImageIndex(null);
                 }}
               />

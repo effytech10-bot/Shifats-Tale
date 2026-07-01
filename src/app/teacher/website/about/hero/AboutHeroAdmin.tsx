@@ -265,13 +265,28 @@ export default function AboutHeroAdmin({ initialSectionData }: { initialSectionD
       </div>
 
       {isMediaModalOpen && (
-        <MediaSelector
-          folderKey="about"
-          onSelect={(url) => {
-            updateProfile('imageUrl', url);
-            setIsMediaModalOpen(false);
-          }}
-        />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="font-bold text-primary">Select Profile Photo</h3>
+              <button 
+                onClick={() => setIsMediaModalOpen(false)}
+                className="text-gray-500 hover:text-red-500"
+              >
+                Close
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto">
+              <MediaSelector
+                folderKey="about"
+                onSelect={(mediaId, secureUrl) => {
+                  updateProfile('imageUrl', secureUrl || mediaId);
+                  setIsMediaModalOpen(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

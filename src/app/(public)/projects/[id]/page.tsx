@@ -67,7 +67,9 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsProps
             Back to Portfolio
           </Link>
           <span className="text-primary/30">/</span>
-          <span className="text-primary/60">Projects</span>
+          <Link href="/about" className="text-primary/60 hover:text-primary transition-colors">
+            Projects
+          </Link>
           <span className="text-primary/30">/</span>
           <span className="text-primary truncate max-w-[200px] sm:max-w-xs">{project.title}</span>
         </nav>

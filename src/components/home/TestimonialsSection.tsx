@@ -134,21 +134,31 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
     </div>
   );
 
-  const MarqueeColumn = ({ items, speed }: { items: any[]; speed: string }) => (
-    <div className="relative h-[620px] overflow-hidden rounded-2xl">
-      <div 
-        style={{ "--marquee-duration": speed } as React.CSSProperties}
-        className="flex flex-col gap-5 animate-marquee-vertical animate-marquee-vertical-hover-pause py-2"
-      >
-        {items.map((item, index) => (
-          <TestimonialCard key={`col-orig-${item.id}-${index}`} item={item} />
-        ))}
-        {items.map((item, index) => (
-          <TestimonialCard key={`col-dup-${item.id}-${index}`} item={item} />
-        ))}
+  const MarqueeColumn = ({ items, speed }: { items: any[]; speed: string }) => {
+    const [isPaused, setIsPaused] = useState(false);
+    return (
+      <div className="relative h-[620px] overflow-hidden rounded-2xl">
+        <div 
+          style={{ 
+            "--marquee-duration": speed,
+            animationPlayState: isPaused ? "paused" : "running"
+          } as React.CSSProperties}
+          className="flex flex-col gap-5 animate-marquee-vertical py-2"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
+        >
+          {items.map((item, index) => (
+            <TestimonialCard key={`col-orig-${item.id}-${index}`} item={item} />
+          ))}
+          {items.map((item, index) => (
+            <TestimonialCard key={`col-dup-${item.id}-${index}`} item={item} />
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <section id="testimonials" className="brand-section-wrapper bg-bg-soft relative overflow-hidden">

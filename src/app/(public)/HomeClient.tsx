@@ -19,6 +19,7 @@ import ResultsSection from "@/components/home/ResultsSection";
 import YouTubeClassesSection from "@/components/home/YouTubeClassesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import GallerySection from "@/components/home/GallerySection";
+import { useSiteSettings } from "@/lib/providers/SiteSettingsProvider";
 
 export default function HomeClient({ 
   heroData,
@@ -49,6 +50,13 @@ export default function HomeClient({
   displayAlbums?: any[],
   testimonialsData?: any[]
 }) {
+  const siteInfo = useSiteSettings();
+  const heroContent = heroData?.content || {};
+  const teacherName = heroContent.teacherName || siteInfo.teacherName || "Md. Zia Uddin Azad Sifat";
+  const teacherTitle = heroContent.teacherTitle || "Instructor & CEO";
+  const teacherSubtitle = heroContent.teacherSubtitle || "EEE, CUET";
+  const teacherImage = heroContent.teacherImage || "/images/sir_photo_clean.png";
+
   const [flyingState, setFlyingState] = useState<{
     startX: number;
     startY: number;
@@ -202,8 +210,8 @@ export default function HomeClient({
                 <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#FFF8E6] via-[#FFF8E6]/85 to-transparent z-10 pointer-events-none" />
 
                 <img
-                  src="/images/sir_photo_clean.png"
-                  alt=""
+                  src={teacherImage}
+                  alt={teacherName}
                   className="w-full h-full object-contain object-bottom filter drop-shadow-[0_16px_32px_rgba(1,14,98,0.22)] z-10"
                 />
               </div>
@@ -211,13 +219,13 @@ export default function HomeClient({
               {/* Compact Designation Tag */}
               <div className="mt-6 z-20 text-center w-full max-w-[280px] sm:max-w-[340px] bg-white border border-border p-3.5 rounded-xl shadow-sm">
                 <span className="block text-accent font-extrabold text-[10px] sm:text-xs uppercase tracking-widest">
-                  Instructor & CEO
+                  {teacherTitle}
                 </span>
                 <h4 className="font-extrabold text-base sm:text-lg text-primary mt-1">
-                  Md. Zia Uddin Azad Sifat
+                  {teacherName}
                 </h4>
                 <span className="block text-xs text-muted font-bold mt-0.5">
-                  EEE, CUET
+                  {teacherSubtitle}
                 </span>
               </div>
             </div>

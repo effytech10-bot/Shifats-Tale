@@ -32,7 +32,8 @@ export default function HomeClient({
   displayCourses, 
   headerData,
   displayStudents,
-  successHeaderData 
+  successHeaderData,
+  testimonialsData
 }: { 
   heroData?: any,
   displayCourses?: any[], 
@@ -45,7 +46,8 @@ export default function HomeClient({
   topStudentsData?: any,
   youtubeData?: any,
   galleryData?: any,
-  displayAlbums?: any[]
+  displayAlbums?: any[],
+  testimonialsData?: any[]
 }) {
   const [flyingState, setFlyingState] = useState<{
     startX: number;
@@ -123,7 +125,7 @@ export default function HomeClient({
       <TopOfTheMonthSection topStudentsData={topStudentsData} />
       <ResultsSection studentItems={displayStudents} headerData={successHeaderData} />
       <YouTubeClassesSection youtubeData={youtubeData} />
-      <TestimonialsSection />
+      <TestimonialsSection initialTestimonials={testimonialsData} />
 
       {/* Dynamic Captured Moments Section */}
       <GallerySection headerData={galleryData} albums={displayAlbums} />

@@ -1,20 +1,51 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { testimonials } from "@/data/testimonials";
-import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import { testimonials as fallbackTestimonials } from "@/data/testimonials";
+import { Star, X, Loader2 } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import toast from "react-hot-toast";
+import { submitReview } from "@/features/website-cms/actions/testimonials-actions";
 
-export default function TestimonialsSection() {
+interface TestimonialsSectionProps {
+  initialTestimonials?: any[];
+}
+
+export default function TestimonialsSection({ initialTestimonials }: TestimonialsSectionProps) {
   const shouldReduceMotion = useReducedMotion();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Distribute testimonials into responsive columns
-  const col1 = [testimonials[0], testimonials[3], testimonials[6]];
-  const col2 = [testimonials[1], testimonials[4], testimonials[7]];
-  const col3 = [testimonials[2], testimonials[5], testimonials[8]];
+  // Form State
+  const [name, setName] = useState("");
+  const [role, setRole] = useState<"Student" | "Parent">("Student");
+  const [message, setMessage] = useState("");
+  const [rating, setRating] = useState(5);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const [batch, setBatch] = useState("");
+  const [achievement, setAchievement] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const tab1 = [testimonials[0], testimonials[2], testimonials[4], testimonials[6], testimonials[8]];
-  const tab2 = [testimonials[1], testimonials[3], testimonials[5], testimonials[7]];
+  const currentTestimonials = initialTestimonials && initialTestimonials.length > 0
+    ? initialTestimonials
+    : fallbackTestimonials;
+
+  // Distribute testimonials into responsive columns dynamically
+  const distribute = (items: any[], numCols: number) => {
+    const cols: any[][] = Array.from({ length: numCols }, () => []);
+    items.forEach((item, idx) => {
+      cols[idx % numCols].push(item);
+    });
+    return cols;
+  };
+
+  const desktopCols = distribute(currentTestimonials, 3);
+  const col1 = desktopCols[0] || [];
+  const col2 = desktopCols[1] || [];
+  const col3 = desktopCols[2] || [];
+
+  const tabletCols = distribute(currentTestimonials, 2);
+  const tab1 = tabletCols[0] || [];
+  const tab2 = tabletCols[1] || [];
 
   const getInitials = (name: string) => {
     return name
@@ -34,7 +65,40 @@ export default function TestimonialsSection() {
     }
   };
 
-  const TestimonialCard = ({ item }: { item: typeof testimonials[0] }) => (
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return toast.error("Please enter your name");
+    if (!message.trim()) return toast.error("Please enter a review message");
+    if (!batch.trim()) return toast.error("Please specify your batch (e.g. HSC 2025)");
+
+    try {
+      setIsSubmitting(true);
+      await submitReview({
+        name,
+        role,
+        message,
+        rating,
+        batch,
+        achievement: achievement.trim() || undefined
+      });
+      toast.success("Thank you! Your review has been submitted for approval.");
+      
+      // Reset form
+      setName("");
+      setRole("Student");
+      setMessage("");
+      setRating(5);
+      setBatch("");
+      setAchievement("");
+      setIsModalOpen(false);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to submit review");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const TestimonialCard = ({ item }: { item: any }) => (
     <div 
       className="brand-card rounded-2xl p-6 bg-white border border-border flex flex-col justify-between space-y-4 hover:shadow-lg hover:border-accent/40 transition-all duration-300 w-full text-left select-none"
     >
@@ -70,7 +134,7 @@ export default function TestimonialsSection() {
     </div>
   );
 
-  const MarqueeColumn = ({ items, speed }: { items: typeof testimonials; speed: string }) => (
+  const MarqueeColumn = ({ items, speed }: { items: any[]; speed: string }) => (
     <div className="relative h-[620px] overflow-hidden rounded-2xl">
       <div 
         style={{ "--marquee-duration": speed } as React.CSSProperties}
@@ -133,25 +197,217 @@ export default function TestimonialsSection() {
           {/* Responsive columns grid */}
           <div className="relative z-0">
             {/* Desktop: 3 Columns */}
-            <div className="hidden lg:grid grid-cols-3 gap-6">
-              <MarqueeColumn items={col1} speed="24s" />
-              <MarqueeColumn items={col2} speed="30s" />
-              <MarqueeColumn items={col3} speed="27s" />
-            </div>
+            {currentTestimonials.length > 0 && (
+              <div className="hidden lg:grid grid-cols-3 gap-6">
+                <MarqueeColumn items={col1} speed="24s" />
+                <MarqueeColumn items={col2} speed="30s" />
+                <MarqueeColumn items={col3} speed="27s" />
+              </div>
+            )}
 
             {/* Tablet: 2 Columns */}
-            <div className="hidden md:grid lg:hidden grid-cols-2 gap-6">
-              <MarqueeColumn items={tab1} speed="26s" />
-              <MarqueeColumn items={tab2} speed="32s" />
-            </div>
+            {currentTestimonials.length > 0 && (
+              <div className="hidden md:grid lg:hidden grid-cols-2 gap-6">
+                <MarqueeColumn items={tab1} speed="26s" />
+                <MarqueeColumn items={tab2} speed="32s" />
+              </div>
+            )}
 
             {/* Mobile: 1 Column */}
-            <div className="grid grid-cols-1 gap-6 md:hidden">
-              <MarqueeColumn items={testimonials} speed="40s" />
-            </div>
+            {currentTestimonials.length > 0 && (
+              <div className="grid grid-cols-1 gap-6 md:hidden">
+                <MarqueeColumn items={currentTestimonials} speed="40s" />
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Submit Review Button */}
+        <div className="flex justify-center mt-10">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="primary-btn inline-flex items-center space-x-2 text-sm px-8 py-3.5 shadow-md hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer font-bold rounded-xl"
+          >
+            Submit a Review
+          </button>
+        </div>
       </div>
+
+      {/* Aesthetic Star-theme Review Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary-dark/40 backdrop-blur-sm">
+            {/* Modal Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 cursor-pointer"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="relative w-full max-w-lg bg-bg-soft border border-border rounded-2xl shadow-xl overflow-hidden p-6 sm:p-8 z-10 text-left"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 p-1.5 text-muted hover:text-primary hover:bg-black/5 rounded-full transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="space-y-4">
+                <div className="text-center">
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-primary">Submit Your Review</h3>
+                  <p className="text-xs text-muted font-semibold mt-1">
+                    Your feedback motivates us to deliver the best educational support.
+                  </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Name Input */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Abrar Ahmed"
+                      className="w-full px-4 py-2.5 text-sm bg-white border border-border rounded-xl focus:outline-none focus:border-accent font-semibold text-primary transition"
+                    />
+                  </div>
+
+                  {/* Role and Star Rating Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Role Selector */}
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
+                        Role
+                      </label>
+                      <div className="grid grid-cols-2 gap-2 bg-white p-1 border border-border rounded-xl">
+                        {(["Student", "Parent"] as const).map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            onClick={() => setRole(r)}
+                            className={`py-1.5 text-xs font-extrabold rounded-lg transition-all ${
+                              role === r
+                                ? "bg-accent text-primary shadow-sm"
+                                : "text-muted hover:text-primary"
+                            }`}
+                          >
+                            {r}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Interactive Star Rating */}
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
+                        Rating
+                      </label>
+                      <div className="flex items-center space-x-1.5 h-10">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setRating(star)}
+                            onMouseEnter={() => setHoveredRating(star)}
+                            onMouseLeave={() => setHoveredRating(0)}
+                            className="p-0.5 focus:outline-none transition-transform active:scale-95"
+                          >
+                            <Star
+                              className={`w-6 h-6 transition-all ${
+                                star <= (hoveredRating || rating)
+                                  ? "fill-accent text-accent scale-105"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Message Input */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
+                      Review Message
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Write your honest review here..."
+                      className="w-full px-4 py-2.5 text-sm bg-white border border-border rounded-xl focus:outline-none focus:border-accent font-semibold text-primary transition resize-none"
+                    />
+                  </div>
+
+                  {/* Batch & Achievement Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Batch Input */}
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
+                        Batch
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={batch}
+                        onChange={(e) => setBatch(e.target.value)}
+                        placeholder="e.g. HSC Batch 2025"
+                        className="w-full px-4 py-2.5 text-sm bg-white border border-border rounded-xl focus:outline-none focus:border-accent font-semibold text-primary transition"
+                      />
+                    </div>
+
+                    {/* Achievement Input */}
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
+                        Achievement (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={achievement}
+                        onChange={(e) => setAchievement(e.target.value)}
+                        placeholder="e.g. BUET CSE / board A+"
+                        className="w-full px-4 py-2.5 text-sm bg-white border border-border rounded-xl focus:outline-none focus:border-accent font-semibold text-primary transition"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full primary-btn py-3 font-extrabold shadow-lg rounded-xl flex items-center justify-center gap-2 hover:brightness-105 active:scale-[0.98] transition disabled:opacity-50 cursor-pointer text-sm"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Submitting...</span>
+                        </>
+                      ) : (
+                        <span>Submit Review</span>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

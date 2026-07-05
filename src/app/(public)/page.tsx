@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import HomeClient from "./HomeClient";
 import { getPageSection, getSectionItems } from "@/features/website-cms/actions/content-actions";
+import { getPublicTestimonials } from "@/features/website-cms/actions/testimonials-actions";
 
 export const metadata: Metadata = {
   title: "Shifat's Tales | Admission & Academic Care",
@@ -54,6 +55,9 @@ export default async function HomePage() {
     
   const displayAlbums = featuredAlbums.length > 0 ? featuredAlbums : allAlbums.slice(0, 4);
 
+  // Fetch approved testimonials dynamically
+  const testimonialsData = await getPublicTestimonials();
+
   return <HomeClient 
     heroData={homeHeroSection}
     statsData={homeStatsSection}
@@ -67,5 +71,6 @@ export default async function HomePage() {
     headerData={homeCoursesSection} 
     displayStudents={displayStudents}
     successHeaderData={homeSuccessSection}
+    testimonialsData={testimonialsData}
   />;
 }

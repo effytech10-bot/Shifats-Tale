@@ -270,21 +270,6 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Name Input */}
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Abrar Ahmed"
-                      className="w-full px-4 py-2.5 text-sm bg-white border border-border rounded-xl focus:outline-none focus:border-accent font-semibold text-primary transition"
-                    />
-                  </div>
-
                   {/* Role and Star Rating Row */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Role Selector */}
@@ -336,6 +321,25 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
                         ))}
                       </div>
                     </div>
+                  </div>
+
+                  {/* Name Input */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder={
+                        role === "Parent"
+                          ? "e.g. Mother of Abrar / Father of Fahim"
+                          : "e.g. Adib Hasan"
+                      }
+                      className="w-full px-4 py-2.5 text-sm bg-white border border-border rounded-xl focus:outline-none focus:border-accent font-semibold text-primary transition"
+                    />
                   </div>
 
                   {/* Message Input */}

@@ -545,7 +545,7 @@ export async function uploadAvatarAction(formData: FormData) {
       const uploadRes = await new Promise<any>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           {
-            folder: `coaching-center/avatars`,
+            folder: "shifats-tales",
             public_id: `${profile.id}-${Date.now()}`,
             resource_type: "image",
             transformation: [{ width: 300, height: 300, crop: "fill", gravity: "face" }],

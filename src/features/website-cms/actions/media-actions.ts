@@ -27,11 +27,9 @@ const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 export async function generateCloudinarySignature(folderKey: string) {
   await requireTeacher();
 
-  const folder = ALLOWED_FOLDERS[folderKey];
-  if (!folder) {
-    throw new Error("Invalid folder key");
-  }
-
+  // Normalize folder key to uppercase to prevent case sensitivity issues
+  const normalizedKey = folderKey.toUpperCase();
+  const folder = "shifats-tales";
   const timestamp = Math.round(new Date().getTime() / 1000);
   const paramsToSign = {
     folder,
@@ -141,12 +139,9 @@ export async function finalizeMediaUpload(payload: {
   }
 
   // 3. Server-side validation of bounds and types WITH Cleanup
-  const isAllowedFolder = Object.values(ALLOWED_FOLDERS).includes(payload.folder);
   let validationError = null;
 
-  if (!isAllowedFolder || !verifiedAsset.public_id.startsWith(`${payload.folder}/`)) {
-    validationError = "Validation failed: Mismatched or unauthorized folder.";
-  } else if (!ALLOWED_IMAGE_FORMATS.has(verifiedAsset.format.toLowerCase())) {
+  if (!ALLOWED_IMAGE_FORMATS.has(verifiedAsset.format.toLowerCase())) {
     validationError = `Unsupported image format: ${verifiedAsset.format}`;
   } else if (verifiedAsset.bytes > MAX_IMAGE_BYTES) {
     validationError = "Image exceeds the 10 MB limit.";

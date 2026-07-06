@@ -29,12 +29,10 @@ export function sanitizeFilename(filename: string): { sanitizedName: string; ext
 }
 
 export function generatePublicId(batchId: string, filename: string): string {
-  const year = new Date().getFullYear().toString();
   const uuid = crypto.randomUUID();
   const { sanitizedName } = sanitizeFilename(filename);
   
-  // coaching-center/batches/{batchId}/{year}/{uuid}-{sanitizedFilename}
-  return `coaching-center/batches/${batchId}/${year}/${uuid}-${sanitizedName}`;
+  return `shifats-tales/${uuid}-${sanitizedName}`;
 }
 
 export function getCloudinaryResourceType(extension: string): "image" | "raw" {

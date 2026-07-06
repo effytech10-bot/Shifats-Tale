@@ -29,10 +29,10 @@ export async function generateCloudinarySignature(folderKey: string) {
 
   // Normalize folder key to uppercase to prevent case sensitivity issues
   const normalizedKey = folderKey.toUpperCase();
-  const folder = ALLOWED_FOLDERS[normalizedKey] || "shifats-tales";
-
+  const folder = "shifats-tales";
   const timestamp = Math.round(new Date().getTime() / 1000);
   const paramsToSign = {
+    folder,
     timestamp,
   };
 
@@ -52,6 +52,7 @@ export async function generateCloudinarySignature(folderKey: string) {
     signature,
     apiKey,
     cloudName,
+    folder,
   };
 }
 
@@ -107,6 +108,7 @@ export async function finalizeMediaUpload(payload: {
   publicId: string;
   version: number;
   signature: string;
+  folder: string;
 }) {
   const { profile } = await requireTeacher();
   const supabase = await createClient();
@@ -165,7 +167,7 @@ export async function finalizeMediaUpload(payload: {
       secure_url: verifiedAsset.secure_url,
       version: verifiedAsset.version,
       format: verifiedAsset.format,
-      folder: null,
+      folder: payload.folder,
       original_filename: verifiedAsset.original_filename,
       width: verifiedAsset.width,
       height: verifiedAsset.height,

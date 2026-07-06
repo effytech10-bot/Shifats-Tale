@@ -32,7 +32,7 @@ export function generatePublicId(batchId: string, filename: string): string {
   const uuid = crypto.randomUUID();
   const { sanitizedName } = sanitizeFilename(filename);
   
-  return `${uuid}-${sanitizedName}`;
+  return `shifats-tales/${uuid}-${sanitizedName}`;
 }
 
 export function getCloudinaryResourceType(extension: string): "image" | "raw" {

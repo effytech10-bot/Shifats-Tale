@@ -69,6 +69,7 @@ export function MediaUploader({
       formData.append("api_key", sigData.apiKey);
       formData.append("timestamp", sigData.timestamp.toString());
       formData.append("signature", sigData.signature);
+      formData.append("folder", sigData.folder);
 
       const cloudinaryData = await new Promise<CloudinaryUploadResponse>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -98,6 +99,7 @@ export function MediaUploader({
         publicId: cloudinaryData.public_id,
         version: cloudinaryData.version,
         signature: cloudinaryData.signature,
+        folder: sigData.folder,
       });
 
       if (finalizeRes.success) {

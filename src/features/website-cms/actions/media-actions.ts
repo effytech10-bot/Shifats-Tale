@@ -27,10 +27,9 @@ const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 export async function generateCloudinarySignature(folderKey: string) {
   await requireTeacher();
 
-  const folder = ALLOWED_FOLDERS[folderKey];
-  if (!folder) {
-    throw new Error("Invalid folder key");
-  }
+  // Normalize folder key to uppercase to prevent case sensitivity issues
+  const normalizedKey = folderKey.toUpperCase();
+  const folder = ALLOWED_FOLDERS[normalizedKey] || "shifats-tales";
 
   const timestamp = Math.round(new Date().getTime() / 1000);
   const paramsToSign = {

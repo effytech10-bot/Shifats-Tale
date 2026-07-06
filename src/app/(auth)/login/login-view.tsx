@@ -52,12 +52,14 @@ export function LoginView() {
         throw new Error(authError.message);
       }
 
-      // Refresh the page state and trigger Next.js layout resolvers to redirect appropriately
+      // Refresh the page state to sync server components
       router.refresh();
       if (redirectPath) {
         router.push(redirectPath);
       } else {
-        router.push("/");
+        // Reloading the login page allows the server component to 
+        // resolve the role and redirect to the appropriate dashboard
+        window.location.href = "/login";
       }
     } catch (err: any) {
       // Map standard Supabase error messages to friendly user-facing messages

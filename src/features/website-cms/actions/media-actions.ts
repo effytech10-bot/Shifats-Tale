@@ -33,7 +33,6 @@ export async function generateCloudinarySignature(folderKey: string) {
 
   const timestamp = Math.round(new Date().getTime() / 1000);
   const paramsToSign = {
-    folder,
     timestamp,
   };
 
@@ -53,7 +52,6 @@ export async function generateCloudinarySignature(folderKey: string) {
     signature,
     apiKey,
     cloudName,
-    folder,
   };
 }
 
@@ -109,7 +107,6 @@ export async function finalizeMediaUpload(payload: {
   publicId: string;
   version: number;
   signature: string;
-  folder: string;
 }) {
   const { profile } = await requireTeacher();
   const supabase = await createClient();
@@ -140,12 +137,9 @@ export async function finalizeMediaUpload(payload: {
   }
 
   // 3. Server-side validation of bounds and types WITH Cleanup
-  const isAllowedFolder = Object.values(ALLOWED_FOLDERS).includes(payload.folder);
   let validationError = null;
 
-  if (!isAllowedFolder || !verifiedAsset.public_id.startsWith(`${payload.folder}/`)) {
-    validationError = "Validation failed: Mismatched or unauthorized folder.";
-  } else if (!ALLOWED_IMAGE_FORMATS.has(verifiedAsset.format.toLowerCase())) {
+  if (!ALLOWED_IMAGE_FORMATS.has(verifiedAsset.format.toLowerCase())) {
     validationError = `Unsupported image format: ${verifiedAsset.format}`;
   } else if (verifiedAsset.bytes > MAX_IMAGE_BYTES) {
     validationError = "Image exceeds the 10 MB limit.";
@@ -171,7 +165,7 @@ export async function finalizeMediaUpload(payload: {
       secure_url: verifiedAsset.secure_url,
       version: verifiedAsset.version,
       format: verifiedAsset.format,
-      folder: payload.folder,
+      folder: null,
       original_filename: verifiedAsset.original_filename,
       width: verifiedAsset.width,
       height: verifiedAsset.height,

@@ -134,6 +134,9 @@ export async function updatePageSection(
     throw new Error("Failed to update section content");
   }
 
+  // Clear cache so public pages immediately show updates
+  revalidatePath("/", "layout");
+
   return { success: true };
 }
 
@@ -241,6 +244,9 @@ export async function upsertSectionItem(
     if (error) throw new Error("Failed to create item");
   }
 
+  // Clear cache so public pages immediately show updates
+  revalidatePath("/", "layout");
+
   return { success: true };
 }
 
@@ -260,6 +266,9 @@ export async function deleteSectionItem(itemId: string) {
     console.error("Failed to delete section item:", error);
     throw new Error("Failed to delete item");
   }
+
+  // Clear cache so public pages immediately show updates
+  revalidatePath("/", "layout");
 
   return { success: true };
 }

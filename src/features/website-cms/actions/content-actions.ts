@@ -160,13 +160,9 @@ export async function getSectionItems(sectionKey: string) {
 
   // 2. Get the items
   const { data: items, error: itemsError } = await supabase
-    .from("site_section_items")
-    .select(`
-      *,
-      media:media_assets(secure_url)
-    `)
+    .from("vw_public_site_section_items")
+    .select("*")
     .eq("section_id", section.id)
-    .eq("status", "PUBLISHED")
     .order("sort_order", { ascending: true });
 
   if (itemsError) {
@@ -174,10 +170,23 @@ export async function getSectionItems(sectionKey: string) {
     return [];
   }
 
+  // 3. Get media for these items
+  const mediaIds = items.map((i: any) => i.media_id).filter(Boolean);
+  let mediaMap: Record<string, string> = {};
+  if (mediaIds.length > 0) {
+    const { data: mediaAssets } = await supabase
+      .from("vw_public_media_assets")
+      .select("id, secure_url")
+      .in("id", mediaIds);
+    if (mediaAssets) {
+      mediaAssets.forEach(m => mediaMap[m.id] = m.secure_url);
+    }
+  }
+
   // Map to include mediaUrl directly for easier frontend consumption
   return items.map((item: any) => ({
     ...item,
-    mediaUrl: item.media?.secure_url || null,
+    mediaUrl: item.media_id ? (mediaMap[item.media_id] || null) : null,
   }));
 }
 

@@ -93,7 +93,7 @@ export default function HeroSection({ heroData, isTeacherFlying = false, onImage
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+              className="flex flex-col sm:flex-row flex-wrap items-center justify-center lg:justify-start gap-4"
             >
               <a
                 href="/contact"
@@ -109,6 +109,13 @@ export default function HeroSection({ heroData, isTeacherFlying = false, onImage
                 <Play className="h-4 w-4 fill-primary text-primary" />
                 <span>Watch Free Class</span>
               </button>
+              <a
+                href="/about"
+                className="secondary-btn flex items-center justify-center space-x-2 w-full sm:w-auto cursor-pointer bg-white/50 hover:bg-white"
+              >
+                <User className="h-4 w-4 text-primary" />
+                <span>Visit Portfolio</span>
+              </a>
             </motion.div>
 
             {/* Small Trust Line */}

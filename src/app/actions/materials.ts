@@ -12,6 +12,7 @@ import {
   getCloudinaryResourceType,
   sanitizeFilename,
 } from "@/lib/cloudinary";
+import { deleteR2File } from "@/lib/r2";
 import { validateUploadedFile, validateFileMagicBytes } from "@/lib/cloudinary/validation";
 import { revalidatePath } from "next/cache";
 
@@ -252,6 +253,7 @@ export async function updateMaterialAction(contentId: string, formData: FormData
   let uploadedResourceType: "image" | "raw" = "raw";
   let oldPublicIdToDelete: string | null = null;
   let oldResourceTypeToDelete: "image" | "raw" = "raw";
+  let oldR2KeyToDelete: string | null = null;
 
   try {
     const teacher = await assertActiveTeacher();
@@ -377,6 +379,9 @@ export async function updateMaterialAction(contentId: string, formData: FormData
           oldPublicIdToDelete = oldMaterial.cloudinary_public_id;
           oldResourceTypeToDelete = (oldMaterial.cloudinary_resource_type as any) || "raw";
         }
+        if (oldMaterial.storage_path) {
+          oldR2KeyToDelete = oldMaterial.storage_path;
+        }
         storagePath = null; // Clear R2 storage path if replacing with Cloudinary
       } else {
         // Keeping current file reference, unless the previous type was NOT file-based
@@ -386,10 +391,13 @@ export async function updateMaterialAction(contentId: string, formData: FormData
         }
       }
     } else {
-      // Swapping from file-based to non-file-based -> delete the old Cloudinary asset
+      // Swapping from file-based to non-file-based -> delete the old assets
       if (oldMaterial.cloudinary_public_id) {
         oldPublicIdToDelete = oldMaterial.cloudinary_public_id;
         oldResourceTypeToDelete = (oldMaterial.cloudinary_resource_type as any) || "raw";
+      }
+      if (oldMaterial.storage_path) {
+        oldR2KeyToDelete = oldMaterial.storage_path;
       }
       // Nullify all Cloudinary fields
       cloudinaryData = {
@@ -465,8 +473,15 @@ export async function updateMaterialAction(contentId: string, formData: FormData
           oldValue: { public_id: oldPublicIdToDelete },
         });
       } catch (delErr) {
-        // Log sanitized cleanup error but keep working state
         console.error("Sanitized warning: failed to delete old Cloudinary asset after successful update:", delErr);
+      }
+    }
+    
+    if (oldR2KeyToDelete) {
+      try {
+        await deleteR2File(oldR2KeyToDelete);
+      } catch (delErr) {
+        console.error("Sanitized warning: failed to delete old R2 asset after successful update:", delErr);
       }
     }
 
@@ -570,6 +585,15 @@ export async function deleteMaterialAction(contentId: string) {
         });
       } catch (cloudinaryErr) {
         console.error("Failed to clean up Cloudinary asset on deletion:", cloudinaryErr);
+      }
+    }
+
+    // Delete R2 asset if exists
+    if (material.storage_path) {
+      try {
+        await deleteR2File(material.storage_path);
+      } catch (r2Err) {
+        console.error("Failed to clean up R2 asset on deletion:", r2Err);
       }
     }
 

@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const accountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID!;
@@ -36,4 +36,18 @@ export async function generateR2DownloadUrl(filename: string) {
   });
 
   return await getSignedUrl(r2Client, command, { expiresIn: 3600 });
+}
+
+export async function deleteR2File(filename: string) {
+  try {
+    const command = new DeleteObjectCommand({
+      Bucket: r2BucketName,
+      Key: filename,
+    });
+    await r2Client.send(command);
+    return true;
+  } catch (error) {
+    console.error("Failed to delete R2 file:", error);
+    return false;
+  }
 }

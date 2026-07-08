@@ -1,4 +1,4 @@
-jai "use client";
+"use client";
 
 import React, { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";

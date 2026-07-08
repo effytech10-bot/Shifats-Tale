@@ -121,12 +121,12 @@ export function NewBatchForm() {
 
         <div>
           <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
-            Academic Level <span className="text-red-500">*</span>
+            Academic Year <span className="text-red-500">*</span>
           </label>
           <input
-            type="text"
+            type="number"
             {...register("academicLevel")}
-            placeholder="e.g. HSC"
+            placeholder="e.g. 2026"
             className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none"
           />
           {errors.academicLevel && (

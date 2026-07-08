@@ -147,10 +147,10 @@ export function EditBatchForm({ batch, hasEnrollments }: EditBatchFormProps) {
 
         <div>
           <label className="block text-[10px] uppercase font-extrabold tracking-wider text-muted mb-2">
-            Academic Level <span className="text-red-500">*</span>
+            Academic Year <span className="text-red-500">*</span>
           </label>
           <input
-            type="text"
+            type="number"
             disabled={isRestricted}
             {...register("academicLevel")}
             className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-bg/25 text-xs font-bold focus:border-primary focus:outline-none disabled:opacity-50"

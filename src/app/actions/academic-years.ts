@@ -1,13 +1,17 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Fetches the distinct academic years (academic_level) from the batches table.
  * Used for the student registration dropdown.
  */
 export async function getDistinctAcademicYears() {
-  const supabase = await createClient();
+  // Use service role to bypass RLS since unauthenticated users need this data to register
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
 
   // We use a simple select and distinct to get unique years.
   // Note: Since 'academic_level' is a free text field previously, 
@@ -25,8 +29,8 @@ export async function getDistinctAcademicYears() {
     return [];
   }
 
-  // Deduplicate and filter out empty values
-  const uniqueYears = Array.from(new Set(data.map(b => b.academic_level).filter(Boolean)));
+  // Deduplicate and filter out empty values, and keep only 4-digit years
+  const uniqueYears = Array.from(new Set(data.map(b => b.academic_level).filter(val => val && /^\d{4}$/.test(val))));
   
   // Sort descending so newer years are at the top
   uniqueYears.sort((a, b) => b.localeCompare(a));

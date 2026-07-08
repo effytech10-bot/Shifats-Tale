@@ -8,7 +8,9 @@ import { Calendar, ZoomIn, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import InnerPageHero from "@/components/layout/InnerPageHero";
 import Lightbox from "yet-another-react-lightbox";
+import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/captions.css";
 
 export default function AlbumDetailsClient({ album }: { album: GalleryAlbum }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -130,10 +132,13 @@ export default function AlbumDetailsClient({ album }: { album: GalleryAlbum }) {
         open={lightboxOpen}
         close={() => setLightboxOpen(false)}
         index={lightboxIndex}
+        plugins={[Captions]}
         slides={(album.images || []).map((img) => ({
           src: img.url,
           alt: img.alt || "Gallery Image",
+          description: img.alt && img.alt !== "Gallery Image" ? img.alt : undefined,
         }))}
+        captions={{ showToggle: false, descriptionTextAlign: 'center' }}
         styles={{
           container: { backgroundColor: "rgba(0, 0, 0, 0.95)" },
         }}

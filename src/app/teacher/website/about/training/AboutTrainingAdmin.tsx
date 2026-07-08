@@ -1,4 +1,4 @@
-"use client";
+jai "use client";
 
 import React, { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
@@ -7,6 +7,7 @@ import { updatePageSection } from "@/features/website-cms/actions/content-action
 import { trainingData as defaultData, TrainingItem, SectionHeader } from "@/data/about";
 import { IconPicker } from "@/features/website-cms/components/IconPicker";
 import { SectionHeaderEditor } from "@/features/website-cms/components/SectionHeaderEditor";
+import { MediaSelector } from "@/features/website-cms/components/MediaSelector";
 
 export default function AboutTrainingAdmin({ initialSectionData }: { initialSectionData: any }) {
   const [header, setHeader] = useState<SectionHeader>(
@@ -17,7 +18,7 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
       description: "My practical experience in the telecommunications and power sector."
     }
   );
-  
+
   const [training, setTraining] = useState<TrainingItem>(
     initialSectionData?.content?.training || defaultData
   );
@@ -74,15 +75,15 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
         </button>
       </div>
 
-      <SectionHeaderEditor 
-        header={header} 
-        onChange={setHeader} 
+      <SectionHeaderEditor
+        header={header}
+        onChange={setHeader}
         defaultHeader={{
           badge: "Industry Experience",
           title1: "Industrial",
           title2: "Training",
           description: "My practical experience in the telecommunications and power sector."
-        }} 
+        }}
       />
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-border space-y-6">
@@ -150,14 +151,29 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-xs font-semibold mb-1 text-gray-500">Certificate Link / URL</label>
-            <input
-              type="text"
-              value={training.certificateUrl || ""}
-              onChange={(e) => updateField('certificateUrl', e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg focus:border-accent text-sm text-blue-600"
-              placeholder="https://..."
-            />
+            <label className="block text-xs font-semibold mb-1 text-gray-500">Certificate Image</label>
+            {training.certificateUrl ? (
+              <div className="mb-4 relative rounded-xl overflow-hidden border border-border group">
+                <img src={training.certificateUrl} alt="Certificate" className="w-full max-h-[300px] object-cover" />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <button
+                    onClick={() => updateField('certificateUrl', "")}
+                    className="p-2 bg-white text-red-600 rounded-full hover:bg-red-50 transition-colors"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-2">
+                <MediaSelector
+                  folderKey="PUBLICATIONS"
+                  onSelect={(mediaId, secureUrl) => {
+                    if (secureUrl) updateField('certificateUrl', secureUrl);
+                  }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -176,7 +192,7 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
               <div className="cursor-grab active:cursor-grabbing text-gray-400 mt-2">
                 <GripVertical className="w-5 h-5" />
               </div>
-              
+
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold mb-1 text-gray-500">Topic Label</label>
@@ -196,8 +212,8 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
                 </div>
               </div>
 
-              <button 
-                onClick={() => removeFeature(idx)} 
+              <button
+                onClick={() => removeFeature(idx)}
                 className="text-red-400 hover:text-red-600 p-2 mt-2"
                 title="Remove Feature"
               >

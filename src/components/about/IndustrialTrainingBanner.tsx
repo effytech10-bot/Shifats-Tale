@@ -2,9 +2,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { TrainingItem, profileData, SectionHeader } from "@/data/about";
+import { TrainingItem, SectionHeader } from "@/data/about";
 import * as LucideIcons from "lucide-react";
-import { Award, Calendar, Building, CheckCircle2, FileText, ExternalLink } from "lucide-react";
+import { Calendar, Building, CheckCircle2, FileText } from "lucide-react";
 
 interface IndustrialTrainingBannerProps {
   training: TrainingItem;
@@ -155,70 +155,22 @@ export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> =
               </div>
             )}
 
-            {/* Action Button */}
-            <div className="pt-2">
-              <a href={training.certificateUrl || "#"} className="inline-flex items-center space-x-2 px-8 py-4 bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl shadow-md transition-all hover:-translate-y-1">
-                <FileText className="w-5 h-5" />
-                <span>View Certificate</span>
-                <ExternalLink className="w-4 h-4 ml-1 opacity-70" />
-              </a>
-            </div>
           </div>
 
           {/* Right Column (Certificate Visual) */}
-          <div className="lg:w-[450px] shrink-0 bg-[#0A1A44] rounded-[1.5rem] p-6 relative overflow-hidden flex items-center justify-center min-h-[400px]">
-            {/* Background patterns for the dark blue area */}
-            <div className="absolute inset-0 opacity-10">
-               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-                  <circle cx="100" cy="0" r="50" fill="none" stroke="white" strokeWidth="0.5"/>
-                  <circle cx="100" cy="0" r="80" fill="none" stroke="white" strokeWidth="0.5"/>
-                  <circle cx="100" cy="0" r="110" fill="none" stroke="white" strokeWidth="0.5"/>
-                  <circle cx="100" cy="0" r="140" fill="none" stroke="white" strokeWidth="0.5"/>
-               </svg>
-            </div>
-
-            {/* The Certificate Paper */}
-            <div className="bg-white w-[90%] h-[95%] rounded-lg p-6 shadow-2xl relative z-10 flex flex-col items-center text-center transform -rotate-2 hover:rotate-0 transition-transform duration-500">
-               {/* Border inner */}
-               <div className="absolute inset-2 border border-[#E7E0D2] rounded-md pointer-events-none" />
-               <div className="absolute inset-3 border border-accent/20 rounded-sm pointer-events-none" />
-               
-               <div className="flex w-full justify-between items-start mb-6">
-                 <Award className="w-8 h-8 text-accent" />
-                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">{training.organization.split("(")[1]?.replace(")","") || "BTCL"}</span>
-               </div>
-
-               <div className="space-y-4 w-full">
-                 <div className="text-[10px] font-bold text-accent tracking-widest uppercase flex items-center justify-center space-x-2">
-                   <div className="w-6 h-px bg-accent/30" />
-                   <span>Official Certificate</span>
-                   <div className="w-6 h-px bg-accent/30" />
-                 </div>
-                 <h4 className="text-base font-extrabold text-primary uppercase">Certificate of Completion</h4>
-                 <div className="text-[9px] text-muted font-medium mt-4">This is to certify that</div>
-                 <div className="text-sm font-bold text-accent border-b border-[#E7E0D2] pb-1 mx-4">{profileData.name}</div>
-                 <div className="text-[9px] text-muted font-medium">has successfully completed</div>
-                 <div className="text-xs font-bold text-primary">{training.title}</div>
-                 <div className="text-[9px] text-muted font-medium">at</div>
-                 <div className="text-[9px] font-bold text-accent">{training.organization}</div>
-               </div>
-
-               <div className="mt-auto flex w-full justify-between items-end pt-6">
-                 <div className="flex flex-col items-center">
-                    <Award className="w-6 h-6 text-accent mb-1" />
-                 </div>
-                 <div className="flex flex-col items-center">
-                    <div className="w-16 border-b border-primary/20 mb-1" />
-                    <span className="text-[6px] text-muted uppercase font-bold">Date of Issue</span>
-                 </div>
-                 <div className="flex flex-col items-center">
-                    <div className="w-16 border-b border-primary/20 mb-1 flex items-center justify-center">
-                       <span className="font-signature text-primary text-lg leading-none -mt-3 italic">Signature</span>
-                    </div>
-                    <span className="text-[6px] text-muted uppercase font-bold">Authorized Signature</span>
-                 </div>
-               </div>
-            </div>
+          <div className="lg:w-[450px] shrink-0 rounded-[1.5rem] relative overflow-hidden flex items-center justify-center min-h-[300px] border border-[#E7E0D2] bg-white shadow-sm p-4">
+            {training.certificateUrl ? (
+              <img 
+                src={training.certificateUrl} 
+                alt="Industrial Training Certificate" 
+                className="w-full h-auto object-contain rounded-xl max-h-[500px]" 
+              />
+            ) : (
+              <div className="text-center p-10 flex flex-col items-center justify-center h-full">
+                <FileText className="w-16 h-16 text-primary/20 mb-4" />
+                <p className="text-primary/50 font-medium text-sm">Certificate not available</p>
+              </div>
+            )}
           </div>
 
         </motion.div>

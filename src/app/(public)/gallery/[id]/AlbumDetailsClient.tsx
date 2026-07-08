@@ -95,28 +95,32 @@ export default function AlbumDetailsClient({ album }: { album: GalleryAlbum }) {
                 setLightboxOpen(true);
               }}
             >
-              <Image
-                src={img.url}
-                alt={img.alt || "Gallery Image"}
-                width={600}
-                height={800}
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-                unoptimized
-              />
-              
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#010E62]/90 via-[#010E62]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-white font-extrabold text-sm leading-snug mb-1">
-                    {img.alt || "Image"}
-                  </h3>
-                </div>
+              <div className="relative overflow-hidden rounded-t-2xl">
+                <Image
+                  src={img.url}
+                  alt={img.alt || "Gallery Image"}
+                  width={600}
+                  height={800}
+                  className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                  unoptimized
+                />
                 
-                {/* Zoom Icon indicator */}
-                <div className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300 border border-white/20">
-                  <ZoomIn className="w-4.5 h-4.5 text-white" />
+                {/* Zoom Icon indicator on hover */}
+                <div className="absolute inset-0 bg-[#010E62]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="w-12 h-12 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center transform scale-50 group-hover:scale-100 transition-all duration-300 border border-white/40 shadow-lg">
+                    <ZoomIn className="w-6 h-6 text-white" />
+                  </div>
                 </div>
               </div>
+              
+              {/* Permanent Caption Area Below Image */}
+              {img.alt && img.alt !== "Gallery Image" && (
+                <div className="p-4 bg-white rounded-b-2xl border-t border-slate-100 group-hover:bg-[#FFF9F2] transition-colors duration-300">
+                  <h3 className="text-[#010E62] font-extrabold text-[15px] leading-snug">
+                    {img.alt}
+                  </h3>
+                </div>
+              )}
             </motion.div>
           ))}
           {(!album.images || album.images.length === 0) && (

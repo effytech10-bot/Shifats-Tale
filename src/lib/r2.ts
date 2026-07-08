@@ -17,6 +17,7 @@ export const r2Client = new S3Client({
     accessKeyId: accessKeyId || "",
     secretAccessKey: secretAccessKey || "",
   },
+  forcePathStyle: true,
 });
 
 export async function generateR2UploadUrl(filename: string, contentType: string) {

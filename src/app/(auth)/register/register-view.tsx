@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Mail, Lock, User, Phone, Loader2, AlertCircle, Home, GraduationCap, Calendar } from "lucide-react";
+import { Mail, Lock, User, Phone, Loader2, AlertCircle, Home, GraduationCap, Calendar, Clock } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { getDistinctAcademicYears } from "@/app/actions/academic-years";
 
 export const registerSchema = z
   .object({
@@ -16,7 +17,7 @@ export const registerSchema = z
     phone: z.string().min(10, "Please enter a valid mobile number"),
     password: z.string().min(6, "Password must be at least 6 characters long"),
     confirmPassword: z.string(),
-    academicLevel: z.string().min(2, "Academic level is required (e.g. HSC 2026, Admission)"),
+    academicLevel: z.string().min(1, "Please select your academic year"),
     institution: z.string().min(2, "Educational institution is required"),
     guardianName: z.string().min(2, "Guardian's name is required"),
     guardianPhone: z.string().min(10, "Guardian's mobile number must be valid"),
@@ -37,6 +38,18 @@ export function RegisterView() {
   const [success, setSuccess] = useState(false);
   const [studentCode, setStudentCode] = useState<string | null>(null);
   const [emailConfirmationRequired, setEmailConfirmationRequired] = useState(false);
+  
+  const [academicYears, setAcademicYears] = useState<string[]>([]);
+  const [loadingYears, setLoadingYears] = useState(true);
+
+  React.useEffect(() => {
+    async function loadYears() {
+      const years = await getDistinctAcademicYears();
+      setAcademicYears(years);
+      setLoadingYears(false);
+    }
+    loadYears();
+  }, []);
 
   const {
     register,
@@ -154,6 +167,37 @@ export function RegisterView() {
           className="w-full primary-btn py-2.5 rounded-xl text-sm font-bold block"
         >
           Proceed to Login
+        </Link>
+      </div>
+    );
+  }
+
+  if (loadingYears) {
+    return (
+      <div className="bg-white border border-border/60 rounded-2xl p-8 shadow-sm text-center max-w-lg mx-auto flex flex-col items-center justify-center min-h-[300px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-sm font-bold text-muted animate-pulse">Loading registration form...</p>
+      </div>
+    );
+  }
+
+  if (academicYears.length === 0) {
+    return (
+      <div className="bg-white border border-border/60 rounded-2xl p-10 shadow-sm text-center max-w-lg mx-auto">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-orange-50 text-orange-500 mb-6 border border-orange-100">
+          <Clock className="h-8 w-8" />
+        </div>
+        <h2 className="text-2xl font-bold font-display text-primary mb-3">
+          Registration Closed
+        </h2>
+        <p className="text-sm text-muted font-medium mb-8 leading-relaxed max-w-sm mx-auto">
+          Currently, there are no active batches available for new student enrollment. The registration process will be opened soon!
+        </p>
+        <Link
+          href="/login"
+          className="inline-block primary-btn py-3 px-8 rounded-xl text-sm font-bold"
+        >
+          Go to Login
         </Link>
       </div>
     );
@@ -295,19 +339,22 @@ export function RegisterView() {
           {/* Academic Level */}
           <div>
             <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
-              Academic Level
+              Academic Year
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-muted">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-muted pointer-events-none">
                 <GraduationCap className="h-4 w-4" />
               </span>
-              <input
-                type="text"
+              <select
                 {...register("academicLevel")}
                 disabled={loading}
-                className="w-full pl-10 pr-4 py-2.5 bg-bg/30 border border-border/80 focus:border-primary/40 focus:ring-1 focus:ring-primary/45 rounded-xl text-sm transition-all focus:outline-none placeholder-muted font-medium"
-                placeholder="e.g. HSC 2026, Admission"
-              />
+                className="w-full pl-10 pr-4 py-2.5 bg-bg/30 border border-border/80 focus:border-primary/40 focus:ring-1 focus:ring-primary/45 rounded-xl text-sm transition-all focus:outline-none placeholder-muted font-medium appearance-none cursor-pointer"
+              >
+                <option value="">Select your academic year</option>
+                {academicYears.map((year) => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
             </div>
             {errors.academicLevel && (
               <p className="text-rose-600 text-xs font-bold mt-1.5 leading-none pl-1">

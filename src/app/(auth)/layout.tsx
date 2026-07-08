@@ -12,18 +12,8 @@ export default function AuthLayout({
     <div className="min-h-screen bg-bg-soft text-text flex flex-col justify-between selection:bg-accent selection:text-primary relative py-8 px-4 sm:px-6 lg:px-8">
       {/* Top Header - Brand Logo & Back link */}
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="p-1 bg-primary text-white rounded-xl group-hover:bg-primary-dark transition-colors shadow-sm">
-            <Image src="/images/logo_transparent.png" alt="Logo" width={32} height={32} className="object-contain" />
-          </div>
-          <div>
-            <span className="font-extrabold text-base tracking-wide font-display text-primary block leading-none">
-              SHIFAT'S TALES
-            </span>
-            <span className="text-[10px] uppercase font-bold text-accent tracking-widest mt-1 block">
-              ACADEMIC CARE
-            </span>
-          </div>
+        <Link href="/" className="inline-block transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]">
+          <Image src="/images/logo_transparent.png" alt="Shifat's Tales Logo" width={160} height={40} className="object-contain" />
         </Link>
 
         <Link

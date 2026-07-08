@@ -185,18 +185,8 @@ export function TeacherSidebar({ className, onLinkClick, adminMode = "coaching" 
   return (
     <div className={cn("flex flex-col h-full bg-primary-dark text-white border-r border-slate-900", className)}>
       {/* Brand area */}
-      <div className="flex items-center gap-2.5 px-6 py-5 border-b border-slate-900 bg-slate-950/20">
-        <div className="p-1 bg-white rounded-xl text-primary-dark">
-          <Image src="/images/logo.png" alt="Logo" width={28} height={28} className="object-contain" />
-        </div>
-        <div>
-          <span className="font-extrabold text-base tracking-wide font-display block leading-none">
-            SHIFAT'S TALES
-          </span>
-          <span className="text-[10px] uppercase font-bold text-accent tracking-widest mt-1 block">
-            Teacher Portal
-          </span>
-        </div>
+      <div className="flex items-center px-6 py-5 border-b border-slate-900 bg-slate-950/20">
+        <Image src="/images/logo_transparent.png" alt="Shifat's Tales Logo" width={160} height={40} className="object-contain" />
       </div>
 
       {/* Nav links */}

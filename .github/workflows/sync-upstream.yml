@@ -1,0 +1,45 @@
+name: Sync from upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout fork repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream repo
+        run: |
+          git remote add upstream https://github.com/adnan-bin-wahid/Shifats-Tale.git
+          git fetch upstream main
+
+      - name: Backup this workflow
+        run: |
+          mkdir -p /tmp/workflows
+          cp .github/workflows/sync-upstream.yml /tmp/workflows/sync-upstream.yml
+
+      - name: Sync main branch but keep workflow
+        run: |
+          git checkout main
+          git reset --hard upstream/main
+
+          mkdir -p .github/workflows
+          cp /tmp/workflows/sync-upstream.yml .github/workflows/sync-upstream.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .github/workflows/sync-upstream.yml
+          git commit -m "chore: keep fork auto-sync workflow" || echo "No workflow changes"
+
+          git push origin main --force

@@ -88,6 +88,11 @@ export function MaterialForm({ batches, initialData }: Props) {
     if (isFileBased && !isEdit && !file) {
       fieldErrors.file = ["A file upload is required."];
     }
+    
+    // Check file size (4MB limit for server actions)
+    if (file && file.size > 4 * 1024 * 1024) {
+      fieldErrors.file = ["File size must be less than 4MB."];
+    }
 
     if (releaseAt && expiresAt && new Date(expiresAt) <= new Date(releaseAt)) {
       fieldErrors.expiresAt = ["Expiry date must be after release date."];

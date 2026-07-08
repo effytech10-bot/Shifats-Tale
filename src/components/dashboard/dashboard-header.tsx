@@ -125,14 +125,14 @@ export function DashboardHeader({
       <div className="flex items-center gap-4">
         {/* Toggle Website Admin vs Coaching Mode (TEACHER ONLY) */}
         {role === "TEACHER" && (
-          <div className="hidden md:flex items-center gap-1 rounded-xl border border-border/50 bg-bg p-1 shadow-sm">
+          <div className="flex items-center gap-1 rounded-xl border border-border/50 bg-bg p-1 shadow-sm">
             <button
               type="button"
               onClick={() => {
                 onAdminModeChange?.("coaching");
                 router.push("/teacher");
               }}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+              className={`rounded-lg px-2 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-bold transition-all cursor-pointer ${
                 adminMode === "coaching"
                   ? "bg-primary text-white shadow-sm"
                   : "text-muted hover:text-primary hover:bg-bg/50"
@@ -146,7 +146,7 @@ export function DashboardHeader({
                 onAdminModeChange?.("website");
                 router.push("/teacher/website");
               }}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+              className={`rounded-lg px-2 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-bold transition-all cursor-pointer ${
                 adminMode === "website"
                   ? "bg-primary text-white shadow-sm"
                   : "text-muted hover:text-primary hover:bg-bg/50"

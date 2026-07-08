@@ -18,6 +18,8 @@ export const r2Client = new S3Client({
     secretAccessKey: secretAccessKey || "",
   },
   forcePathStyle: true,
+  requestChecksumCalculation: "WHEN_REQUIRED",
+  responseChecksumValidation: "WHEN_REQUIRED",
 });
 
 export async function generateR2UploadUrl(filename: string, contentType: string) {

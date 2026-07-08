@@ -9,6 +9,7 @@ import * as z from "zod";
 import { Mail, Lock, User, Phone, Loader2, AlertCircle, Home, GraduationCap, Calendar, Clock } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { getDistinctAcademicYears } from "@/app/actions/academic-years";
+import { getStudentCodeByUserId } from "@/app/actions/auth";
 
 export const registerSchema = z
   .object({
@@ -88,27 +89,23 @@ export function RegisterView() {
       const session = authData.session;
       const user = authData.user;
 
-      if (!session) {
-        // Verification email sent
-        setEmailConfirmationRequired(true);
-        setSuccess(true);
-      } else if (user) {
-        // Auto logged in - query database for student code
-        // Wait a brief moment for trigger to run and profiles to populate
+      if (user) {
+        // Wait a brief moment for database triggers to finish processing the new user
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        const { data: studentProfile, error: dbError } = await supabase
-          .from("student_profiles")
-          .select("student_code")
-          .eq("profile_id", (await supabase.from("profiles").select("id").eq("auth_user_id", user.id).single()).data?.id)
-          .maybeSingle();
-
-        if (studentProfile) {
-          setStudentCode(studentProfile.student_code);
+        
+        // Fetch the generated student code using server action (bypasses RLS)
+        const code = await getStudentCodeByUserId(user.id);
+        if (code) {
+          setStudentCode(code);
         }
-        setSuccess(true);
-      } else {
-        setSuccess(true);
       }
+
+      if (!session) {
+        // Verification email sent, user is not logged in automatically
+        setEmailConfirmationRequired(true);
+      }
+      
+      setSuccess(true);
     } catch (err: any) {
       const msg = err.message || "";
       if (msg.includes("User already registered") || msg.includes("already exists")) {

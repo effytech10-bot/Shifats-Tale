@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, GraduationCap } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 
 export default function AuthLayout({
   children,
@@ -12,8 +13,8 @@ export default function AuthLayout({
       {/* Top Header - Brand Logo & Back link */}
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="p-2 bg-primary text-white rounded-xl group-hover:bg-primary-dark transition-colors shadow-sm">
-            <GraduationCap className="h-6 w-6 font-bold" />
+          <div className="p-1 bg-primary text-white rounded-xl group-hover:bg-primary-dark transition-colors shadow-sm">
+            <Image src="/images/logo_transparent.png" alt="Logo" width={32} height={32} className="object-contain" />
           </div>
           <div>
             <span className="font-extrabold text-base tracking-wide font-display text-primary block leading-none">

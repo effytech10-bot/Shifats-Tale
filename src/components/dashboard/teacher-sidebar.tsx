@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/client";
@@ -185,8 +186,8 @@ export function TeacherSidebar({ className, onLinkClick, adminMode = "coaching" 
     <div className={cn("flex flex-col h-full bg-primary-dark text-white border-r border-slate-900", className)}>
       {/* Brand area */}
       <div className="flex items-center gap-2.5 px-6 py-5 border-b border-slate-900 bg-slate-950/20">
-        <div className="p-2 bg-accent rounded-xl text-primary-dark">
-          <ShieldAlert className="h-6 w-6 font-bold" />
+        <div className="p-1 bg-white rounded-xl text-primary-dark">
+          <Image src="/images/logo.png" alt="Logo" width={28} height={28} className="object-contain" />
         </div>
         <div>
           <span className="font-extrabold text-base tracking-wide font-display block leading-none">

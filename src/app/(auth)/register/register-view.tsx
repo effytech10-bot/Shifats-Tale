@@ -89,12 +89,21 @@ export function RegisterView() {
       const session = authData.session;
       const user = authData.user;
 
+      if (user && user.identities && user.identities.length === 0) {
+        throw new Error("This email address is already registered. Please log in instead.");
+      }
+
       if (user) {
-        // Wait a brief moment for database triggers to finish processing the new user
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // Retry loop to fetch the generated student code (waits for database triggers)
+        let code = null;
+        let attempts = 0;
         
-        // Fetch the generated student code using server action (bypasses RLS)
-        const code = await getStudentCodeByUserId(user.id);
+        while (!code && attempts < 5) {
+          await new Promise((resolve) => setTimeout(resolve, 1500)); // wait 1.5s per attempt
+          code = await getStudentCodeByUserId(user.id);
+          attempts++;
+        }
+        
         if (code) {
           setStudentCode(code);
         }

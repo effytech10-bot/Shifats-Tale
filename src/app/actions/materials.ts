@@ -109,15 +109,25 @@ export async function createMaterialAction(formData: FormData) {
     const data = validated.data;
     const isFileBased = ["PDF", "DOC", "DOCX", "IMAGE"].includes(data.contentType);
     const file = formData.get("file") as File | null;
+    const r2Key = formData.get("r2Key") as string | null;
+    const originalFilename = formData.get("originalFilename") as string | null;
+    const r2FileSize = formData.get("fileSize") as string | null;
 
     let cloudinaryData: any = {};
+    let storagePath: string | null = null;
 
     if (isFileBased) {
-      if (!file || file.size === 0) {
-        return { success: false, message: "A valid file is required for this content type." };
-      }
-
-      // 1. Validate file headers (extension, mime type, size)
+      if (r2Key && originalFilename) {
+        // Handle R2 direct upload metadata
+        storagePath = r2Key;
+        cloudinaryData = {
+          original_filename: originalFilename,
+          file_size: r2FileSize ? parseInt(r2FileSize, 10) : null,
+          mime_type: originalFilename.endsWith(".pdf") ? "application/pdf" : "application/octet-stream",
+        };
+      } else if (file && file.size > 0) {
+        // Handle standard Server Action upload (Cloudinary)
+        // 1. Validate file headers (extension, mime type, size)
       const valResult = validateUploadedFile(file.name, file.type, file.size, data.contentType);
       if (!valResult.isValid) {
         return { success: false, message: valResult.error || "File validation failed." };
@@ -154,6 +164,9 @@ export async function createMaterialAction(formData: FormData) {
         page_count: uploadResult.pages || null,
         mime_type: file.type,
       };
+    } else {
+        return { success: false, message: "A valid file or R2 upload is required for this content type." };
+      }
     }
 
     const admin = createAdminClient();
@@ -175,6 +188,7 @@ export async function createMaterialAction(formData: FormData) {
         published_by: data.status === "PUBLISHED" ? teacher.id : null,
         created_by: teacher.id,
         updated_by: teacher.id,
+        storage_path: storagePath,
         ...cloudinaryData,
       })
       .select()
@@ -286,14 +300,42 @@ export async function updateMaterialAction(contentId: string, formData: FormData
 
     const isFileBased = ["PDF", "DOC", "DOCX", "IMAGE"].includes(data.contentType);
     const file = formData.get("file") as File | null;
+    const r2Key = formData.get("r2Key") as string | null;
+    const originalFilename = formData.get("originalFilename") as string | null;
+    const r2FileSize = formData.get("fileSize") as string | null;
 
     let cloudinaryData: any = {};
+    let storagePath: string | null = oldMaterial.storage_path;
     let shouldUpdateFileFields = false;
 
     // Determine replacement vs keeping old file vs swapping to external URL
     if (isFileBased) {
-      if (file && file.size > 0) {
-        // Uploading a replacement file
+      if (r2Key && originalFilename) {
+        // Uploading a replacement file (R2)
+        storagePath = r2Key;
+        cloudinaryData = {
+          original_filename: originalFilename,
+          file_size: r2FileSize ? parseInt(r2FileSize, 10) : null,
+          mime_type: originalFilename.endsWith(".pdf") ? "application/pdf" : "application/octet-stream",
+          cloudinary_public_id: null,
+          cloudinary_asset_id: null,
+          cloudinary_resource_type: null,
+          cloudinary_delivery_type: null,
+          cloudinary_format: null,
+          cloudinary_version: null,
+          width: null,
+          height: null,
+          page_count: null,
+        };
+        shouldUpdateFileFields = true;
+
+        // Queue old file for deletion after successful DB update (if it was Cloudinary)
+        if (oldMaterial.cloudinary_public_id) {
+          oldPublicIdToDelete = oldMaterial.cloudinary_public_id;
+          oldResourceTypeToDelete = (oldMaterial.cloudinary_resource_type as any) || "raw";
+        }
+      } else if (file && file.size > 0) {
+        // Uploading a replacement file (Cloudinary)
         const valResult = validateUploadedFile(file.name, file.type, file.size, data.contentType);
         if (!valResult.isValid) {
           return { success: false, message: valResult.error || "File validation failed." };
@@ -335,6 +377,7 @@ export async function updateMaterialAction(contentId: string, formData: FormData
           oldPublicIdToDelete = oldMaterial.cloudinary_public_id;
           oldResourceTypeToDelete = (oldMaterial.cloudinary_resource_type as any) || "raw";
         }
+        storagePath = null; // Clear R2 storage path if replacing with Cloudinary
       } else {
         // Keeping current file reference, unless the previous type was NOT file-based
         const wasFileBasedBefore = ["PDF", "DOC", "DOCX", "IMAGE"].includes(oldMaterial.content_type);
@@ -363,6 +406,7 @@ export async function updateMaterialAction(contentId: string, formData: FormData
         page_count: null,
         mime_type: null,
       };
+      storagePath = null;
       shouldUpdateFileFields = true;
     }
 
@@ -380,6 +424,7 @@ export async function updateMaterialAction(contentId: string, formData: FormData
     };
 
     if (shouldUpdateFileFields) {
+      updatedFields.storage_path = storagePath;
       Object.assign(updatedFields, cloudinaryData);
     }
 

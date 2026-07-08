@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateSignedAccessUrl } from "@/lib/cloudinary";
+import { generateR2DownloadUrl } from "@/lib/r2";
 import { requireMaterialAccess } from "@/lib/auth-guards";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
@@ -40,21 +41,26 @@ export async function GET(
       return NextResponse.json({ error: "Download is not allowed for this material" }, { status: 403, headers });
     }
 
-    // 4. Generate signed Cloudinary URL
-    if (!material.cloudinary_public_id) {
+    // 4. Generate signed URL (R2 or Cloudinary)
+    let signedUrl = "";
+    if (material.storage_path) {
+      // It's an R2 file
+      signedUrl = await generateR2DownloadUrl(material.storage_path);
+    } else if (material.cloudinary_public_id) {
+      // It's a Cloudinary file
+      const resourceType = (material.cloudinary_resource_type as "image" | "raw") || "raw";
+      const allowDownload = mode === "download";
+
+      signedUrl = generateSignedAccessUrl(
+        material.cloudinary_public_id,
+        resourceType,
+        material.cloudinary_format,
+        allowDownload,
+        120 // 2 minutes short-lived URL
+      );
+    } else {
       return NextResponse.json({ error: "Material does not contain a file asset" }, { status: 400, headers });
     }
-
-    const resourceType = (material.cloudinary_resource_type as "image" | "raw") || "raw";
-    const allowDownload = mode === "download";
-
-    const signedUrl = generateSignedAccessUrl(
-      material.cloudinary_public_id,
-      resourceType,
-      material.cloudinary_format,
-      allowDownload,
-      120 // 2 minutes short-lived URL
-    );
 
     // Redirect user to the signed URL safely
     return NextResponse.redirect(signedUrl, { headers });

@@ -61,6 +61,8 @@ export function MaterialForm({ batches, initialData }: Props) {
 
   // File input state
   const [file, setFile] = useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Errors state
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -89,9 +91,13 @@ export function MaterialForm({ batches, initialData }: Props) {
       fieldErrors.file = ["A file upload is required."];
     }
     
-    // Check file size (4MB limit for server actions)
-    if (file && file.size > 4 * 1024 * 1024) {
-      fieldErrors.file = ["File size must be less than 4MB."];
+    // Check file size limit: 4MB for Vercel/Image, no strict limit for R2 (maybe 500MB)
+    if (file) {
+      if (contentType === "IMAGE" && file.size > 4 * 1024 * 1024) {
+        fieldErrors.file = ["Image size must be less than 4MB."];
+      } else if (file.size > 500 * 1024 * 1024) {
+        fieldErrors.file = ["File size cannot exceed 500MB."];
+      }
     }
 
     if (releaseAt && expiresAt && new Date(expiresAt) <= new Date(releaseAt)) {
@@ -103,7 +109,85 @@ export function MaterialForm({ batches, initialData }: Props) {
       return;
     }
 
-    // Prepare FormData
+    const isR2Upload = isFileBased && file && ["PDF", "DOC", "DOCX"].includes(contentType);
+
+    if (isR2Upload) {
+      setIsUploading(true);
+      setUploadProgress(0);
+      try {
+        const { getPreSignedUploadUrl } = await import("@/app/actions/r2-upload");
+        const urlResult = await getPreSignedUploadUrl(file.name, file.type || "application/octet-stream");
+        
+        if (!urlResult.success || !urlResult.uploadUrl || !urlResult.r2Key) {
+          throw new Error(urlResult.error || "Failed to initialize upload");
+        }
+
+        // XMLHttpRequest for progress tracking
+        await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("PUT", urlResult.uploadUrl, true);
+          xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+              const percentComplete = Math.round((e.loaded / e.total) * 100);
+              setUploadProgress(percentComplete);
+            }
+          };
+
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve(true);
+            } else {
+              reject(new Error("Upload failed with status " + xhr.status));
+            }
+          };
+
+          xhr.onerror = () => reject(new Error("Network error during upload"));
+          xhr.send(file);
+        });
+
+        // Continue with Server Action saving
+        const formData = new FormData();
+        formData.append("batchId", batchId);
+        formData.append("title", title);
+        formData.append("contentType", contentType);
+        formData.append("status", status);
+        formData.append("description", description);
+        formData.append("externalUrl", externalUrl);
+        formData.append("allowDownload", String(allowDownload));
+        formData.append("r2Key", urlResult.r2Key);
+        formData.append("originalFilename", file.name);
+        formData.append("fileSize", String(file.size));
+        if (releaseAt) formData.append("releaseAt", new Date(releaseAt).toISOString());
+        if (expiresAt) formData.append("expiresAt", new Date(expiresAt).toISOString());
+
+        startTransition(async () => {
+          let result;
+          if (isEdit) {
+            result = await updateMaterialAction(initialData!.id, formData);
+          } else {
+            result = await createMaterialAction(formData);
+          }
+
+          if (result.success) {
+            router.push(`/teacher/materials`);
+            router.refresh();
+          } else {
+            setSubmitError(result.message || "An error occurred saving material metadata.");
+          }
+          setIsUploading(false);
+        });
+
+      } catch (err: any) {
+        console.error("R2 Upload Error:", err);
+        setSubmitError(err.message || "An error occurred during file upload.");
+        setIsUploading(false);
+      }
+      return;
+    }
+
+    // Default Vercel/Cloudinary upload (Images or Text/Link based)
     const formData = new FormData();
     formData.append("batchId", batchId);
     formData.append("title", title);
@@ -244,10 +328,18 @@ export function MaterialForm({ batches, initialData }: Props) {
             className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none text-xs text-slate-700 font-semibold"
           />
           <p className="text-[9px] text-slate-400 font-semibold">
-            Allowed formats: PDF, DOC, DOCX, JPG, PNG, WEBP (Max 4MB). <br />
-            For files larger than 4MB, please select <strong>LINK</strong> Content Type and provide a Google Drive link.
+            Allowed formats: PDF, DOC, DOCX (Max 500MB) | JPG, PNG, WEBP (Max 4MB).
           </p>
           {errors.file && <p className="text-[10px] text-rose-600 mt-1 font-semibold">{errors.file[0]}</p>}
+          {isUploading && (
+            <div className="mt-2 w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+              <div 
+                className="bg-primary h-1.5 rounded-full transition-all duration-300" 
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+              <p className="text-[9px] text-slate-500 font-semibold mt-1">Uploading... {uploadProgress}%</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -308,30 +400,21 @@ export function MaterialForm({ batches, initialData }: Props) {
         )}
       </div>
 
-      {/* Action buttons */}
-      <div className="flex justify-end gap-2.5 pt-4">
+      {/* Submit Button */}
+      <div className="pt-4 border-t border-slate-50 flex justify-end gap-3">
         <Link
-          href="/teacher/materials"
-          className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all font-bold text-xs"
+          href={`/teacher/materials`}
+          className="px-4 py-2 border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 rounded-xl transition-all"
         >
           Cancel
         </Link>
         <button
           type="submit"
-          disabled={isPending}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-primary text-white hover:bg-primary-dark rounded-xl transition-all font-bold text-xs disabled:opacity-55"
+          disabled={isPending || isUploading}
+          className="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
-          {isPending ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save className="h-4 w-4" />
-              Save Material
-            </>
-          )}
+          {(isPending || isUploading) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {(isPending || isUploading) ? "Saving..." : (isEdit ? "Update Material" : "Save Material")}
         </button>
       </div>
     </form>

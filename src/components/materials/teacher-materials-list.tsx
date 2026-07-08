@@ -42,6 +42,7 @@ interface Material {
   original_filename: string | null;
   external_url: string | null;
   allow_download: boolean;
+  storage_path?: string | null;
   cloudinary_public_id?: string | null;
   cloudinary_resource_type?: string | null;
   cloudinary_format?: string | null;
@@ -289,7 +290,7 @@ export function TeacherMaterialsList({ materials, batches, selectedBatchId = "" 
                 </tr>
               ) : (
                 filtered.map((material) => {
-                  const hasFile = !!material.cloudinary_public_id;
+                  const hasFile = !!material.cloudinary_public_id || !!material.storage_path;
                   const isLink = ["LINK", "YOUTUBE"].includes(material.content_type);
                   
                   return (

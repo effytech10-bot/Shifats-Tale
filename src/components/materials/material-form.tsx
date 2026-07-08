@@ -244,7 +244,8 @@ export function MaterialForm({ batches, initialData }: Props) {
             className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none text-xs text-slate-700 font-semibold"
           />
           <p className="text-[9px] text-slate-400 font-semibold">
-            Allowed formats: PDF, DOC, DOCX (Max 25MB) | JPG, PNG, WEBP (Max 10MB)
+            Allowed formats: PDF, DOC, DOCX, JPG, PNG, WEBP (Max 4MB). <br />
+            For files larger than 4MB, please select <strong>LINK</strong> Content Type and provide a Google Drive link.
           </p>
           {errors.file && <p className="text-[10px] text-rose-600 mt-1 font-semibold">{errors.file[0]}</p>}
         </div>

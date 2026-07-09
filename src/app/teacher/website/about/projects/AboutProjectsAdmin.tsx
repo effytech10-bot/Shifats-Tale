@@ -440,14 +440,6 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
                               className="w-full sm:w-3/4 px-2 py-1.5 border border-border rounded-md text-xs bg-white"
                             />
                           )}
-                          <select
-                            value={link.variant || "outline"}
-                            onChange={(e) => updateActionLink(idx, lIdx, "variant", e.target.value)}
-                            className="w-full sm:w-1/4 px-2 py-1.5 border border-border rounded-md text-xs bg-white"
-                          >
-                            <option value="outline">Outline</option>
-                            <option value="primary">Primary</option>
-                          </select>
                         </div>
                       </div>
                     ))}

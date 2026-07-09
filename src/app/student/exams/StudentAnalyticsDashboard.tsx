@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, 
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, ReferenceLine,
   BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, 
   PieChart, Pie, Cell, Legend
 } from "recharts";
@@ -110,11 +110,15 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
     }
 
     // Chart Data
+    const shortDate = new Date(exam.exam_date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+    const shortName = exam.name.substring(0, 10) + (exam.name.length > 10 ? "..." : "");
     lineChartData.push({
-      name: exam.name.substring(0, 10) + (exam.name.length > 10 ? "..." : ""),
+      name: shortName,
+      xAxisLabel: `${shortName}||${shortDate}`,
       score: Math.round(percentage),
+      marks: marks,
       fullDate: exam.exam_date,
-      shortDate: new Date(exam.exam_date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
+      shortDate: shortDate,
       fullName: exam.name,
       grade: exam.result?.grade || "-"
     });
@@ -190,7 +194,11 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
           <p className="text-xs font-black text-primary mb-1">{data.fullName}</p>
           <p className="text-[10px] text-muted font-bold mb-2">{data.fullDate}</p>
           <div className="flex justify-between items-center gap-4">
-            <span className="text-xs font-bold text-slate-600">Score:</span>
+            <span className="text-xs font-bold text-slate-600">Marks:</span>
+            <span className="text-xs font-black text-primary">{data.marks}</span>
+          </div>
+          <div className="flex justify-between items-center gap-4 mt-1">
+            <span className="text-xs font-bold text-slate-600">Percentage:</span>
             <span className="text-xs font-black text-primary">{data.score}%</span>
           </div>
           <div className="flex justify-between items-center gap-4 mt-1">
@@ -201,6 +209,22 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
       );
     }
     return null;
+  };
+
+  const CustomXAxisTick = ({ x, y, payload }: any) => {
+    const parts = payload.value.split("||");
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={0} dy={16} textAnchor="middle" fill="#64748B" fontSize={9} fontWeight={700}>
+          {parts[0]}
+        </text>
+        {parts[1] && (
+          <text x={0} y={0} dy={28} textAnchor="middle" fill="#94a3b8" fontSize={8} fontWeight={600}>
+            {parts[1]}
+          </text>
+        )}
+      </g>
+    );
   };
 
   return (
@@ -282,14 +306,15 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
             <h3 className="text-sm font-black text-primary mb-4 flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-accent" /> Score Trend
             </h3>
-            <div className="h-[250px] w-full">
+            <div className="h-[270px] w-full mt-2">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={lineChartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                <LineChart data={lineChartData} margin={{ top: 15, right: 10, left: -20, bottom: 25 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                  <XAxis dataKey="shortDate" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 600 }} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 600 }} domain={[0, 100]} />
-                  <RechartsTooltip content={CustomLineTooltip} />
-                  <Line type="monotone" dataKey="score" stroke="#010E62" strokeWidth={3} dot={{ r: 4, fill: '#FBB503', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#010E62' }} />
+                  <XAxis dataKey="xAxisLabel" axisLine={false} tickLine={false} tick={<CustomXAxisTick />} />
+                  <YAxis dataKey="marks" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 600 }} ticks={[0, 25, 45, 75, 100]} domain={[0, 100]} />
+                  <ReferenceLine y={45} stroke="#e11d48" strokeDasharray="4 4" strokeWidth={1} label={{ position: 'insideTopLeft', value: 'MAX: 45', fill: '#e11d48', fontSize: 9, fontWeight: 700 }} />
+                  <RechartsTooltip content={CustomLineTooltip} cursor={{ stroke: '#f1f5f9', strokeWidth: 2 }} />
+                  <Line type="monotone" dataKey="marks" stroke="#010E62" strokeWidth={3} dot={{ r: 4, fill: '#FBB503', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#010E62' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

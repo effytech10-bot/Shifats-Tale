@@ -234,7 +234,7 @@ export default function AboutECAAdmin({ initialSectionData }: { initialSectionDa
                   {eca.coverImage ? (
                     <div className="relative w-full h-32 rounded-lg overflow-hidden border border-gray-200 group">
                       <img src={eca.coverImage} alt="Cover" className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <button
                           onClick={() => setEditingECAImageIndex({index, field: 'coverImage'})}
                           className="px-3 py-1.5 bg-white text-primary text-xs font-bold rounded-lg shadow-sm mr-2"
@@ -266,7 +266,7 @@ export default function AboutECAAdmin({ initialSectionData }: { initialSectionDa
                   {eca.attachment?.imageUrl ? (
                     <div className="relative w-full h-32 rounded-lg overflow-hidden border border-gray-200 group">
                       <img src={eca.attachment.imageUrl} alt="Attachment" className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <button
                           onClick={() => setEditingECAImageIndex({index, field: 'attachmentImage'})}
                           className="px-3 py-1.5 bg-white text-primary text-xs font-bold rounded-lg shadow-sm mr-2"

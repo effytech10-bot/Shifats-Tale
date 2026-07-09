@@ -69,7 +69,7 @@ export default function ContactFAQAdmin({ initialSectionData }: { initialSection
           <div key={faq.id} className="p-4 border border-border rounded-xl bg-gray-50 relative group">
             <button 
               onClick={() => handleRemoveFaq(faq.id)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
             >
               <Trash2 className="w-5 h-5" />
             </button>

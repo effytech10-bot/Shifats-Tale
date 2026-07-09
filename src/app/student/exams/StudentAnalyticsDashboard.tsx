@@ -336,10 +336,20 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
                     <RechartsTooltip />
                   </RadarChart>
                 </ResponsiveContainer>
+              ) : radarData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={radarData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f0f0f0" />
+                    <XAxis type="number" domain={[0, 100]} hide />
+                    <YAxis dataKey="subject" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 700 }} width={80} />
+                    <RechartsTooltip cursor={{fill: '#f8fafc'}} />
+                    <Bar dataKey="score" fill="#FBB503" radius={[0, 4, 4, 0]} barSize={24} />
+                  </BarChart>
+                </ResponsiveContainer>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-center">
-                  <p className="text-xs text-muted font-bold">Subject Mastery will appear after results from at least 3 subjects.</p>
-                  <p className="text-[10px] text-muted/70 mt-1 font-semibold">Keep taking exams to unlock mastery insights.</p>
+                  <p className="text-xs text-muted font-bold">Subject Mastery unavailable.</p>
+                  <p className="text-[10px] text-muted/70 mt-1 font-semibold max-w-[180px]">Complete exams in subjects to unlock insights.</p>
                 </div>
               )}
             </div>

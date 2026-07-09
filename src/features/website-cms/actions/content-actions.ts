@@ -28,7 +28,15 @@ export async function getPageSection(pageKey: string, sectionKey: string) {
 
   // Auto-resolve media URL if mediaId exists in content
   let mediaUrl = null;
-  const content = section.content as Record<string, any>;
+  let content = section.content;
+  if (typeof content === 'string') {
+    try {
+      content = JSON.parse(content);
+    } catch (e) {
+      content = {};
+    }
+  }
+  
   if (content && content.mediaId) {
     const { data: media } = await supabase
       .from("vw_public_media_assets")
@@ -43,6 +51,7 @@ export async function getPageSection(pageKey: string, sectionKey: string) {
 
   return {
     ...section,
+    content: content || {},
     mediaUrl,
   };
 }
@@ -184,10 +193,22 @@ export async function getSectionItems(sectionKey: string) {
   }
 
   // Map to include mediaUrl directly for easier frontend consumption
-  return items.map((item: any) => ({
-    ...item,
-    mediaUrl: item.media_id ? (mediaMap[item.media_id] || null) : null,
-  }));
+  return items.map((item: any) => {
+    let parsedMetadata = item.metadata;
+    if (typeof item.metadata === 'string') {
+      try {
+        parsedMetadata = JSON.parse(item.metadata);
+      } catch (e) {
+        parsedMetadata = {};
+      }
+    }
+
+    return {
+      ...item,
+      metadata: parsedMetadata || {},
+      mediaUrl: item.media_id ? (mediaMap[item.media_id] || null) : null,
+    };
+  });
 }
 
 /**

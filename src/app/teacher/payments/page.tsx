@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { DebouncedSearchInput } from "@/components/ui/debounced-search-input";
 import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
@@ -285,13 +286,10 @@ export default async function TeacherPaymentsPage({ searchParams }: PageProps) {
               <label className="block text-[10px] text-muted uppercase font-bold mb-1.5">
                 Search Students / Ref
               </label>
-              <div className="relative">
-                <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted" />
-                <input
-                  type="text"
-                  name="search"
-                  defaultValue={search}
+              <div>
+                <DebouncedSearchInput
                   placeholder="ID, Name, Reference..."
+                  defaultValue={search}
                   className="w-full pl-9 pr-3 py-2 text-xs border border-border/60 rounded-xl bg-bg/20 focus:border-primary focus:outline-none"
                 />
               </div>

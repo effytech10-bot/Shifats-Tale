@@ -32,7 +32,7 @@ export function MaterialForm({ batches, initialData }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const isEdit = !!initialData;
+  const isEdit = !!initialData?.id;
 
   // Form states
   const [batchId, setBatchId] = useState(initialData?.batch_id || "");

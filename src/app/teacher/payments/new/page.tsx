@@ -14,7 +14,7 @@ export default async function NewPaymentPage() {
     .select(`
       id,
       student_code,
-      profile:profiles (
+      profile:profiles!inner (
         full_name,
         email,
         phone,

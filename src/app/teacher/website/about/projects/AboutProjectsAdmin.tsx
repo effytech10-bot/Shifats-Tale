@@ -71,13 +71,66 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
     updateProject(projectIndex, "metrics", newMetrics);
   };
 
+  const [uploadingLinkIndex, setUploadingLinkIndex] = useState<{proj: number, link: number} | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleResourceUpload = async (projectIndex: number, linkIndex: number, file: File) => {
+    try {
+      setUploadingLinkIndex({proj: projectIndex, link: linkIndex});
+      setUploadProgress(0);
+      
+      const { getPreSignedUploadUrl } = await import("@/app/actions/r2-upload");
+      const urlResult = await getPreSignedUploadUrl(file.name, file.type || "application/octet-stream");
+      
+      if (!urlResult.success || !urlResult.uploadUrl || !urlResult.r2Key) {
+        throw new Error(urlResult.error || "Failed to initialize upload");
+      }
+
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", urlResult.uploadUrl, true);
+        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve(true);
+          else reject(new Error("Upload failed"));
+        };
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.send(file);
+      });
+
+      const resourceUrl = `/api/resource?key=${urlResult.r2Key}`;
+      
+      const project = projectsList[projectIndex];
+      const newLinks = [...(project.actionLinks || [])];
+      newLinks[linkIndex] = { 
+        ...newLinks[linkIndex], 
+        url: resourceUrl,
+        label: newLinks[linkIndex].label || file.name
+      };
+      updateProject(projectIndex, "actionLinks", newLinks);
+      
+      toast.success("File uploaded successfully");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to upload file");
+    } finally {
+      setUploadingLinkIndex(null);
+      setUploadProgress(0);
+    }
+  };
+
   const addActionLink = (projectIndex: number) => {
     const project = projectsList[projectIndex];
-    const newLink = { label: "View Details", url: "#", iconName: "ArrowRight", variant: "outline" };
+    const newLink = { label: "View Details", url: "#", iconName: "ArrowRight", variant: "outline", isFile: false };
     updateProject(projectIndex, "actionLinks", [...(project.actionLinks || []), newLink as any]);
   };
 
-  const updateActionLink = (projectIndex: number, linkIndex: number, field: string, value: string) => {
+  const updateActionLink = (projectIndex: number, linkIndex: number, field: string, value: any) => {
     const project = projectsList[projectIndex];
     const newLinks = [...(project.actionLinks || [])];
     newLinks[linkIndex] = { ...newLinks[linkIndex], [field]: value };
@@ -298,46 +351,93 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
                 {/* Action Links */}
                 <div className="bg-white p-4 rounded-xl border border-[#E7E0D2] shadow-sm">
                   <div className="flex justify-between items-center mb-3">
-                    <h4 className="text-xs font-bold text-primary">Action Links</h4>
+                    <h4 className="text-xs font-bold text-primary">Action Links & Resources</h4>
                     <button onClick={() => addActionLink(idx)} className="text-xs font-bold text-accent hover:underline">
-                      + Add Link
+                      + Add Item
                     </button>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {(item.actionLinks || []).map((link, lIdx) => (
-                      <div key={lIdx} className="flex flex-col sm:flex-row items-center gap-2">
-                        <input
-                          type="text"
-                          value={link.label}
-                          onChange={(e) => updateActionLink(idx, lIdx, "label", e.target.value)}
-                          placeholder="Label"
-                          className="w-full sm:w-1/4 px-2 py-1.5 border border-border rounded-md text-xs font-bold"
-                        />
-                        <input
-                          type="text"
-                          value={link.url}
-                          onChange={(e) => updateActionLink(idx, lIdx, "url", e.target.value)}
-                          placeholder="URL"
-                          className="w-full sm:w-1/3 px-2 py-1.5 border border-border rounded-md text-xs"
-                        />
-                        <div className="w-full sm:w-1/4">
-                          <IconPicker
-                            value={link.iconName}
-                            onChange={(iconName) => updateActionLink(idx, lIdx, "iconName", iconName)}
-                            className="text-xs"
+                      <div key={lIdx} className="flex flex-col gap-2 p-3 bg-gray-50 border border-border rounded-lg">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                          <input
+                            type="text"
+                            value={link.label}
+                            onChange={(e) => updateActionLink(idx, lIdx, "label", e.target.value)}
+                            placeholder="Label (e.g. View Details, Report)"
+                            className="w-full sm:w-1/3 px-2 py-1.5 border border-border rounded-md text-xs font-bold"
                           />
+                          <div className="w-full sm:w-1/4">
+                            <IconPicker
+                              value={link.iconName}
+                              onChange={(iconName) => updateActionLink(idx, lIdx, "iconName", iconName)}
+                              className="text-xs"
+                            />
+                          </div>
+                          <label className="flex items-center space-x-2 w-full sm:w-1/4">
+                            <input
+                              type="checkbox"
+                              checked={link.isFile || false}
+                              onChange={(e) => {
+                                updateActionLink(idx, lIdx, "isFile", e.target.checked);
+                                // if switching back to URL, we can leave URL as is, or clear it
+                              }}
+                              className="w-3 h-3 text-accent border-gray-300 rounded focus:ring-accent"
+                            />
+                            <span className="text-[10px] font-bold text-primary">Is File?</span>
+                          </label>
+                          <button onClick={() => removeActionLink(idx, lIdx)} className="text-red-400 p-1 self-end sm:self-auto shrink-0">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <select
-                          value={link.variant || "outline"}
-                          onChange={(e) => updateActionLink(idx, lIdx, "variant", e.target.value)}
-                          className="w-full sm:w-1/4 px-2 py-1.5 border border-border rounded-md text-xs"
-                        >
-                          <option value="outline">Outline</option>
-                          <option value="primary">Primary</option>
-                        </select>
-                        <button onClick={() => removeActionLink(idx, lIdx)} className="text-red-400 p-1">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        
+                        <div className="w-full flex flex-col sm:flex-row gap-2">
+                          {link.isFile ? (
+                            <div className="w-full sm:w-3/4 flex flex-col space-y-1">
+                              {link.url && link.url.includes('/api/resource') ? (
+                                <div className="text-[10px] bg-green-50 text-green-700 p-2 rounded border border-green-200 truncate flex items-center justify-between">
+                                  <span>✓ File Attached: {link.url}</span>
+                                  <button onClick={() => updateActionLink(idx, lIdx, "url", "")} className="text-red-500 underline ml-2">Change</button>
+                                </div>
+                              ) : (
+                                <>
+                                  <input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx,.pptx"
+                                    onChange={(e) => {
+                                      if (e.target.files && e.target.files[0]) {
+                                        handleResourceUpload(idx, lIdx, e.target.files[0]);
+                                      }
+                                    }}
+                                    disabled={uploadingLinkIndex?.proj === idx && uploadingLinkIndex?.link === lIdx}
+                                    className="w-full px-2 py-1.5 border border-border rounded-md text-[10px] bg-white"
+                                  />
+                                  {uploadingLinkIndex?.proj === idx && uploadingLinkIndex?.link === lIdx && (
+                                    <div className="w-full bg-slate-200 rounded-full h-1 mt-1">
+                                      <div className="bg-primary h-1 rounded-full" style={{ width: `${uploadProgress}%` }}></div>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          ) : (
+                            <input
+                              type="text"
+                              value={link.url}
+                              onChange={(e) => updateActionLink(idx, lIdx, "url", e.target.value)}
+                              placeholder="URL Link"
+                              className="w-full sm:w-3/4 px-2 py-1.5 border border-border rounded-md text-xs bg-white"
+                            />
+                          )}
+                          <select
+                            value={link.variant || "outline"}
+                            onChange={(e) => updateActionLink(idx, lIdx, "variant", e.target.value)}
+                            className="w-full sm:w-1/4 px-2 py-1.5 border border-border rounded-md text-xs bg-white"
+                          >
+                            <option value="outline">Outline</option>
+                            <option value="primary">Primary</option>
+                          </select>
+                        </div>
                       </div>
                     ))}
                     {(!item.actionLinks || item.actionLinks.length === 0) && (

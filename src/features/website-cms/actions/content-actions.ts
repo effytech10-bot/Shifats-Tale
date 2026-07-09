@@ -232,6 +232,8 @@ export async function upsertSectionItem(
     updated_by: profile.id,
   };
 
+  let savedId = payload.id;
+
   if (payload.id) {
     // Update
     const { error } = await supabase
@@ -243,20 +245,23 @@ export async function upsertSectionItem(
     if (error) throw new Error("Failed to update item");
   } else {
     // Insert
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("site_section_items")
       .insert({
         ...itemData,
         created_by: profile.id,
-      });
+      })
+      .select("id")
+      .single();
       
     if (error) throw new Error("Failed to create item");
+    savedId = data.id;
   }
 
   // Clear cache so public pages immediately show updates
   revalidatePath("/", "layout");
 
-  return { success: true };
+  return { success: true, id: savedId };
 }
 
 /**

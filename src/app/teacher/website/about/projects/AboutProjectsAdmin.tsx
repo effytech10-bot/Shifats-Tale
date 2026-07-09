@@ -126,7 +126,7 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
 
   const addActionLink = (projectIndex: number) => {
     const project = projectsList[projectIndex];
-    const newLink = { label: "View Details", url: "#", iconName: "ArrowRight", variant: "outline", isFile: false };
+    const newLink = { label: "Project Document", url: "#", iconName: "FileText", variant: "outline", isFile: false };
     updateProject(projectIndex, "actionLinks", [...(project.actionLinks || []), newLink as any]);
   };
 
@@ -290,6 +290,17 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
                       onChange={(e) => updateProject(idx, 'shortDescription', e.target.value)}
                       rows={2}
                       className="w-full px-3 py-2 border border-border rounded-lg focus:border-accent text-sm"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-semibold mb-1 text-gray-500">Full Description</label>
+                    <textarea
+                      value={item.fullDescription || ""}
+                      onChange={(e) => updateProject(idx, 'fullDescription', e.target.value)}
+                      rows={4}
+                      className="w-full px-3 py-2 border border-border rounded-lg focus:border-accent text-sm"
+                      placeholder="Detailed technical documentation, implementation strategies..."
                     />
                   </div>
                   

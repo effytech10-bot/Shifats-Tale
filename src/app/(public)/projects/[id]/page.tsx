@@ -166,7 +166,7 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsProps
               )}
 
               {/* Action Links */}
-              {project.actionLinks && project.actionLinks.filter(l => l.label !== "View Details").length > 0 && (
+              {project.actionLinks && project.actionLinks.length > 0 && (
                 <ProjectResources links={project.actionLinks} />
               )}
 

@@ -14,9 +14,9 @@ export function ProjectResources({ links }: { links: any[] }) {
     return <IconComponent className={className} />;
   };
 
-  const validLinks = links.filter(l => l.label !== "View Details");
+  const validLinks = links;
 
-  if (validLinks.length === 0) return null;
+  if (!validLinks || validLinks.length === 0) return null;
 
   return (
     <div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Plus, Edit2, Trash2, Calendar, Clock, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { deleteSectionItem } from "@/features/website-cms/actions/content-actions";
@@ -31,12 +32,15 @@ export default function CourseCardsAdmin({ initialItems }: { initialItems: any[]
       await deleteSectionItem(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
       toast.success("Course card deleted successfully");
+      router.refresh();
     } catch (err: any) {
       toast.error(err.message || "Failed to delete course card");
     } finally {
       setIsDeleting(null);
     }
   };
+
+  const router = useRouter();
 
   const onSaveComplete = (updatedItem: any, isNew: boolean) => {
     if (isNew) {
@@ -45,6 +49,7 @@ export default function CourseCardsAdmin({ initialItems }: { initialItems: any[]
       setItems((prev) => prev.map((item) => item.id === updatedItem.id ? updatedItem : item));
     }
     setIsModalOpen(false);
+    router.refresh(); // Tell Next.js to update the cache in the background
   };
 
   return (

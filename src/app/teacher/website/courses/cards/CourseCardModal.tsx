@@ -71,12 +71,12 @@ export default function CourseCardModal({ item, onClose, onSave }: CourseCardMod
 
     try {
       setIsSaving(true);
-      await upsertSectionItem("COURSES_CARDS", payload);
+      const res = await upsertSectionItem("COURSES_CARDS", payload);
       
       // Construct the saved item format to update UI without refetching immediately
       const savedItem = {
         ...item,
-        id: item?.id || Math.random().toString(36).substr(2, 9), // Fake ID if new, will be refetched anyway if page reloads, but good enough for optimistic UI
+        id: res?.id || item?.id || Math.random().toString(36).substr(2, 9), // Use real ID if available
         title,
         subtitle,
         body,

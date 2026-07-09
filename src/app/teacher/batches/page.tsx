@@ -5,6 +5,7 @@ import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-heade
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { BatchListActions } from "@/components/dashboard/batch-list-actions";
 import { Plus, Search, Filter, BookOpen } from "lucide-react";
+import { DebouncedSearchInput } from "@/components/ui/debounced-search-input";
 
 interface PageProps {
   searchParams: Promise<{
@@ -109,14 +110,10 @@ export default async function TeacherBatchesPage({ searchParams }: PageProps) {
       <form method="GET" className="bg-white p-5 rounded-2xl border border-border/40 shadow-sm space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
           {/* Search bar */}
-          <div className="relative md:col-span-2">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
-            <input
-              type="text"
-              name="search"
-              defaultValue={search}
+          <div className="md:col-span-2">
+            <DebouncedSearchInput
               placeholder="Search by name or code..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border/60 bg-bg/20 text-xs font-bold focus:border-primary focus:outline-none placeholder:text-muted/70 text-primary"
+              defaultValue={search}
             />
           </div>
 

@@ -5,6 +5,7 @@ import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-heade
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Plus, Search, Filter, GraduationCap, Calendar, Eye, Edit, ListTodo, Archive, Trash2, CheckCircle, XCircle } from "lucide-react";
 import { archiveExamAction, deleteExamAction } from "@/app/actions/exams";
+import { DebouncedSearchInput } from "@/components/ui/debounced-search-input";
 
 interface PageProps {
   searchParams: Promise<{
@@ -130,14 +131,10 @@ export default async function TeacherExamsPage({ searchParams }: PageProps) {
       <form method="GET" className="bg-white p-5 rounded-2xl border border-border/40 shadow-sm space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {/* Search bar */}
-          <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
-            <input
-              type="text"
-              name="search"
-              defaultValue={search}
+          <div>
+            <DebouncedSearchInput
               placeholder="Search by exam or batch name..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border/60 bg-bg/20 text-xs font-bold focus:border-primary focus:outline-none placeholder:text-muted/70 text-primary"
+              defaultValue={search}
             />
           </div>
 

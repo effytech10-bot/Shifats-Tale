@@ -69,7 +69,7 @@ export function PaymentEntryForm({ students }: PaymentEntryFormProps) {
     ? []
     : students.filter(s =>
         s.student_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.profile.full_name.toLowerCase().includes(searchQuery.toLowerCase())
+        (s.profile?.full_name || "").toLowerCase().includes(searchQuery.toLowerCase())
       );
 
   // Set default fee and enrollment when student changes

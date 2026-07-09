@@ -277,38 +277,44 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, header }) 
                 )}
 
                 {/* Action Links */}
-                {featuredProject.actionLinks && (
-                  <div className="flex flex-wrap gap-4 mt-auto">
-                    {featuredProject.actionLinks.map((link, idx) => {
-                      const isFileLink = link.isFile || (link.url && link.url.includes('/api/resource'));
-                      const btnClass = `inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all shadow-sm ${
-                        link.variant === "primary" || link.label === "View Details"
-                          ? "bg-[#0A1A44] text-white hover:bg-[#0A1A44]/90" 
-                          : "bg-white text-primary border border-primary/20 hover:bg-gray-50"
-                      }`;
+                <div className="flex flex-wrap gap-4 mt-auto">
+                  <a 
+                    href={`/projects/${featuredProject.id}`}
+                    className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all shadow-sm bg-[#0A1A44] text-white hover:bg-[#0A1A44]/90"
+                  >
+                    <span>View Details</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                  
+                  {featuredProject.actionLinks && featuredProject.actionLinks.map((link, idx) => {
+                    const isFileLink = link.isFile || (link.url && link.url.includes('/api/resource'));
+                    const btnClass = `inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all shadow-sm ${
+                      link.variant === "primary"
+                        ? "bg-accent text-primary hover:bg-accent/90" 
+                        : "bg-white text-primary border border-primary/20 hover:bg-gray-50"
+                    }`;
 
-                      return isFileLink ? (
-                        <button
-                          key={idx}
-                          onClick={() => setSelectedResource({ url: link.url, name: link.label || "Project Document" })}
-                          className={btnClass}
-                        >
-                          <span>{link.label}</span>
-                          {getIcon(link.iconName)}
-                        </button>
-                      ) : (
-                        <a 
-                          key={idx}
-                          href={link.url}
-                          className={btnClass}
-                        >
-                          <span>{link.label}</span>
-                          {getIcon(link.iconName)}
-                        </a>
-                      );
-                    })}
-                  </div>
-                )}
+                    return isFileLink ? (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedResource({ url: link.url, name: link.label || "Project Document" })}
+                        className={btnClass}
+                      >
+                        <span>{link.label}</span>
+                        {getIcon(link.iconName)}
+                      </button>
+                    ) : (
+                      <a 
+                        key={idx}
+                        href={link.url}
+                        className={btnClass}
+                      >
+                        <span>{link.label}</span>
+                        {getIcon(link.iconName)}
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </motion.div>
           )}
@@ -381,47 +387,40 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, header }) 
 
                     {/* Bottom Action Links */}
                     <div className="mt-auto pt-2 flex items-center justify-between border-t border-[#E7E0D2]/50">
-                      {project.actionLinks?.[0] ? (
-                        (project.actionLinks[0].isFile || (project.actionLinks[0].url && project.actionLinks[0].url.includes('/api/resource'))) ? (
-                          <button 
-                            onClick={() => setSelectedResource({ url: project.actionLinks![0].url, name: project.actionLinks![0].label || "Project Document" })}
-                            className="inline-flex items-center text-primary text-[10px] font-extrabold hover:text-accent transition-colors"
-                          >
-                            <span>{project.actionLinks[0].label}</span>
-                            <ArrowRight className="w-3 h-3 ml-1" />
-                          </button>
-                        ) : (
-                          <a href={project.actionLinks[0].url} className="inline-flex items-center text-primary text-[10px] font-extrabold hover:text-accent transition-colors">
-                            <span>{project.actionLinks[0].label}</span>
-                            <ArrowRight className="w-3 h-3 ml-1" />
-                          </a>
-                        )
-                      ) : (
-                        <a href="#" className="inline-flex items-center text-primary text-[10px] font-extrabold hover:text-accent transition-colors">
-                          <span>View Details</span>
-                          <ArrowRight className="w-3 h-3 ml-1" />
-                        </a>
-                      )}
+                      <a href={`/projects/${project.id}`} className="inline-flex items-center text-primary text-[10px] font-extrabold hover:text-accent transition-colors shrink-0">
+                        <span>View Details</span>
+                        <ArrowRight className="w-3 h-3 ml-1" />
+                      </a>
                       
-                      {project.actionLinks && project.actionLinks.length > 1 && (
-                        (project.actionLinks[1].isFile || (project.actionLinks[1].url && project.actionLinks[1].url.includes('/api/resource'))) ? (
-                          <button 
-                            onClick={() => setSelectedResource({ url: project.actionLinks![1].url, name: project.actionLinks![1].label || "Project Document" })}
-                            className="inline-flex items-center justify-center space-x-1 px-2.5 py-1 rounded-md border border-[#E7E0D2] bg-white text-primary/70 text-[9px] font-bold hover:bg-gray-50 transition-colors"
-                          >
-                            <span>{project.actionLinks[1].label}</span>
-                            <span className="opacity-70 scale-75">{getIcon(project.actionLinks[1].iconName)}</span>
-                          </button>
-                        ) : (
-                          <a 
-                            href={project.actionLinks[1].url}
-                            className="inline-flex items-center justify-center space-x-1 px-2.5 py-1 rounded-md border border-[#E7E0D2] bg-white text-primary/70 text-[9px] font-bold hover:bg-gray-50 transition-colors"
-                          >
-                            <span>{project.actionLinks[1].label}</span>
-                            <span className="opacity-70 scale-75">{getIcon(project.actionLinks[1].iconName)}</span>
-                          </a>
-                        )
-                      )}
+                      <div className="flex gap-1 overflow-hidden justify-end">
+                        {project.actionLinks && project.actionLinks.slice(0, 2).map((link, lIdx) => {
+                          const isFileLink = link.isFile || (link.url && link.url.includes('/api/resource'));
+                          
+                          if (isFileLink) {
+                            return (
+                              <button 
+                                key={lIdx}
+                                onClick={() => setSelectedResource({ url: link.url, name: link.label || "Project Document" })}
+                                className="inline-flex items-center justify-center space-x-1 px-2.5 py-1 rounded-md border border-[#E7E0D2] bg-white text-primary/70 text-[9px] font-bold hover:bg-gray-50 transition-colors whitespace-nowrap"
+                              >
+                                <span>{link.label}</span>
+                                <span className="opacity-70 scale-75">{getIcon(link.iconName)}</span>
+                              </button>
+                            );
+                          }
+                          
+                          return (
+                            <a 
+                              key={lIdx}
+                              href={link.url}
+                              className="inline-flex items-center justify-center space-x-1 px-2.5 py-1 rounded-md border border-[#E7E0D2] bg-white text-primary/70 text-[9px] font-bold hover:bg-gray-50 transition-colors whitespace-nowrap"
+                            >
+                              <span>{link.label}</span>
+                              <span className="opacity-70 scale-75">{getIcon(link.iconName)}</span>
+                            </a>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </motion.div>

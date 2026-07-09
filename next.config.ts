@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "X-Frame-Options",
-            value: "DENY",
+            value: "SAMEORIGIN",
           },
           {
             key: "X-XSS-Protection",
@@ -55,7 +55,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://res.cloudinary.com https://img.youtube.com https://images.unsplash.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.cloudinary.com https://*.r2.cloudflarestorage.com; frame-src 'self' https://www.youtube.com https://docs.google.com; object-src 'none';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://res.cloudinary.com https://img.youtube.com https://images.unsplash.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.cloudinary.com https://*.r2.cloudflarestorage.com; frame-src 'self' https://www.youtube.com https://docs.google.com https://res.cloudinary.com https://*.r2.cloudflarestorage.com blob:; object-src 'none';",
           },
         ],
       },

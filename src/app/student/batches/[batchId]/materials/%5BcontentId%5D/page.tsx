@@ -150,7 +150,7 @@ export default async function StudentMaterialDetailsPage({ params }: PageProps) 
               <span>Short-lived access link refreshed</span>
             </div>
             <iframe
-              src={signedPreviewUrl}
+              src={`https://docs.google.com/gview?url=${encodeURIComponent(signedPreviewUrl)}&embedded=true`}
               className="w-full flex-grow border-none"
               title={material.title}
             />

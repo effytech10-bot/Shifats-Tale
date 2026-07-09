@@ -8,6 +8,7 @@ import {
   ArrowRight, FileText, BarChart, Code, FileSymlink
 } from "lucide-react";
 import Link from "next/link";
+import { ProjectResources } from "@/components/about/ProjectResources";
 
 interface ProjectDetailsProps {
   params: Promise<{
@@ -166,29 +167,7 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsProps
 
               {/* Action Links */}
               {project.actionLinks && project.actionLinks.filter(l => l.label !== "View Details").length > 0 && (
-                <div>
-                  <h3 className="text-sm font-extrabold text-primary uppercase tracking-widest mb-4 flex items-center">
-                    <FileSymlink className="w-4 h-4 mr-2 text-accent" />
-                    Resources
-                  </h3>
-                  <div className="flex flex-col gap-3">
-                    {project.actionLinks.filter(l => l.label !== "View Details").map((link, idx) => (
-                      <a 
-                        key={idx}
-                        href={link.url}
-                        className="flex items-center justify-between w-full px-5 py-4 rounded-xl border-2 border-primary text-sm font-bold text-primary hover:bg-primary hover:text-white transition-colors group shadow-sm"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <span className="text-accent group-hover:text-white transition-colors">
-                            {getIcon(link.iconName, "w-5 h-5")}
-                          </span>
-                          <span>{link.label}</span>
-                        </div>
-                        <ArrowRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                      </a>
-                    ))}
-                  </div>
-                </div>
+                <ProjectResources links={project.actionLinks} />
               )}
 
             </div>

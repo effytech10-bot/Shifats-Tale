@@ -12,6 +12,7 @@ export default async function CourseCardsPage() {
 
   // Fetch existing course cards
   const items = await getSectionItems("COURSES_CARDS");
+  console.log("FETCHED COURSE CARDS:", JSON.stringify(items, null, 2));
 
   return (
     <div className="space-y-6">

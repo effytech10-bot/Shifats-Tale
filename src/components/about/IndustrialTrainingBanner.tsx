@@ -158,15 +158,15 @@ export const IndustrialTrainingBanner: React.FC<IndustrialTrainingBannerProps> =
           </div>
 
           {/* Right Column (Certificate Visual) */}
-          <div className="lg:w-[450px] shrink-0 rounded-[1.5rem] relative overflow-hidden flex items-center justify-center min-h-[300px] border border-[#E7E0D2] bg-white shadow-sm p-4">
+          <div className="lg:w-[450px] lg:max-w-md shrink-0 flex items-center justify-center">
             {training.certificateUrl ? (
               <img 
                 src={training.certificateUrl} 
                 alt="Industrial Training Certificate" 
-                className="w-full h-auto object-contain rounded-xl max-h-[500px]" 
+                className="w-full h-auto rounded-[1.5rem] border border-[#E7E0D2] shadow-sm object-cover" 
               />
             ) : (
-              <div className="text-center p-10 flex flex-col items-center justify-center h-full">
+              <div className="w-full min-h-[300px] rounded-[1.5rem] border border-[#E7E0D2] bg-white shadow-sm p-10 flex flex-col items-center justify-center">
                 <FileText className="w-16 h-16 text-primary/20 mb-4" />
                 <p className="text-primary/50 font-medium text-sm">Certificate not available</p>
               </div>

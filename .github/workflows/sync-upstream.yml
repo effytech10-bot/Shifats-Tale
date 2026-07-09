@@ -18,28 +18,39 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Add upstream repo
+      - name: Fetch upstream repo
         run: |
           git remote add upstream https://github.com/adnan-bin-wahid/Shifats-Tale.git
           git fetch upstream main
 
-      - name: Backup this workflow
+      - name: Copy upstream files except workflow files
         run: |
-          mkdir -p /tmp/workflows
-          cp .github/workflows/sync-upstream.yml /tmp/workflows/sync-upstream.yml
+          mkdir -p /tmp/upstream
+          git archive upstream/main | tar -x -C /tmp/upstream
 
-      - name: Sync main branch but keep workflow
+          mkdir -p /tmp/current-workflows
+          cp -r .github/workflows /tmp/current-workflows/workflows
+
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/***' \
+            /tmp/upstream/ ./
+
+          mkdir -p .github
+          rm -rf .github/workflows
+          cp -r /tmp/current-workflows/workflows .github/workflows
+
+      - name: Commit and push synced files
         run: |
-          git checkout main
-          git reset --hard upstream/main
-
-          mkdir -p .github/workflows
-          cp /tmp/workflows/sync-upstream.yml .github/workflows/sync-upstream.yml
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add .github/workflows/sync-upstream.yml
-          git commit -m "chore: keep fork auto-sync workflow" || echo "No workflow changes"
+          git add -A
 
-          git push origin main --force
+          if git diff --cached --quiet; then
+            echo "No changes to sync"
+            exit 0
+          fi
+
+          git commit -m "chore: sync from upstream"
+          git push origin main

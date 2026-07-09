@@ -6,16 +6,21 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: fork-sync-main
+  cancel-in-progress: true
+
 jobs:
   trigger:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
 
     steps:
       - name: Trigger B repo sync
         env:
           GH_TOKEN: ${{ secrets.B_REPO_DISPATCH_TOKEN }}
         run: |
-          response=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" -L \
+          response=$(curl -sS --connect-timeout 10 --max-time 30 --retry 2 -w "\nHTTP_STATUS:%{http_code}\n" -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \

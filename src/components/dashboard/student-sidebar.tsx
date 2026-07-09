@@ -14,7 +14,8 @@ import {
   GraduationCap,
   LogOut,
   Loader2,
-  Bell
+  Bell,
+  Home
 } from "lucide-react";
 
 interface SidebarProps {
@@ -88,12 +89,12 @@ export function StudentSidebar({ className, onLinkClick, activeBatches = [] }: S
     });
   });
 
-  // Base links
   navItems.push(
     { label: "Exams & Results", href: "/student/exams", icon: GraduationCap },
     { label: "Payments", href: "/student/payments", icon: CreditCard },
     { label: "Notifications", href: "/student/notifications", icon: Bell },
-    { label: "Profile", href: "/student/profile", icon: User }
+    { label: "Profile", href: "/student/profile", icon: User },
+    { label: "Go to Home", href: "/", icon: Home }
   );
 
   const handleSignOut = async () => {

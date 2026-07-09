@@ -174,10 +174,10 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, header }) 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-[2rem] shadow-sm border border-[#E7E0D2] overflow-hidden flex flex-col lg:flex-row h-auto lg:h-[420px]"
+              className="bg-white rounded-[2rem] shadow-sm border border-[#E7E0D2] overflow-hidden flex flex-col lg:flex-row h-auto lg:min-h-[420px]"
             >
               {/* Image side */}
-              <div className="lg:w-[45%] relative h-64 lg:h-full overflow-hidden group shrink-0">
+              <div className="lg:w-[45%] relative h-64 lg:h-auto lg:min-h-full overflow-hidden group shrink-0">
                 <img 
                   src={featuredProject.imageUrl} 
                   alt={featuredProject.title} 
@@ -186,11 +186,6 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, header }) 
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                 <div className="absolute top-6 left-6 bg-accent text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-md">
                   Featured
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <button className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
-                    <Play className="w-5 h-5 text-primary ml-1" fill="currentColor" />
-                  </button>
                 </div>
               </div>
               
@@ -263,7 +258,7 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects, header }) 
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
                   key={project.id}
-                  className="bg-white rounded-3xl border border-[#E7E0D2] shadow-sm overflow-hidden flex flex-col sm:flex-row group hover:shadow-md transition-shadow h-auto sm:h-[220px]"
+                  className="bg-white rounded-3xl border border-[#E7E0D2] shadow-sm overflow-hidden flex flex-col sm:flex-row group hover:shadow-md transition-shadow h-auto sm:min-h-[220px]"
                 >
                   {/* Left Image */}
                   <div className="w-full sm:w-[40%] h-48 sm:h-full relative overflow-hidden shrink-0">

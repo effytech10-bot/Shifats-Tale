@@ -71,7 +71,9 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
   let passedCount = 0;
   let failedCount = 0;
   let highestPercentage = 0;
+  let lowestPercentage = 101;
   let bestExam: any = null;
+  let worstExam: any = null;
   let totalPercentageSum = 0;
 
   const lineChartData: any[] = [];
@@ -101,12 +103,20 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
       highestPercentage = percentage;
       bestExam = exam;
     }
+    
+    if (percentage < lowestPercentage) {
+      lowestPercentage = percentage;
+      worstExam = exam;
+    }
 
     // Chart Data
     lineChartData.push({
       name: exam.name.substring(0, 10) + (exam.name.length > 10 ? "..." : ""),
       score: Math.round(percentage),
-      fullDate: exam.exam_date
+      fullDate: exam.exam_date,
+      shortDate: new Date(exam.exam_date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
+      fullName: exam.name,
+      grade: exam.result?.grade || "-"
     });
 
     // Histogram
@@ -127,19 +137,25 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
   
   // Recent Trend (Last 3 vs Previous 3)
   let trendMsg = "Not enough data";
-  let trendIsUp = true;
+  let trendState = "stable"; // "improving" | "declining" | "stable"
   let trendDiff = 0;
+  
+  const calculateTrendState = (diff: number) => {
+    if (diff > 1) return "improving";
+    if (diff < -1) return "declining";
+    return "stable";
+  };
   
   if (lineChartData.length >= 4) {
     const last3 = lineChartData.slice(-3).reduce((sum, item) => sum + item.score, 0) / 3;
     const prev3 = lineChartData.slice(Math.max(0, lineChartData.length - 6), lineChartData.length - 3).reduce((sum, item) => sum + item.score, 0) / Math.min(3, lineChartData.length - 3);
     trendDiff = last3 - prev3;
-    trendIsUp = trendDiff >= 0;
-    trendMsg = `${trendIsUp ? "Improving" : "Dropped"} ${trendIsUp ? "↑" : "↓"} ${Math.abs(trendDiff).toFixed(1)}% vs previous`;
+    trendState = calculateTrendState(trendDiff);
+    trendMsg = trendState === "stable" ? `Changed ${trendDiff > 0 ? '+' : ''}${trendDiff.toFixed(1)}% vs previous` : `${trendState === 'improving' ? 'Improving ↑' : 'Declining ↓'} ${Math.abs(trendDiff).toFixed(1)}% vs previous`;
   } else if (lineChartData.length > 1) {
     trendDiff = lineChartData[lineChartData.length-1].score - lineChartData[lineChartData.length-2].score;
-    trendIsUp = trendDiff >= 0;
-    trendMsg = `${trendIsUp ? "Improving" : "Dropped"} ${trendIsUp ? "↑" : "↓"} ${Math.abs(trendDiff).toFixed(1)}% from last exam`;
+    trendState = calculateTrendState(trendDiff);
+    trendMsg = trendState === "stable" ? `Changed ${trendDiff > 0 ? '+' : ''}${trendDiff.toFixed(1)}% from last exam` : `${trendState === 'improving' ? 'Improving ↑' : 'Declining ↓'} ${Math.abs(trendDiff).toFixed(1)}% from last exam`;
   }
 
   // Format Chart Data
@@ -166,6 +182,27 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
   // Default Target
   const TARGET_SCORE = 80;
 
+  const CustomLineTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-3 border border-border/60 rounded-xl shadow-lg">
+          <p className="text-xs font-black text-primary mb-1">{data.fullName}</p>
+          <p className="text-[10px] text-muted font-bold mb-2">{data.fullDate}</p>
+          <div className="flex justify-between items-center gap-4">
+            <span className="text-xs font-bold text-slate-600">Score:</span>
+            <span className="text-xs font-black text-primary">{data.score}%</span>
+          </div>
+          <div className="flex justify-between items-center gap-4 mt-1">
+            <span className="text-xs font-bold text-slate-600">Grade:</span>
+            <span className="text-xs font-black text-primary">{data.grade}</span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-6">
       
@@ -182,9 +219,9 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
         
         {/* Total */}
         <div className="bg-white border border-border/60 p-4 rounded-2xl shadow-sm">
-          <p className="text-[10px] uppercase font-bold tracking-wider text-muted mb-1">Exams Taken</p>
-          <p className="text-3xl font-black font-display text-primary">{totalGraded}</p>
-          <p className="text-[9px] font-bold text-muted mt-1">{exams.length - totalGraded} Upcoming/Pending</p>
+          <p className="text-[10px] uppercase font-bold tracking-wider text-muted mb-1">Total Exams</p>
+          <p className="text-3xl font-black font-display text-primary">{exams.length}</p>
+          <p className="text-[9px] font-bold text-muted mt-1">Graded: {totalGraded} | Pending: {exams.length - totalGraded}</p>
         </div>
 
         {/* Pass/Fail */}
@@ -223,17 +260,17 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
         </div>
 
         {/* Streak / Trend */}
-        <div className={`p-4 rounded-2xl shadow-sm border ${trendIsUp ? 'bg-emerald-50 border-emerald-100' : 'bg-rose-50 border-rose-100'}`}>
-          <p className={`text-[10px] uppercase font-bold tracking-wider mb-1 ${trendIsUp ? 'text-emerald-700' : 'text-rose-700'}`}>
+        <div className={`p-4 rounded-2xl shadow-sm border ${trendState === 'improving' ? 'bg-emerald-50 border-emerald-100' : trendState === 'declining' ? 'bg-rose-50 border-rose-100' : 'bg-slate-50 border-slate-200'}`}>
+          <p className={`text-[10px] uppercase font-bold tracking-wider mb-1 ${trendState === 'improving' ? 'text-emerald-700' : trendState === 'declining' ? 'text-rose-700' : 'text-slate-600'}`}>
             Performance Trend
           </p>
           <div className="flex items-center gap-2 mt-2">
-            {trendIsUp ? <TrendingUp className="w-6 h-6 text-emerald-600" /> : <TrendingDown className="w-6 h-6 text-rose-600" />}
-            <span className={`text-lg font-black font-display ${trendIsUp ? 'text-emerald-700' : 'text-rose-700'}`}>
+            {trendState === 'improving' ? <TrendingUp className="w-6 h-6 text-emerald-600" /> : trendState === 'declining' ? <TrendingDown className="w-6 h-6 text-rose-600" /> : <TrendingUp className="w-6 h-6 text-slate-400" />}
+            <span className={`text-lg font-black font-display ${trendState === 'improving' ? 'text-emerald-700' : trendState === 'declining' ? 'text-rose-700' : 'text-slate-600'}`}>
               {trendDiff > 0 ? '+' : ''}{trendDiff ? trendDiff.toFixed(1) : "0"}%
             </span>
           </div>
-          <p className={`text-[9px] font-bold mt-1 ${trendIsUp ? 'text-emerald-600/80' : 'text-rose-600/80'}`}>{trendMsg}</p>
+          <p className={`text-[9px] font-bold mt-1 ${trendState === 'improving' ? 'text-emerald-600/80' : trendState === 'declining' ? 'text-rose-600/80' : 'text-slate-500'}`}>{trendMsg}</p>
         </div>
       </div>
 
@@ -249,12 +286,9 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={lineChartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 600 }} dy={10} />
+                  <XAxis dataKey="shortDate" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 600 }} dy={10} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 600 }} domain={[0, 100]} />
-                  <RechartsTooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', fontWeight: 'bold' }}
-                    itemStyle={{ color: '#010E62' }}
-                  />
+                  <RechartsTooltip content={CustomLineTooltip} />
                   <Line type="monotone" dataKey="score" stroke="#010E62" strokeWidth={3} dot={{ r: 4, fill: '#FBB503', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#010E62' }} />
                 </LineChart>
               </ResponsiveContainer>
@@ -278,8 +312,9 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
                   </RadarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-center">
-                  <p className="text-xs text-muted font-bold">Need at least 3 subjects/batches for radar visualization.</p>
+                <div className="w-full h-full flex flex-col items-center justify-center text-center">
+                  <p className="text-xs text-muted font-bold">Subject Mastery will appear after results from at least 3 subjects.</p>
+                  <p className="text-[10px] text-muted/70 mt-1 font-semibold">Keep taking exams to unlock mastery insights.</p>
                 </div>
               )}
             </div>
@@ -343,33 +378,36 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
             
             <div className="space-y-4 relative z-10">
               {/* Strength */}
-              {trendIsUp && (
+              {bestExam && (
                 <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                  <p className="text-[10px] uppercase font-bold text-emerald-400 mb-1">Top Strength</p>
-                  <p className="text-xs font-semibold">Your performance is improving steadily. You've gained +{trendDiff.toFixed(1)}% recently. Keep this momentum!</p>
+                  <p className="text-[10px] uppercase font-bold text-emerald-400 mb-1">Strongest Exam</p>
+                  <p className="text-xs font-semibold truncate" title={bestExam.name}>{bestExam.name} — {highestPercentage.toFixed(0)}%</p>
                 </div>
               )}
               
               {/* Weakness */}
-              {weakestSubjects.length > 0 && weakestSubjects[0].score < 70 && (
+              {worstExam && (
                 <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                  <p className="text-[10px] uppercase font-bold text-rose-400 mb-1">Needs Attention</p>
-                  <p className="text-xs font-semibold">Focus on <span className="text-accent">{weakestSubjects[0].subject}</span> (Avg: {weakestSubjects[0].score}%). Review recent materials for this batch.</p>
+                  <p className="text-[10px] uppercase font-bold text-rose-400 mb-1">Needs Focus</p>
+                  <p className="text-xs font-semibold truncate" title={worstExam.name}>{worstExam.name} — {lowestPercentage.toFixed(0)}%</p>
                 </div>
               )}
 
               {/* Goal Progress */}
               <div className="mt-4 pt-4 border-t border-white/10">
                 <div className="flex justify-between items-end mb-2">
-                  <p className="text-[10px] uppercase font-bold text-white/70">Current Goal: 80% Average</p>
-                  <p className="text-xs font-black">{overallAverage.toFixed(1)}% / 80%</p>
+                  <p className="text-[10px] uppercase font-bold text-white/70">Goal Progress</p>
+                  <p className="text-xs font-black">{overallAverage.toFixed(1)}% / {TARGET_SCORE}%</p>
                 </div>
-                <div className="w-full bg-white/10 rounded-full h-2">
+                <div className="w-full bg-white/10 rounded-full h-2 mb-2">
                   <div 
                     className="bg-accent h-2 rounded-full transition-all duration-1000"
                     style={{ width: `${Math.min(100, (overallAverage / TARGET_SCORE) * 100)}%` }}
                   ></div>
                 </div>
+                {overallAverage >= TARGET_SCORE && (
+                  <p className="text-[10px] text-emerald-300 font-bold">Goal achieved! Try setting {TARGET_SCORE + 5}% as your next target.</p>
+                )}
               </div>
             </div>
           </div>
@@ -456,13 +494,40 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
                   const pass = Number(exam.pass_marks);
                   const passes = marks >= pass;
                   
+                  // Status Logic
+                  let statusLabel = "";
+                  let statusStyle = "";
+                  
+                  if (!isPublished) {
+                    if (new Date(exam.exam_date).getTime() > Date.now()) {
+                      statusLabel = "UPCOMING";
+                      statusStyle = "bg-blue-50 text-blue-600 border-blue-100";
+                    } else {
+                      statusLabel = "NOT PUBLISHED";
+                      statusStyle = "bg-slate-50 text-slate-600 border-slate-200";
+                    }
+                  } else if (!result || result.obtained_marks === null) {
+                    statusLabel = "PENDING";
+                    statusStyle = "bg-amber-50 text-amber-600 border-amber-100";
+                  } else if (isAbs) {
+                    statusLabel = "MISSED";
+                    statusStyle = "bg-rose-50 text-rose-600 border-rose-100";
+                  } else if (passes) {
+                    statusLabel = "PASSED";
+                    statusStyle = "bg-emerald-50 text-emerald-700 border-emerald-100";
+                  } else {
+                    statusLabel = "FAILED";
+                    statusStyle = "bg-rose-50 text-rose-700 border-rose-100";
+                  }
+                  
                   // Row Color Cues
                   let rowColor = "hover:bg-slate-50/30";
-                  if (isPublished && result) {
-                    if (isAbs) rowColor = "bg-rose-50/10 hover:bg-rose-50/30";
-                    else if (passes && (marks/total >= 0.8)) rowColor = "bg-emerald-50/30 hover:bg-emerald-50/50"; // Good
-                    else if (!passes) rowColor = "bg-rose-50/30 hover:bg-rose-50/50"; // Fail
-                    else rowColor = "bg-amber-50/10 hover:bg-amber-50/30"; // Average pass
+                  if (statusLabel === "PASSED") {
+                    rowColor = "bg-emerald-50/30 hover:bg-emerald-50/50";
+                  } else if (statusLabel === "FAILED" || statusLabel === "MISSED") {
+                    rowColor = "bg-rose-50/30 hover:bg-rose-50/50";
+                  } else if (statusLabel === "PENDING") {
+                    rowColor = "bg-amber-50/10 hover:bg-amber-50/30";
                   }
 
                   return (
@@ -492,37 +557,29 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
                       </td>
 
                       <td className="py-4 px-6 text-center">
-                        {isPublished && result ? (
-                          isAbs ? (
-                            <span className="text-rose-700 font-extrabold bg-rose-50 px-2 py-1 border border-rose-100 rounded">ABSENT</span>
-                          ) : (
-                            <div className="inline-block text-center">
-                              <span className={`font-extrabold block text-sm ${passes ? "text-emerald-700" : "text-rose-700"}`}>
-                                {marks}
-                              </span>
-                              <span className="text-[9px] text-muted font-bold block">
-                                {((marks / total) * 100).toFixed(0)}%
-                              </span>
-                            </div>
-                          )
+                        {statusLabel === "PASSED" || statusLabel === "FAILED" ? (
+                          <div className="inline-block text-center">
+                            <span className={`font-extrabold block text-sm ${passes ? "text-emerald-700" : "text-rose-700"}`}>
+                              {marks} / {total}
+                            </span>
+                            <span className="text-[9px] text-muted font-bold block">
+                              {((marks / total) * 100).toFixed(0)}%
+                            </span>
+                          </div>
+                        ) : statusLabel === "MISSED" ? (
+                          <span className="text-rose-700 font-extrabold bg-rose-50 px-2 py-1 border border-rose-100 rounded">ABSENT</span>
                         ) : (
                           <span className="text-muted/50">-</span>
                         )}
                       </td>
 
                       <td className="py-4 px-6 text-center font-display font-black text-slate-800 text-sm">
-                        {isPublished && result ? (isAbs ? "F" : result.grade || "-") : "-"}
+                        {statusLabel === "PASSED" || statusLabel === "FAILED" ? result.grade || "-" : statusLabel === "MISSED" ? "F" : "-"}
                       </td>
 
                       <td className="py-4 px-6 text-center">
-                        <span className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase border ${
-                          isPublished
-                            ? passes 
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-100" 
-                              : "bg-rose-50 text-rose-700 border-rose-100"
-                            : "bg-blue-50 text-blue-600 border-blue-100"
-                        }`}>
-                          {isPublished ? (passes ? "PASSED" : "FAILED") : "UPCOMING"}
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase border ${statusStyle}`}>
+                          {statusLabel}
                         </span>
                       </td>
 

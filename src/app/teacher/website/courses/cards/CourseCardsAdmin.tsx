@@ -76,7 +76,7 @@ export default function CourseCardsAdmin({ initialItems }: { initialItems: any[]
               <div key={item.id} className="border border-border rounded-xl overflow-hidden shadow-sm flex flex-col group relative">
                 
                 {/* Actions Overlay */}
-                <div className="absolute top-2 right-2 flex space-x-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-2 right-2 flex space-x-2 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   <button 
                     onClick={() => handleEdit(item)}
                     className="p-2 bg-white rounded-lg shadow text-blue-600 hover:bg-blue-50 transition-colors"

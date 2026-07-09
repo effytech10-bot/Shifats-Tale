@@ -155,7 +155,7 @@ export default function AboutTrainingAdmin({ initialSectionData }: { initialSect
             {training.certificateUrl ? (
               <div className="mb-4 relative rounded-xl overflow-hidden border border-border group">
                 <img src={training.certificateUrl} alt="Certificate" className="w-full max-h-[300px] object-cover" />
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button
                     onClick={() => updateField('certificateUrl', "")}
                     className="p-2 bg-white text-red-600 rounded-full hover:bg-red-50 transition-colors"

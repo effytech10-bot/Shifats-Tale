@@ -312,7 +312,7 @@ export function StudentAnalyticsDashboard({ exams, activeBatches }: { exams: any
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                   <XAxis dataKey="xAxisLabel" axisLine={false} tickLine={false} tick={<CustomXAxisTick />} />
                   <YAxis dataKey="marks" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B', fontWeight: 600 }} ticks={[0, 25, 45, 75, 100]} domain={[0, 100]} />
-                  <ReferenceLine y={45} stroke="#e11d48" strokeDasharray="4 4" strokeWidth={1} label={{ position: 'insideTopLeft', value: 'MAX: 45', fill: '#e11d48', fontSize: 9, fontWeight: 700 }} />
+                  <ReferenceLine y={45} stroke="#e11d48" strokeDasharray="4 4" strokeWidth={1} />
                   <RechartsTooltip content={CustomLineTooltip} cursor={{ stroke: '#f1f5f9', strokeWidth: 2 }} />
                   <Line type="monotone" dataKey="marks" stroke="#010E62" strokeWidth={3} dot={{ r: 4, fill: '#FBB503', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#010E62' }} />
                 </LineChart>

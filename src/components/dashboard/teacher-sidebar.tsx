@@ -49,7 +49,7 @@ export const teacherNavItems: NavItem[] = [
   { label: "Notifications", href: "/teacher/notifications", icon: Bell },
   { label: "My Profile", href: "/teacher/profile", icon: User },
   { label: "Portal Settings", href: "/teacher/settings", icon: Settings },
-  { label: "Security Audit Logs", href: "/teacher/audit-logs", icon: ShieldAlert },
+  { label: "Go to Home", href: "/", icon: Home },
 ];
 
 export const websiteAdminNavItems: NavItem[] = [

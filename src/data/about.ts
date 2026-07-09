@@ -99,6 +99,8 @@ export interface ProjectItem {
   technologies?: string[];
   metrics?: { label: string; value: string; iconName: string }[];
   actionLinks?: { label: string; url: string; iconName: string; variant?: "primary" | "outline" }[];
+  resourceUrl?: string;
+  resourceFileName?: string;
   displayOrder: number;
 }
 

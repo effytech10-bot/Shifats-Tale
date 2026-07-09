@@ -24,6 +24,52 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
   );
   const [isSaving, setIsSaving] = useState(false);
   const [editingProjectImageIndex, setEditingProjectImageIndex] = useState<number | null>(null);
+  
+  const [uploadingProjectIndex, setUploadingProjectIndex] = useState<number | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleResourceUpload = async (projectIndex: number, file: File) => {
+    try {
+      setUploadingProjectIndex(projectIndex);
+      setUploadProgress(0);
+      
+      const { getPreSignedUploadUrl } = await import("@/app/actions/r2-upload");
+      const urlResult = await getPreSignedUploadUrl(file.name, file.type || "application/octet-stream");
+      
+      if (!urlResult.success || !urlResult.uploadUrl || !urlResult.r2Key) {
+        throw new Error(urlResult.error || "Failed to initialize upload");
+      }
+
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", urlResult.uploadUrl, true);
+        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve(true);
+          else reject(new Error("Upload failed"));
+        };
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.send(file);
+      });
+
+      const resourceUrl = `/api/resource?key=${urlResult.r2Key}`;
+      
+      updateProject(projectIndex, 'resourceUrl', resourceUrl);
+      updateProject(projectIndex, 'resourceFileName', file.name);
+      toast.success("Document uploaded successfully");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to upload document");
+    } finally {
+      setUploadingProjectIndex(null);
+      setUploadProgress(0);
+    }
+  };
 
   const addProject = () => {
     const newProject: ProjectItem = {
@@ -69,25 +115,6 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
     const project = projectsList[projectIndex];
     const newMetrics = (project.metrics || []).filter((_, i) => i !== metricIndex);
     updateProject(projectIndex, "metrics", newMetrics);
-  };
-
-  const addActionLink = (projectIndex: number) => {
-    const project = projectsList[projectIndex];
-    const newLink = { label: "View Details", url: "#", iconName: "ArrowRight", variant: "outline" };
-    updateProject(projectIndex, "actionLinks", [...(project.actionLinks || []), newLink as any]);
-  };
-
-  const updateActionLink = (projectIndex: number, linkIndex: number, field: string, value: string) => {
-    const project = projectsList[projectIndex];
-    const newLinks = [...(project.actionLinks || [])];
-    newLinks[linkIndex] = { ...newLinks[linkIndex], [field]: value };
-    updateProject(projectIndex, "actionLinks", newLinks);
-  };
-
-  const removeActionLink = (projectIndex: number, linkIndex: number) => {
-    const project = projectsList[projectIndex];
-    const newLinks = (project.actionLinks || []).filter((_, i) => i !== linkIndex);
-    updateProject(projectIndex, "actionLinks", newLinks);
   };
 
   const handleSave = async () => {
@@ -295,55 +322,58 @@ export default function AboutProjectsAdmin({ initialSectionData }: { initialSect
                   </div>
                 </div>
 
-                {/* Action Links */}
+                {/* Project Resource (File Upload) */}
                 <div className="bg-white p-4 rounded-xl border border-[#E7E0D2] shadow-sm">
-                  <div className="flex justify-between items-center mb-3">
-                    <h4 className="text-xs font-bold text-primary">Action Links</h4>
-                    <button onClick={() => addActionLink(idx)} className="text-xs font-bold text-accent hover:underline">
-                      + Add Link
-                    </button>
-                  </div>
-                  <div className="space-y-3">
-                    {(item.actionLinks || []).map((link, lIdx) => (
-                      <div key={lIdx} className="flex flex-col sm:flex-row items-center gap-2">
-                        <input
-                          type="text"
-                          value={link.label}
-                          onChange={(e) => updateActionLink(idx, lIdx, "label", e.target.value)}
-                          placeholder="Label"
-                          className="w-full sm:w-1/4 px-2 py-1.5 border border-border rounded-md text-xs font-bold"
-                        />
-                        <input
-                          type="text"
-                          value={link.url}
-                          onChange={(e) => updateActionLink(idx, lIdx, "url", e.target.value)}
-                          placeholder="URL"
-                          className="w-full sm:w-1/3 px-2 py-1.5 border border-border rounded-md text-xs"
-                        />
-                        <div className="w-full sm:w-1/4">
-                          <IconPicker
-                            value={link.iconName}
-                            onChange={(iconName) => updateActionLink(idx, lIdx, "iconName", iconName)}
-                            className="text-xs"
-                          />
+                  <h4 className="text-xs font-bold text-primary mb-3">Project Resource / Report</h4>
+                  
+                  {item.resourceUrl ? (
+                    <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-gray-50">
+                      <div className="flex items-center space-x-2 overflow-hidden">
+                        <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center shrink-0">
+                          <IconPicker value="FileText" onChange={() => {}} className="hidden" />
+                          <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         </div>
-                        <select
-                          value={link.variant || "outline"}
-                          onChange={(e) => updateActionLink(idx, lIdx, "variant", e.target.value)}
-                          className="w-full sm:w-1/4 px-2 py-1.5 border border-border rounded-md text-xs"
-                        >
-                          <option value="outline">Outline</option>
-                          <option value="primary">Primary</option>
-                        </select>
-                        <button onClick={() => removeActionLink(idx, lIdx)} className="text-red-400 p-1">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <span className="text-xs font-bold text-primary truncate max-w-[200px] sm:max-w-[400px]">
+                          {item.resourceFileName || "Project Document"}
+                        </span>
                       </div>
-                    ))}
-                    {(!item.actionLinks || item.actionLinks.length === 0) && (
-                      <p className="text-xs text-gray-400">No action links added.</p>
-                    )}
-                  </div>
+                      <button 
+                        onClick={() => {
+                          updateProject(idx, 'resourceUrl', '');
+                          updateProject(idx, 'resourceFileName', '');
+                        }}
+                        className="text-red-400 p-1 hover:text-red-600 hover:bg-red-50 rounded"
+                        title="Remove Document"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,.pptx"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            handleResourceUpload(idx, e.target.files[0]);
+                          }
+                        }}
+                        disabled={uploadingProjectIndex === idx}
+                        className="w-full px-3 py-2 border border-border rounded-lg text-xs"
+                      />
+                      <p className="text-[10px] text-gray-400">Supported formats: PDF, DOC, DOCX, PPTX.</p>
+                      
+                      {uploadingProjectIndex === idx && (
+                        <div className="w-full bg-slate-200 rounded-full h-1.5 mt-2">
+                          <div 
+                            className="bg-primary h-1.5 rounded-full transition-all duration-300" 
+                            style={{ width: `${uploadProgress}%` }}
+                          ></div>
+                          <p className="text-[9px] text-slate-500 font-semibold mt-1">Uploading... {uploadProgress}%</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
               </div>

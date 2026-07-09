@@ -98,9 +98,7 @@ export interface ProjectItem {
   isFeatured?: boolean;
   technologies?: string[];
   metrics?: { label: string; value: string; iconName: string }[];
-  actionLinks?: { label: string; url: string; iconName: string; variant?: "primary" | "outline" }[];
-  resourceUrl?: string;
-  resourceFileName?: string;
+  actionLinks?: { label: string; url: string; iconName: string; variant?: "primary" | "outline"; isFile?: boolean }[];
   displayOrder: number;
 }
 

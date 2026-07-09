@@ -48,6 +48,28 @@
     color: var(--color-primary);
     font-weight: 800;
   }
+
+  /* Universal button interaction feedback */
+  button:not(:disabled), 
+  input[type="submit"]:not(:disabled), 
+  input[type="button"]:not(:disabled) {
+    cursor: pointer;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+  
+  button:hover:not(:disabled), 
+  input[type="submit"]:hover:not(:disabled), 
+  input[type="button"]:hover:not(:disabled) {
+    filter: brightness(0.92);
+  }
+
+  button:active:not(:disabled), 
+  input[type="submit"]:active:not(:disabled), 
+  input[type="button"]:active:not(:disabled) {
+    transform: scale(0.97);
+  }
 }
 
 /* Custom scrollbar to match the premium warm theme */

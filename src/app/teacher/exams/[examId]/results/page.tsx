@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { resolveAuthenticatedDestination } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header";
-import { ResultsEntrySheet } from "./results-entry-sheet";
+import { ResultsManager } from "./results-manager";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -37,10 +37,8 @@ export default async function ExamResultsEntryPage({ params }: PageProps) {
     notFound();
   }
 
-  // Published exams cannot have results edited without first unpublishing
-  if (exam.status === "RESULT_PUBLISHED") {
-    redirect(`/teacher/exams?error=cannot_edit_results_published`);
-  }
+  // Allow viewing results even if published, but we will handle edit restrictions on the client
+
 
   // Query all eligible students (ACTIVE and COMPLETED enrollments)
   const { data: enrollments, error: enrollError } = await supabase
@@ -113,7 +111,7 @@ export default async function ExamResultsEntryPage({ params }: PageProps) {
         />
       </div>
       
-      <ResultsEntrySheet
+      <ResultsManager
         examId={examId}
         exam={exam as any}
         students={studentsList}

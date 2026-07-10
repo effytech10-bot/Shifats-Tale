@@ -215,7 +215,8 @@ export async function getSectionItems(sectionKey: string) {
 
 /**
  * Teacher: Upsert a section item.
-(
+ */
+export async function upsertSectionItem(
   sectionKey: string,
   payload: {
     id?: string;

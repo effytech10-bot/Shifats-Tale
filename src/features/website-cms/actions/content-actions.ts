@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { requireTeacher } from "@/lib/auth-guards";
 import { revalidatePath } from "next/cache";
 import { SitePageSection } from "../types/cms-types";
@@ -154,11 +155,11 @@ export async function updatePageSection(
  * Automatically resolves media URLs if media_id is present.
  */
 export async function getSectionItems(sectionKey: string) {
-  const supabase = await createClient();
+  const adminAuth = createAdminClient();
 
   // 1. Get the section ID
-  const { data: section, error: sectionError } = await supabase
-    .from("vw_public_site_page_sections")
+  const { data: section, error: sectionError } = await adminAuth
+    .from("site_page_sections")
     .select("id")
     .eq("section_key", sectionKey)
     .maybeSingle();
@@ -167,11 +168,12 @@ export async function getSectionItems(sectionKey: string) {
     return [];
   }
 
-  // 2. Get the items (use the public view which bypasses RLS and pre-filters by status)
-  const { data: items, error: itemsError } = await supabase
-    .from("vw_public_site_section_items")
+  // 2. Get the items (fetch from base table instead of view to ensure metadata is included)
+  const { data: items, error: itemsError } = await adminAuth
+    .from("site_section_items")
     .select("*")
     .eq("section_id", section.id)
+    .eq("status", "PUBLISHED")
     .order("sort_order", { ascending: true });
 
   if (itemsError) {
@@ -183,12 +185,12 @@ export async function getSectionItems(sectionKey: string) {
   const mediaIds = items.map((i: any) => i.media_id).filter(Boolean);
   let mediaMap: Record<string, string> = {};
   if (mediaIds.length > 0) {
-    const { data: mediaAssets } = await supabase
+    const { data: mediaAssets } = await adminAuth
       .from("vw_public_media_assets")
       .select("id, secure_url")
       .in("id", mediaIds);
     if (mediaAssets) {
-      mediaAssets.forEach(m => mediaMap[m.id] = m.secure_url);
+      mediaAssets.forEach((m: any) => mediaMap[m.id] = m.secure_url);
     }
   }
 
@@ -213,8 +215,7 @@ export async function getSectionItems(sectionKey: string) {
 
 /**
  * Teacher: Upsert a section item.
- */
-export async function upsertSectionItem(
+(
   sectionKey: string,
   payload: {
     id?: string;

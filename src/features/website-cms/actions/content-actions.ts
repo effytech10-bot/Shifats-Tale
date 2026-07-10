@@ -167,12 +167,11 @@ export async function getSectionItems(sectionKey: string) {
     return [];
   }
 
-  // 2. Get the items (fetch from base table instead of view to ensure metadata is included)
+  // 2. Get the items (use the public view which bypasses RLS and pre-filters by status)
   const { data: items, error: itemsError } = await supabase
-    .from("site_section_items")
+    .from("vw_public_site_section_items")
     .select("*")
     .eq("section_id", section.id)
-    .eq("status", "PUBLISHED")
     .order("sort_order", { ascending: true });
 
   if (itemsError) {

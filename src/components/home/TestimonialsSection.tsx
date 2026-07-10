@@ -32,9 +32,12 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
   // Distribute testimonials into responsive columns dynamically
   const distribute = (items: any[], numCols: number) => {
     const cols: any[][] = Array.from({ length: numCols }, () => []);
-    items.forEach((item, idx) => {
-      cols[idx % numCols].push(item);
-    });
+    if (items.length === 0) return cols;
+    // Ensure all columns get at least one item by looping
+    const totalToDistribute = Math.max(items.length, numCols);
+    for (let i = 0; i < totalToDistribute; i++) {
+      cols[i % numCols].push(items[i % items.length]);
+    }
     return cols;
   };
 

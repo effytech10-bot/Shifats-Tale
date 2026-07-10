@@ -99,20 +99,26 @@ export default function StudentCardsAdmin({ initialItems }: { initialItems: any[
                 
                 <div className="p-4 flex flex-col flex-grow">
                   <div className="mb-4">
-                    <span className="text-xs font-bold text-gray-500 border px-2 py-1 rounded inline-block mb-2">
-                      {meta.examType || "N/A"}
-                    </span>
-                    <div className="flex items-start space-x-2 text-sm font-semibold text-gray-800">
-                      <Trophy className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                      <span>{meta.achievement || "N/A"}</span>
-                    </div>
+                    {meta.examType ? (
+                      <span className="text-xs font-bold text-gray-500 border px-2 py-1 rounded inline-block mb-2">
+                        {meta.examType}
+                      </span>
+                    ) : null}
+                    {meta.achievement && (
+                      <div className="flex items-start space-x-2 text-sm font-semibold text-gray-800">
+                        <Trophy className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                        <span>{meta.achievement}</span>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex justify-between items-center text-xs text-gray-500 mt-auto pt-4 border-t border-border">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>{meta.year || "N/A"}</span>
-                    </div>
+                  <div className="flex justify-between items-center text-xs text-gray-500 mt-auto pt-4 border-t border-border min-h-[32px]">
+                    {meta.year && (
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-3.5 h-3.5" />
+                        <span>{meta.year}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

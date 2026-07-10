@@ -54,8 +54,8 @@ export default function CoursesSection({ courseItems = [], headerData }: { cours
       bannerImage: item.mediaUrl || meta.fallbackImageUrl || "/images/flyer_admission_science.jpg",
       description: item.body || "",
       features: meta.features || [],
-      schedule: meta.schedule || "N/A",
-      duration: meta.duration || "N/A",
+      schedule: meta.schedule || "",
+      duration: meta.duration || "",
     };
   });
 
@@ -401,16 +401,22 @@ export default function CoursesSection({ courseItems = [], headerData }: { cours
                   )}
 
                   {/* Schedule Details Box */}
-                  <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-bg-soft border border-border text-xs font-bold text-primary text-left">
-                    <div>
-                      <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Weekly Schedule</span>
-                      <span>{selectedCourse.schedule}</span>
+                  {(selectedCourse.schedule || selectedCourse.duration) && (
+                    <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-bg-soft border border-border text-xs font-bold text-primary text-left">
+                      {selectedCourse.schedule && (
+                        <div>
+                          <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Weekly Schedule</span>
+                          <span>{selectedCourse.schedule}</span>
+                        </div>
+                      )}
+                      {selectedCourse.duration && (
+                        <div>
+                          <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Duration</span>
+                          <span>{selectedCourse.duration}</span>
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <span className="block text-[9px] uppercase tracking-wider text-muted opacity-80 mb-0.5">Duration</span>
-                      <span>{selectedCourse.duration}</span>
-                    </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Send Message to WhatsApp inside the modal */}

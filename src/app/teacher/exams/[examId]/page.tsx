@@ -37,7 +37,7 @@ export default async function ExamDetailsPage({ params }: PageProps) {
 
   const { data: enrollments } = await supabase
     .from("enrollments")
-    .select(\`
+    .select(`
       id,
       status,
       student:student_profiles (
@@ -47,7 +47,7 @@ export default async function ExamDetailsPage({ params }: PageProps) {
           full_name
         )
       )
-    \`)
+    `)
     .eq("batch_id", exam.batch_id)
     .in("status", ["ACTIVE", "COMPLETED"]);
 

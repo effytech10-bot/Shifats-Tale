@@ -395,7 +395,7 @@ export function ResultsManager({ examId, exam, students, initialResults }: Props
               <div>
                 <span className="text-[10px] text-muted uppercase font-bold block">Start & Duration</span>
                 <span className="font-extrabold mt-0.5 block">
-                  {exam.start_time || "N/A"} &bull; {exam.duration ? \`\${exam.duration} mins\` : "N/A"}
+                  {exam.start_time || "N/A"} &bull; {exam.duration ? `${exam.duration} mins` : "N/A"}
                 </span>
               </div>
             </div>

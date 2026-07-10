@@ -9,6 +9,11 @@ export default function GlobalFooterAdmin({ initialSettings }: { initialSettings
   const [footerDescription, setFooterDescription] = useState(initialSettings?.footerDescription || "");
   const [footerNotice, setFooterNotice] = useState(initialSettings?.footerNotice || "");
   const [footerCopyright, setFooterCopyright] = useState(initialSettings?.footerCopyright || "");
+  React.useEffect(() => {
+    setFooterDescription(initialSettings?.footerDescription || "");
+    setFooterNotice(initialSettings?.footerNotice || "");
+    setFooterCopyright(initialSettings?.footerCopyright || "");
+  }, [initialSettings]);
   const [quickLinks, setQuickLinks] = useState<{label: string, href: string, isPortal?: boolean}[]>(
     initialSettings?.quickLinks || []
   );

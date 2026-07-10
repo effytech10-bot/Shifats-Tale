@@ -19,6 +19,12 @@ export default function HomeGalleryAdmin({
   const [eyebrow, setEyebrow] = useState(initialSectionData?.eyebrow || "Our Gallery");
   const [title, setTitle] = useState(initialSectionData?.title || "Captured Moments");
   const [description, setDescription] = useState(initialSectionData?.description || "Explore our curated albums of events, interactive classroom sessions, and premium study materials.");
+  React.useEffect(() => {
+    setSelectedIds(initialSelectedIds);
+    setEyebrow(initialSectionData?.eyebrow || "Our Gallery");
+    setTitle(initialSectionData?.title || "Captured Moments");
+    setDescription(initialSectionData?.description || "Explore our curated albums of events, interactive classroom sessions, and premium study materials.");
+  }, [initialSelectedIds, initialSectionData]);
   const [isSaving, setIsSaving] = useState(false);
 
   const toggleSelection = (id: string) => {

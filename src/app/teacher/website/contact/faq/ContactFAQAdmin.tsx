@@ -21,6 +21,7 @@ export default function ContactFAQAdmin({ initialSectionData }: { initialSection
 
   const initialFaqs = initialSectionData?.content?.faqs || defaultFaqs;
   const [faqs, setFaqs] = useState<FAQItem[]>(initialFaqs);
+  React.useEffect(() => { setFaqs(initialFaqs); }, [initialFaqs]);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleAddFaq = () => {

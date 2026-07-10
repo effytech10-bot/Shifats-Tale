@@ -20,6 +20,12 @@ export default function HomeCoursesAdmin({
   const [eyebrow, setEyebrow] = useState(initialSectionData?.eyebrow || "BATCHES & PROGRAMS");
   const [title, setTitle] = useState(initialSectionData?.title || "Offered Batches");
   const [description, setDescription] = useState(initialSectionData?.description || "Explore our curriculum programs designed to guide students towards absolute clarity in board and admission exams.");
+  React.useEffect(() => {
+    setSelectedIds(initialSelectedIds);
+    setEyebrow(initialSectionData?.eyebrow || "BATCHES & PROGRAMS");
+    setTitle(initialSectionData?.title || "Offered Batches");
+    setDescription(initialSectionData?.description || "Explore our curriculum programs designed to guide students towards absolute clarity in board and admission exams.");
+  }, [initialSelectedIds, initialSectionData]);
   const [isSaving, setIsSaving] = useState(false);
 
   const toggleSelection = (id: string) => {

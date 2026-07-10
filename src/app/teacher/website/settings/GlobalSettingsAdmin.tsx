@@ -7,6 +7,7 @@ import { updatePageSection } from "@/features/website-cms/actions/content-action
 
 export default function GlobalSettingsAdmin({ initialSettings }: { initialSettings: any }) {
   const [formData, setFormData] = useState(initialSettings);
+  React.useEffect(() => { setFormData(initialSettings); }, [initialSettings]);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

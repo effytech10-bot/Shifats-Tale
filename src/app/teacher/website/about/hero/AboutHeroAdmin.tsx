@@ -13,6 +13,7 @@ const DEFAULT_PLATFORMS = ["Facebook", "Instagram", "Youtube", "Linkedin", "Twit
 
 export default function AboutHeroAdmin({ initialSectionData }: { initialSectionData: any }) {
   const [profile, setProfile] = useState<ProfileInfo>(initialSectionData?.content || defaultProfileData);
+  React.useEffect(() => { setProfile(initialSectionData?.content || defaultProfileData); }, [initialSectionData]);
   
   const [isSaving, setIsSaving] = useState(false);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);

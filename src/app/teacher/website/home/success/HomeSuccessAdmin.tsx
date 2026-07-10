@@ -20,6 +20,12 @@ export default function HomeSuccessAdmin({
   const [eyebrow, setEyebrow] = useState(initialSectionData?.eyebrow || "STUDENT SUCCESS STORIES");
   const [title, setTitle] = useState(initialSectionData?.title || "Celebrating Excellence");
   const [description, setDescription] = useState(initialSectionData?.description || "Here are some of the remarkable success stories from our past batches.");
+  React.useEffect(() => {
+    setSelectedIds(initialSelectedIds);
+    setEyebrow(initialSectionData?.eyebrow || "STUDENT SUCCESS STORIES");
+    setTitle(initialSectionData?.title || "Celebrating Excellence");
+    setDescription(initialSectionData?.description || "Here are some of the remarkable success stories from our past batches.");
+  }, [initialSelectedIds, initialSectionData]);
   const [isSaving, setIsSaving] = useState(false);
 
   const toggleSelection = (id: string) => {

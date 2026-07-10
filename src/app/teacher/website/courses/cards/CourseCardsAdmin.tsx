@@ -10,6 +10,11 @@ import CourseCardModal from "./CourseCardModal";
 
 export default function CourseCardsAdmin({ initialItems }: { initialItems: any[] }) {
   const [items, setItems] = useState(initialItems);
+  
+  React.useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);

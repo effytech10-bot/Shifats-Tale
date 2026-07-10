@@ -23,22 +23,25 @@ jobs:
           git remote add upstream https://github.com/adnan-bin-wahid/Shifats-Tale.git
           git fetch upstream main
 
+      - name: Backup only B sync workflow
+        run: |
+          mkdir -p /tmp/workflows
+          cp .github/workflows/sync-upstream.yml /tmp/workflows/sync-upstream.yml
+
       - name: Copy upstream files except workflow files
         run: |
+          rm -rf /tmp/upstream
           mkdir -p /tmp/upstream
           git archive upstream/main | tar -x -C /tmp/upstream
-
-          mkdir -p /tmp/current-workflows
-          cp -r .github/workflows /tmp/current-workflows/workflows
 
           rsync -a --delete \
             --exclude='.git/' \
             --exclude='.github/workflows/***' \
             /tmp/upstream/ ./
 
-          mkdir -p .github
           rm -rf .github/workflows
-          cp -r /tmp/current-workflows/workflows .github/workflows
+          mkdir -p .github/workflows
+          cp /tmp/workflows/sync-upstream.yml .github/workflows/sync-upstream.yml
 
       - name: Commit and push synced files
         run: |

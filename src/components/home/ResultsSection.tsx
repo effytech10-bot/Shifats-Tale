@@ -161,13 +161,17 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
 
       <div className="space-y-5 relative z-10 flex flex-col items-center w-full">
         {/* Category Badge & Class Year */}
-        <div className="flex items-center justify-between w-full">
-          <span className="text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-md bg-[#010E62]/5 text-[#010E62] border border-[#010E62]/10 group-hover/card:bg-primary group-hover/card:text-white group-hover/card:border-primary transition-all duration-300">
-            {result.examType}
-          </span>
-          <span className="text-[10px] font-bold text-muted bg-[#FFF9EA] px-2 py-0.5 rounded border border-[#E7E0D2]">
-            Class of {result.year}
-          </span>
+        <div className="flex items-center justify-between w-full min-h-[24px]">
+          {result.examType ? (
+            <span className="text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-md bg-[#010E62]/5 text-[#010E62] border border-[#010E62]/10 group-hover/card:bg-primary group-hover/card:text-white group-hover/card:border-primary transition-all duration-300">
+              {result.examType}
+            </span>
+          ) : <span />}
+          {result.year ? (
+            <span className="text-[10px] font-bold text-muted bg-[#FFF9EA] px-2 py-0.5 rounded border border-[#E7E0D2]">
+              Class of {result.year}
+            </span>
+          ) : <span />}
         </div>
 
         {/* Student Photo - Boldly Highlighted with glowing borders & shadow */}
@@ -217,13 +221,11 @@ const StudentSuccessCard = ({ result, isActive }: { result: any; isActive: boole
         <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover/card:scale-110 group-hover/card:bg-accent/20 transition-all duration-300">
           <GraduationCap className="h-5 w-5 text-primary" />
         </div>
-        <div className="min-w-0">
-          <span className="block text-[8px] text-muted font-extrabold uppercase tracking-widest leading-none">
-            Secured Result
-          </span>
-          <span className="text-xs sm:text-sm font-extrabold text-primary mt-1.5 block leading-tight truncate">
-            {result.achievement}
-          </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[9px] font-bold text-muted uppercase tracking-wider mb-0.5">SECURED RESULT</p>
+          <p className="text-sm font-extrabold text-[#08132E] truncate">
+            {result.achievement || "-"}
+          </p>
         </div>
       </div>
     </div>
@@ -239,9 +241,9 @@ export default function ResultsSection({ studentItems = [], headerData }: { stud
       studentName: item.title,
       college: item.subtitle,
       image: item.mediaUrl || meta.fallbackImageUrl || "/placeholder.jpg",
-      achievement: meta.achievement || "N/A",
-      course: meta.course || "N/A",
-      examType: meta.examType || "N/A",
+      achievement: meta.achievement || "",
+      course: meta.course || "",
+      examType: meta.examType || "",
       year: meta.year || "",
       note: meta.note || ""
     };
